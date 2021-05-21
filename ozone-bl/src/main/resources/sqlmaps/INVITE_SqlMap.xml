@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="INVITE">
+
+	<resultMap id="inviteResultMap" type="al.ozone.bl.model.Invite">
+	   <result column="INVITER_ID" property="inviterId" jdbcType="DECIMAL" />
+	   <result column="INVITED_ID" property="invitedId" jdbcType="DECIMAL" />
+	   <result column="INVITER_EMAIL" property="inviterEmail" jdbcType="VARCHAR" />
+	   <result column="INVITED_EMAIL" property="invitedEmail" jdbcType="VARCHAR" />
+	   <result column="FIRST_PURCHASE" property="confFirsPurchase" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+	   <result column="OP_DATE" property="operationDate" jdbcType="TIMESTAMP" />
+  	</resultMap> 
+  	
+  	<resultMap id="customerInvitedResultMap" type="al.ozone.bl.model.CustomerInvited">
+	   <result column="INVITER_ID" property="inviterId" jdbcType="DECIMAL" />
+	   <result column="INVITED_ID" property="invitedId" jdbcType="DECIMAL" />
+	   <result column="FIRST_PURCHASE" property="confFirsPurchase" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+	   <result column="NAME" property="name" jdbcType="VARCHAR" />
+	   <result column="SURNAME" property="surname" jdbcType="VARCHAR" />
+	   <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+	   <result column="ACTIVE" property="active" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+	   <result column="CITY_ID" property="cityId" jdbcType="VARCHAR" />	
+	</resultMap> 
+  	
+	<select id="get" resultMap="inviteResultMap" parameterType="string" >
+		select *
+		from INVITE
+	</select>
+	
+	<select id="search" resultMap="inviteResultMap" parameterType="al.ozone.bl.bean.SearchInviteBean" >
+		select i.inviter_id, i.invited_id, i.first_purchase, c1.email inviter_email, 
+				c2.email invited_email, i.OP_DATE
+		from INVITE i, CUSTOMER c1, CUSTOMER c2
+		where i.INVITER_ID = c1.ID
+		and i.INVITED_ID = c2.ID
+		<if test="inviterEmail!=null and inviterEmail!=''">and upper(c1.email) like upper(CONCAT('%', #{inviterEmail,jdbcType=VARCHAR}, '%'))</if>
+		<if test="invitedEmail!=null and invitedEmail!=''">and upper(c2.email) like upper(CONCAT('%', #{invitedEmail,jdbcType=VARCHAR}, '%'))</if>
+		<if test="confFirstPurchase!=null">and FIRST_PURCHASE = #{confFirstPurchase,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler} </if>
+		<if test="from!=null">and UNIX_TIMESTAMP(DATE(i.OP_DATE)) >= UNIX_TIMESTAMP(#{from,jdbcType=TIMESTAMP})</if>
+		<if test="to!=null">and UNIX_TIMESTAMP(#{to,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(i.OP_DATE)) </if>
+		order by i.OP_DATE desc	
+	</select>
+
+	<insert id="insert" parameterType="al.ozone.bl.model.Invite">
+		insert into INVITE (INVITER_ID, INVITED_ID, FIRST_PURCHASE, OP_DATE)
+		values (#{inviterId,jdbcType=DECIMAL}, 
+				#{invitedId,jdbcType=DECIMAL},
+				#{confFirsPurchase,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler},
+				#{operationDate,jdbcType=TIMESTAMP}
+				)
+	</insert>
+	
+	<select id="getInvitationsForCustomer" resultMap="customerInvitedResultMap" parameterType="int" >
+		select c.*, i.*
+		from CUSTOMER c, INVITE i
+		where c.ID = i.INVITED_ID
+		and i.INVITER_ID =  #{customerId,jdbcType=DECIMAL}
+	</select>
+	
+	<select id="getWhoInvitedCustomer" resultType="int" parameterType="int" >
+		select *
+		from INVITE
+		where INVITED_ID = #{cusId,jdbcType=DECIMAL}
+		and FIRST_PURCHASE = 'N'
+	</select>
+	
+	
+	<update id="firstPurchaseDone" parameterType="map" >
+	    update INVITE
+	    set FIRST_PURCHASE = 'Y'
+	    where INVITER_ID = #{inviterId,jdbcType=DECIMAL}
+	    and INVITED_ID = #{invitedId,jdbcType=DECIMAL}
+    </update>
+
+</mapper>

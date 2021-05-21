@@ -1,0 +1,84 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	   
+<ui:composition>    	
+  		<h:form id="formPartnerSearchDlg">        
+       		
+       		<p:dialog header="#{msg['partner.panelSearch']}" 
+		   		widgetVar="searchPartnerDialog" 
+		   		resizable="false"
+				modal="true"
+	           	width="1000"
+	           	style="position:fixed; top:0%; left:0%;"> 
+        	
+        	<!-- Search Panel -->
+			<p:panel id="partnerSearchPanel" header="#{msg['partner.panelSearch']}" styleClass="nowrapColumn">
+				<h:panelGrid columns="4" cellpadding="5" width="600px" border="0">			
+			 		<h:outputLabel value="#{msg['partner.partnerName']}"/>
+			 		<p:inputText id="partnerName" binding="#{partnerController.sPartnerName}"/>
+       				
+					<h:outputLabel value="#{msg['partner.city']}"/>				                
+			        <p:selectOneMenu
+			        	value="ALL"
+			        	binding="#{partnerController.sCityId}">  
+			        	<f:selectItem itemLabel="ALL" itemValue="" />
+			            <f:selectItems value="#{partnerController.allCityItems}" />  
+			        </p:selectOneMenu>
+					
+					<f:facet name="footer">
+						<h:panelGroup>
+						<center>					
+							<p:commandButton value="#{msg['buttonSearch']}" update="partnersListPanel" action="#{partnerController.searchPartner}"/>
+							<p:spacer width="10"/>
+							<p:commandButton value="#{msg['buttonReset']}" update="partnerSearchPanel,message" action="#{partnerController.cleanSearchForm}" />  							
+						</center>
+						</h:panelGroup>
+					</f:facet>
+				</h:panelGrid>		
+			</p:panel>	
+        	
+        	<!-- Table Panel -->
+        	<p:panel id="partnersListPanel" header="#{msg['partner.panelResult']}" >		
+	    		<p:dataTable id="partnersTable" var="p" value="#{partnerController.lazyModel}" 
+			    			paginator="true" rows="5" rowsPerPageTemplate="5"
+			    			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">   
+				    <p:column>   
+	            		<p:commandButton title="Check" update="dealForm:dealPartnerPanel" 
+	            					oncomplete="searchPartnerDialog.hide()" icon="ui-icon ui-icon-check">  
+	                        <f:setPropertyActionListener value="#{p}" target="#{dealWizController.partnerSelected}" />  
+	                       
+	                    </p:commandButton>  
+		          	</p:column> 
+					<p:column headerText="#{msg['partner.id']}" sortBy="#{p.id}" style="width:6%;">
+						<h:outputText value="#{p.id}"/>
+					</p:column>	
+					<p:column headerText="#{msg['partner.name']}" sortBy="#{p.name}">
+						<h:outputText value="#{p.name}"/>
+					</p:column>		
+					 <p:column headerText="#{msg['partner.city']}" sortBy="#{p.city.name}">	
+						<h:outputText value="#{p.city.name}"/>
+					</p:column>	
+					<p:column headerText="#{msg['partner.address']}">
+						<h:outputText value="#{p.address}"/>
+					</p:column>	
+					<p:column headerText="#{msg['partner.tel']}">
+						<h:outputText value="#{p.tel}"/>
+					</p:column>	
+					<p:column headerText="#{msg['partner.cel']}">
+						<h:outputText value="#{p.cel}"/>
+					</p:column>	
+					<p:column headerText="#{msg['partner.email']}">
+						<h:outputText value="#{p.email}"/>
+					</p:column>	          
+		 		</p:dataTable >			
+		 	</p:panel>
+        </p:dialog>
+		</h:form>	  		
+
+</ui:composition>    	
+</html>
+	
+	

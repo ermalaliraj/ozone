@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="PAYMENT">
+
+	<resultMap id="paymentResultMap" type="al.ozone.bl.model.Payment">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+	   	<result column="PAY_TYPE" property="paymentType" jdbcType="VARCHAR" />
+	   	<result column="AMOUNT" property="amount" jdbcType="DECIMAL"/>
+	   	<result column="OP_DATE" property="operationDate" jdbcType="TIMESTAMP"/>
+  	   	<association property="purchase" column="{id=PURCHASE_ID}" javaType="al.ozone.bl.model.Purchase">   	
+			<result column="PURCHASE_ID" property="id" jdbcType="DECIMAL" />
+		</association>
+	   
+	   	<!-- Discriminator is used when we have in a single table(or in a join) all possible 
+	   	fields and using a discriminator field(ex:PAY_TYPE) we map in different child objects.-->
+	   	<discriminator column="PAY_TYPE" javaType="string">
+	   		<case value="1" resultMap="paymentCashResultMap"></case>
+	   		<case value="2" resultMap="paymentEasyPayResultMap"></case>
+	   		<case value="3" resultMap="paymentPayPalResultMap"></case>
+	   		<case value="4" resultMap="paymentBankResultMap"></case>
+	   		<case value="5" resultMap="paymentAEResultMap"></case>
+	   	</discriminator>
+  	</resultMap> 
+  	
+  	<resultMap id="paymentCashResultMap" type="al.ozone.bl.model.PaymentCash" extends="paymentResultMap">
+	   <result column="SELLER_FULL_NAME" property="sellerFullName" jdbcType="VARCHAR" />
+	   <result column="BUYER_FULL_NAME" property="buyerFullName" jdbcType="VARCHAR"/>
+	   <result column="BUYER_TEL" property="buyerTel" jdbcType="VARCHAR"/>
+<!-- 	   <result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR"/>
+	   <result column="CUSTOMER_SURNAME" property="customerSurname" jdbcType="VARCHAR"/>
+	   <result column="CUSTOMER_EMAIL" property="customerEmail" jdbcType="VARCHAR"/> -->
+	   <result column="NOTE" property="note" jdbcType="VARCHAR"/>
+  	</resultMap> 
+
+  	<resultMap id="paymentPayPalResultMap" type="al.ozone.bl.model.PaymentPayPal" extends="paymentResultMap">
+	   <result column="TXN_ID" property="txnId" jdbcType="VARCHAR" />
+	   <result column="INVOICE_ID" property="invoice" jdbcType="VARCHAR"/>
+	   <result column="PAYER_EMAIL" property="payerEmail" jdbcType="VARCHAR"/>
+	   <result column="RECEIVER_EMAIL" property="receiverEmail" jdbcType="VARCHAR"/>
+	   <result column="PP_AMOUNT" property="amountEUR" jdbcType="VARCHAR"/>
+	   <result column="CURRENCY" property="currency" jdbcType="VARCHAR"/>
+	   <result column="EXCHANGE_RATE" property="exchangeRate" jdbcType="VARCHAR"/>	   
+	   <result column="MC_FEE" property="mcFee" jdbcType="VARCHAR"/>
+	   <result column="PARENT_TXN_ID" property="parentTxnId" jdbcType="VARCHAR"/> 
+	   <result column="FIRST_NAME" property="firstName" jdbcType="VARCHAR"/>
+	   <result column="LAST_NAME" property="lastName" jdbcType="VARCHAR"/>
+	   <result column="SUBSCRIBER_ID" property="subscriberId" jdbcType="VARCHAR"/>
+	   <result column="PAYMENT_STATUS" property="paymentStatus" jdbcType="VARCHAR"/>
+	   <result column="PAYMENT_DATE" property="paymentDate" jdbcType="VARCHAR"/>
+	   <result column="PAYER_STATUS" property="payerStatus" jdbcType="VARCHAR"/>
+	   <result column="RESPONSE_STRING" property="responseString" jdbcType="VARCHAR"/>
+	   <result column="QUERY_STRING" property="queryString" jdbcType="VARCHAR"/>
+  	</resultMap> 
+
+  	<resultMap id="paymentEasyPayResultMap" type="al.ozone.bl.model.PaymentEasyPay" extends="paymentResultMap">
+  	   <result column="EP_TXN_ID" property="txnId" jdbcType="VARCHAR" />
+	   <result column="EP_INVOICE_ID" property="orderId" jdbcType="VARCHAR"/>
+	   <result column="MERCHANT_USERNAME" property="merchantUsername" jdbcType="VARCHAR"/>
+	   <result column="RESPONSE_CODE" property="responseCode" jdbcType="VARCHAR"/>
+	   <result column="TRANSACTION_STATUS" property="txnStatus" jdbcType="VARCHAR"/>
+	   <result column="ORIGINAL_RESPONSE" property="originalResponse" jdbcType="VARCHAR"/>
+	   <result column="AMOUNT" property="amount" jdbcType="DECIMAL"/>	   
+	   <result column="DATE" property="date" jdbcType="VARCHAR"/>
+	   <result column="FEE" property="fee" jdbcType="DECIMAL"/> 
+  	</resultMap> 
+  	
+  	<resultMap id="paymentBankResultMap" type="al.ozone.bl.model.PaymentBank" extends="paymentResultMap">
+  	   <result column="BANK_NAME" property="bankName" jdbcType="VARCHAR" />
+	   <result column="REF_NR" property="refNr" jdbcType="VARCHAR"/>
+	   <result column="PB_FULL_NAME" property="fullPayerName" jdbcType="VARCHAR"/>
+       <result column="PB_DATE" property="transferDate" jdbcType="TIMESTAMP"/>
+       <result column="PB_NOTE" property="note" jdbcType="VARCHAR"/>
+  	</resultMap> 
+  	
+  	<resultMap id="paymentAEResultMap" type="string" extends="paymentResultMap">
+  	</resultMap> 
+
+  	<!-- Put in JOIN every new PaymentTable -->
+	<select id="get" resultMap="paymentResultMap" parameterType="int" >
+		select *
+		from PAYMENT p
+            LEFT JOIN PAYCASH pc on p.ID = pc.PAYMENT_ID 
+            LEFT JOIN PAYPAL pp on p.ID = pp.PAYMENT_ID
+            LEFT JOIN PAY_EASYPAY ep on p.ID = ep.PAYMENT_ID
+            LEFT JOIN PAYBANK pb on p.ID = pb.PAYMENT_ID
+    	where p.ID = #{id,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="search" resultMap="paymentResultMap" parameterType="al.ozone.bl.bean.SearchPaymentBean" >
+		select *, pur.ID AS PURCHASE_ID
+		from PAYMENT p
+            LEFT JOIN PAYCASH pc on p.ID = pc.PAYMENT_ID 
+            LEFT JOIN PAYPAL pp on p.ID = pp.PAYMENT_ID
+            LEFT JOIN PAY_EASYPAY ep on p.ID = ep.PAYMENT_ID
+            LEFT JOIN PURCHASE pur on p.ID = pur.PAYMENT_ID
+            LEFT JOIN PAYBANK pb on p.ID = pb.PAYMENT_ID
+        where 1=1
+	    <if test="paymentId!=null and paymentId!=0">and p.ID = #{paymentId,jdbcType=DECIMAL}</if>
+	    <if test="purchaseId!=null and purchaseId!=0">and pur.ID = #{purchaseId,jdbcType=DECIMAL}</if>
+	    <if test="insertedFrom!=null">and UNIX_TIMESTAMP(DATE(p.OP_DATE)) >= UNIX_TIMESTAMP(#{insertedFrom,jdbcType=TIMESTAMP})</if>
+		<if test="insertedTo!=null">and UNIX_TIMESTAMP(#{insertedTo,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(p.OP_DATE)) </if>
+		<if test="paymentType!=null and paymentType!=''">and p.PAY_TYPE = #{paymentType,jdbcType=VARCHAR}</if>
+		order by p.id desc
+	</select>
+	
+	<select id="getPaymentForPurchase" parameterType="string" resultMap="paymentResultMap">
+    	select *, pur.ID AS PURCHASE_ID
+		from PAYMENT p
+            LEFT JOIN PAYCASH pc on p.ID = pc.PAYMENT_ID 
+            LEFT JOIN PAYPAL pp on p.ID = pp.PAYMENT_ID
+            LEFT JOIN PURCHASE pur on p.ID = pur.PAYMENT_ID
+            LEFT JOIN PAYBANK pb on p.ID = pb.PAYMENT_ID
+        where 1=1
+        and pur.ID = #{purchaseId,jdbcType=DECIMAL}
+    </select>
+    
+	<insert id="insert" parameterType="al.ozone.bl.model.Payment">
+		<selectKey keyProperty="id" resultType="java.lang.Integer"  >
+			VALUES NEXT VALUE FOR seq_payment;
+	   	</selectKey>
+	   	
+		insert into PAYMENT (PAY_TYPE, AMOUNT, OP_DATE)
+		values (#{paymentType,jdbcType=VARCHAR}, 
+				#{amount,jdbcType=DECIMAL}, 
+				#{operationDate,jdbcType=TIMESTAMP})
+	</insert>
+	
+	<insert id="insertCashPay" parameterType="al.ozone.bl.model.PaymentCash">
+		insert into PAYCASH (PAYMENT_ID, SELLER_FULL_NAME, BUYER_FULL_NAME, BUYER_TEL,
+							NOTE)
+		values (#{id,jdbcType=DECIMAL}, 
+				#{sellerFullName,jdbcType=VARCHAR}, 
+				#{buyerFullName,jdbcType=VARCHAR}, 
+				#{buyerTel,jdbcType=VARCHAR},
+				#{note,jdbcType=VARCHAR})
+	</insert>
+	
+	<insert id="insertPayPalPay" parameterType="al.ozone.bl.model.PaymentPayPal">
+		insert into PAYPAL (PAYMENT_ID, TXN_ID, INVOICE_ID, PAYER_EMAIL, RECEIVER_EMAIL,
+						PP_AMOUNT, CURRENCY, EXCHANGE_RATE,
+						MC_FEE, PARENT_TXN_ID, FIRST_NAME, LAST_NAME, SUBSCRIBER_ID,
+						PAYMENT_STATUS, PAYMENT_DATE,
+						PAYER_STATUS, RESPONSE_STRING, QUERY_STRING)
+		values (#{id,jdbcType=DECIMAL}, 
+				#{txnId,jdbcType=VARCHAR}, 
+				#{invoice,jdbcType=VARCHAR}, 
+				#{payerEmail,jdbcType=VARCHAR},
+				#{receiverEmail,jdbcType=VARCHAR},
+				#{amountEUR,jdbcType=VARCHAR},
+				#{currency,jdbcType=VARCHAR},
+				#{exchangeRate,jdbcType=VARCHAR},
+				#{mcFee,jdbcType=VARCHAR},
+				#{parentTxnId,jdbcType=VARCHAR},				
+				#{firstName,jdbcType=VARCHAR},
+				#{lastName,jdbcType=VARCHAR},
+				#{subscriberId,jdbcType=VARCHAR},
+				#{paymentStatus,jdbcType=VARCHAR},
+				#{paymentDate,jdbcType=VARCHAR},
+				#{payerStatus,jdbcType=VARCHAR},
+				#{responseString,jdbcType=VARCHAR},
+				#{queryString,jdbcType=VARCHAR})
+	</insert>
+	
+	<insert id="insertPayEasyPay" parameterType="al.ozone.bl.model.PaymentEasyPay">	
+		insert into pay_easypay (PAYMENT_ID, EP_TXN_ID, EP_INVOICE_ID, MERCHANT_USERNAME, 
+						RESPONSE_CODE, TRANSACTION_STATUS, ORIGINAL_RESPONSE,
+						AMOUNT, DATE, FEE)
+		values (#{id,jdbcType=DECIMAL}, 
+				#{txnId,jdbcType=VARCHAR}, 
+				#{orderId,jdbcType=VARCHAR}, 
+				#{merchantUsername,jdbcType=VARCHAR},
+				#{responseCode,jdbcType=DECIMAL},
+				#{txnStatus,jdbcType=VARCHAR},
+				#{originalResponse,jdbcType=VARCHAR},
+				#{amount,jdbcType=DECIMAL},
+				#{date,jdbcType=VARCHAR},
+				#{fee,jdbcType=DECIMAL})
+	</insert>
+	
+	<insert id="insertPayBank" parameterType="al.ozone.bl.model.PaymentBank">
+		insert into PAYBANK (PAYMENT_ID, BANK_NAME, REF_NR, PB_FULL_NAME,
+							PB_DATE, PB_NOTE)
+		values (#{id,jdbcType=DECIMAL}, 
+				#{bankName,jdbcType=VARCHAR}, 
+				#{refNr,jdbcType=VARCHAR}, 
+				#{fullPayerName,jdbcType=VARCHAR},
+				#{transferDate,jdbcType=VARCHAR},				
+				#{note,jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="changePaymentStatus" parameterType="al.ozone.bl.model.PaymentPayPal">
+	    update PAYPAL
+	    set PAYMENT_STATUS = #{paymentStatus,jdbcType=VARCHAR}
+	    where PAYMENT_ID = #{id,jdbcType=DECIMAL}
+    </update>
+    
+    	<update id="updatePaymentNote" parameterType="map">
+	    update PAYCASH
+	    set NOTE = CONCAT (IFNULL(NOTE, ""), #{note,jdbcType=VARCHAR})
+	    where PAYMENT_ID = #{pId,jdbcType=DECIMAL}
+    </update>
+    	
+</mapper>

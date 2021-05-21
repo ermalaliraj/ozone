@@ -1,0 +1,131 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" >
+
+
+<h:form id="customerPurchasesForm">
+	<p:panel header="#{msg['customer.tab.purchases.list']}: #{customerDetailController.customerSelected.email}">
+		<p:messages id="purchasesMessage" showDetail="true"/> 
+	
+		<h:panelGrid columns="2" cellpadding="5" border="0" style="width:100%">
+			<p:dataTable id="purchasesTable" var="p" value="#{customerDetailController.purchasesList}" 
+					paginator="true" rows="10" rowsPerPageTemplate="10,20,50"
+			    	paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"> 
+			    	
+			    <p:column style="width:3%">  
+		            <p:rowToggler/> 
+		        </p:column>  
+		    	<p:column headerText="#{msg['purchase.id']}" sortBy="#{p.id}" style="width:5%;">
+					<h:outputText value="#{p.id}"/>
+				</p:column>
+				<p:column headerText="Kontrata&lt;br/&gt; Nr." sortBy="#{p.dealChoice.dealId}" style="width:6%;">
+					<h:outputText value="#{p.dealChoice.dealId}"/>
+				</p:column>	
+				<p:column headerText="Zgjedhja" style="width:35%;">
+					<h:outputText value="#{p.dealChoice.choiceTitle}"/>
+				</p:column>						
+				<p:column headerText="#{msg['purchase.quantity']}" sortBy="#{p.quantity}" style="width:6%;">
+					<h:outputText value="#{p.quantity}"/>
+				</p:column>	
+				<p:column headerText="#{msg['purchase.amount']}" style="width:5%;" >
+					<h:outputText value="#{p.amount}L"/>
+				</p:column>	
+				<p:column headerText="Cmimi i &lt;br/&gt; paguar" sortBy="#{p.moneySpent}" style="width:8%;" >
+					<h:outputText value="#{p.moneySpent}L"/>
+				</p:column>	
+				<p:column headerText="#{msg['purchase.creditSpent']}" sortBy="#{p.creditSpent}" style="width:7%;">
+					<h:outputText value="#{p.creditSpent}L"/>
+				</p:column>	
+				<p:column headerText="#{msg['purchase.discount']}" style="width:5%;">
+					<h:outputText value="#{p.discount.percDiscount} %">
+					</h:outputText>
+				</p:column>	
+				<p:column headerText="Konf-&lt;br/&gt;ermuar" sortBy="#{p.confirmed}" style="width:6%;">
+					<h:outputText value="#{p.confirmed}">
+						<f:converter converterId="yesNoFormatter" />
+					</h:outputText>
+				</p:column>	
+				<p:column headerText="Data e &lt;br/&gt; blerjes" sortBy="#{p.purchDate}" style="width:8%;">
+					<h:outputText value="#{p.purchDate}">
+						<f:converter converterId="dateFormatter" />
+					</h:outputText>
+				</p:column>	
+				<p:column headerText="Tipi i &lt;br/&gt; Pageses" sortBy="#{p.payment.paymentType}" style="width:6%;">
+						<h:outputText value="#{p.payment.paymentType}">
+							<f:converter converterId="paymentTypeFormatter" />
+						</h:outputText>
+					</p:column>
+				<p:column headerText="buttonat" style="width:4%;">
+					<p:commandButton  title="#{msg['payment.detail']}" icon="payment-icon"
+							update="tabViewId:paymentDetailForm" oncomplete="paymentDetailDialog.show();" >  
+						<f:setPropertyActionListener value="#{p.payment}" target="#{paymentController.paymentSelected}" />  
+					</p:commandButton>  
+					<p:commandButton  title="Kreditet e perdorur" icon="ui-icon ui-icon ui-icon-star"
+							update="tabViewId:creditDetailForm" oncomplete="creditDetailDialog.show();" >  
+						<f:setPropertyActionListener value="#{p}" target="#{purchaseController.purchaseSelected}" />  
+					</p:commandButton>  
+				</p:column>	
+								
+				<p:rowExpansion>   
+		                <f:facet name="header">  
+		                    #{p.quantity} - #{msg['purchase.couponsHeaderMsg']}
+		                </f:facet>  
+		  
+		                <p:dataTable id="couponsTable" var="c" value="#{p.coupons}">
+					        <p:column headerText="#{msg['coupon.code']}">
+								<h:outputText value="#{c.code}"/>
+							</p:column>	
+							<p:column headerText="#{msg['coupon.secCode']}">
+								<h:outputText value="#{c.securityCode}"/>
+							</p:column>	
+							<p:column headerText="#{msg['coupon.from']}">
+								<h:outputText value="#{c.from}">
+									<f:converter converterId="dateFormatter" />
+								</h:outputText>
+							</p:column>	
+							<p:column headerText="#{msg['coupon.to']}">
+								<h:outputText value="#{c.to}">
+									<f:converter converterId="dateFormatter" />
+								</h:outputText>
+							</p:column>	
+							<p:column headerText="#{msg['coupon.status']}">
+								<h:outputText value="#{c.status}">
+									<f:converter converterId="couponStatusFormatter" />
+								</h:outputText>
+							</p:column>	
+							<p:column headerText="#{msg['coupon.lastChange']}">
+								<h:outputText value="#{c.lastStatusChange}">
+									<f:converter converterId="dateWithHourFormatter" />
+								</h:outputText>
+							</p:column>	
+							<p:column headerText="PDF">
+								<h:commandLink action="#{customerDetailController.checkCoupon}">
+									<p:graphicImage value="../../images/pdf_icon_16x16.gif"/>  
+									<f:setPropertyActionListener value="#{c.code}" 
+										target="#{customerDetailController.couponToCheck}"/>
+								</h:commandLink>
+							</p:column>	
+		                </p:dataTable> 	
+		        </p:rowExpansion>  
+        
+        
+			    <f:facet name="footer"> 
+					<p:commandButton  value="#{msg['purchase.buttonAdd']}"  
+									title="#{msg['purchase.buttonAdd']}"
+									update="tabViewId:purchaseNewForm:purchaseNewDlgPanel"
+									oncomplete="purchaseNewDialog.show()"
+									icon="ui-icon ui-icon-newwin"> 					
+					</p:commandButton> 
+				</f:facet>  
+			</p:dataTable> 
+		</h:panelGrid>	
+	</p:panel>
+</h:form>
+
+<ui:include src="../payment/paymentDetailDlg.xhtml" />
+<ui:include src="../purchase/creditDetailDlg.xhtml" />
+<ui:include src="../purchase/purchaseNewDlg.xhtml" />
+
+</html>

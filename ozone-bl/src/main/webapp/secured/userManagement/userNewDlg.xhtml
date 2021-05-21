@@ -1,0 +1,114 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition>
+    <h:form id="newUserForm">
+
+        <!-- New User Dialog -->
+        <p:dialog header="#{msg['user.new']}"
+                  widgetVar="newUserDialog"
+                  resizable="false"
+                  modal="true"
+                  width="700"
+                  style="position:fixed; top:0%; left:0%;">
+
+            <h:panelGrid id="newUserPanel" columns="2" cellpadding="2" border="0" styleClass="nowrapColumn">
+                <p:fieldset legend="#{msg['user.data']}" style="width:70%;height:300px;">
+                    <h:panelGrid columns="3" cellpadding="2" style="margin:0 auto;">
+                        <h:outputLabel for="nUsername" value="#{msg['username']} *"/>
+                        <p:inputText required="true" id="nUsername"
+                                     label="#{msg['username']}"
+                                     binding="#{userController.newUsername}">
+                            <p:ajax event="blur" update="nUsernameMsg"/>
+                        </p:inputText>
+                        <p:message id="nUsernameMsg" for="nUsername" display="icon"/>
+
+                        <h:outputLabel for="nName" value="#{msg['name']} *"/>
+                        <p:inputText required="true" id="nName"
+                                     label="#{msg['name']}"
+                                     binding="#{userController.newName}">
+                            <p:ajax event="blur" update="nNameMsg"/>
+                        </p:inputText>
+                        <p:message id="nNameMsg" for="nName" display="icon"/>
+
+                        <h:outputLabel for="nSurname" value="#{msg['surname']} *"/>
+                        <p:inputText id="nSurname"
+                                     required="true"
+                                     label="#{msg['surname']}"
+                                     binding="#{userController.newSurname}">
+                            <p:ajax event="blur" update="nSurnameMsg"/>
+                        </p:inputText>
+                        <p:message id="nSurnameMsg" for="nSurname" display="icon"/>
+
+                        <h:outputLabel for="nEmail" value="#{msg['email']}"/>
+                        <p:inputText id="nEmail"
+                                     size="30"
+                                     binding="#{userController.newEmail}">
+                            <f:validator validatorId="emailValidator"/>
+                            <p:ajax event="blur" update="nEmailMsg"/>
+                        </p:inputText>
+                        <p:message id="nEmailMsg" for="nEmail"/>
+
+                        <h:outputLabel for="nPassword" value="#{msg['pwd']} *"/>
+                        <p:inputText required="true" id="nPassword"
+                                     size="30"
+                                     binding="#{userController.newPwd}">
+                            <p:ajax event="blur" update="nPasswordMsg"/>
+                        </p:inputText>
+                        <p:message id="nPasswordMsg" for="nPassword" display="icon"/>
+
+                        <h:outputLabel for="nEnabled" value="#{msg['enabled']}"/>
+                        <p:selectBooleanCheckbox id="nEnabled"
+                                                 binding="#{userController.newEnabled}"/>
+                        <p:message for="nEnabled"/>
+
+                        <h:outputLabel for="nLocked" value="#{msg['locked']}"/>
+                        <p:selectBooleanCheckbox id="nLocked"
+                                                 binding="#{userController.newLocked}"/>
+                        <p:message for="nLocked"/>
+                    </h:panelGrid>
+                </p:fieldset>
+
+
+                <p:fieldset legend="#{msg['user.assRoles']}" style="width:30%;height:300px">
+                    <p:selectManyCheckbox id="nRoles" value="#{userController.newRolesSelected}" required="true"
+                                          layout="pageDirection" label="#{msg['headerRole']}">
+                        <f:selectItems value="#{userController.allRolesMap}"/>
+                        <p:ajax event="blur" update="nRolesMsg"/>
+                    </p:selectManyCheckbox>
+                    <p:message id="nRolesMsg" for="nRoles" display="icon"/>
+                </p:fieldset>
+
+
+                <f:facet name="footer">
+                    <h:panelGroup>
+                        <center>
+                            <p:commandButton update="form:usersListPanel,form:message,newUserPanel"
+                                             value="#{msg['user.buttonAdd']}"
+                                             oncomplete="handleCallbackRequest(xhr, status, args)"
+                                             actionListener="#{userController.addUser}"/>
+                            <p:commandButton value="#{msg['buttonClose']}" onclick="newUserDialog.hide()" type="button"
+                                             icon="ui-icon ui-icon-close"/>
+                        </center>
+                    </h:panelGroup>
+                </f:facet>
+
+            </h:panelGrid>
+        </p:dialog>
+
+        <script type="text/javascript">
+            function handleCallbackRequest(xhr, status, args) {
+                if (!args.validationFailed) {
+                    newUserDialog.hide();
+                }
+            }
+        </script>
+    </h:form>
+</ui:composition>
+
+</html>
+	
+	

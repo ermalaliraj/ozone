@@ -1,0 +1,19 @@
+<html>
+<body>
+<h3>Oferta $deal.title skadoi.</h3>
+
+<div>
+Kuponat e ofertes <b>$deal.title (id: $deal.id)</b> nuk mund te perdoren me.<br/>
+
+Kontaktoni Partnerin <b>$deal.partner.name</b> per te bere likuidimin e kuponave te perdorur dhe mos
+haroni te kontrolloni ne sistemi gjendjen e kuponave per kete publikim.
+
+<br/><br/>
+List e kuponave me gjendjen akoma te pa perdorur:<br/>
+#foreach( $c in $notUsedCoupons )
+	 $c.code<br/>
+#end
+</div>
+
+</body>
+</html>

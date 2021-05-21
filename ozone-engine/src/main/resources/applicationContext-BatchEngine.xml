@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+			http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-2.0.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"
+	default-lazy-init="true">
+  
+  <bean id="closeDealJob" class="al.ozone.engine.batch.jobs.CloseDealJob" >
+        <property name="dealManager" ref="dealManager" />
+  </bean>     
+  
+  <bean id="pdfCreatorJob" class="al.ozone.engine.batch.jobs.PdfCreatorJob">
+        <property name="dealManager" ref="dealManager" />
+        <property name="couponManager" ref="couponManager" />
+        <property name="emailRobot" ref="emailRobot" />   
+  </bean> 
+   
+  <bean id="sendNewsletterJob" class="al.ozone.engine.batch.jobs.SendNewsletterJob">
+        <property name="dealManager" ref="dealManager" />
+        <property name="customerManager" ref="customerManager" />
+        <property name="emailRobot" ref="emailRobot" />
+        <property name="emailsIntroDAO" ref="emailsIntroDAO" />
+        <property name="envConfig" ref="envConfig" />     
+        <property name="urlEncrypter" ref="urlEncrypter" />     
+  </bean> 
+  
+<!--   <bean id="addCreditToInvitersJob" class="al.ozone.engine.batch.jobs.AddCreditToInvitersJob">
+        <property name="publicationManager" ref="publicationManager" />
+        <property name="purchaseManager" ref="purchaseManager" />
+        <property name="inviteManager" ref="inviteManager" />
+        <property name="applicationConfig" ref="applicationConfig" />
+  </bean>  -->
+   
+  <bean id="notifyExpiredCouponJob" class="al.ozone.engine.batch.jobs.NotifyExpiredCouponJob">
+        <property name="dealManager" ref="dealManager" />
+        <property name="userManager" ref="userManager" />
+        <property name="couponManager" ref="couponManager" />
+        <property name="emailRobot" ref="emailRobot" />
+  </bean>
+  
+  <bean id="exchangeRateCalculationJob" class="al.ozone.engine.batch.jobs.ExchangeRateCalculationJob">
+        <property name="currencyConvertor" ref="currencyConvertor" />
+        <property name="envConfig" ref="envConfig" />
+        <property name="userManager" ref="userManager" />
+        <property name="emailRobot" ref="emailRobot" />
+        <property name="applicationConfig" ref="applicationConfig" />
+  </bean>
+  
+  <bean id="batchEngine" 
+        class="al.ozone.engine.batch.BatchEngine"
+        scope="singleton"
+        init-method="init">
+        <property name="emailRobot" ref="emailRobot" />
+        <property name="jobs">
+			<list>
+                <ref bean="closeDealJob"/>
+                <ref bean="pdfCreatorJob"/>
+                <!-- <ref bean="addCreditToInvitersJob"/>-->
+                <ref bean="notifyExpiredCouponJob"/> 
+                <ref bean="exchangeRateCalculationJob"/>                
+			</list>        
+        </property>
+  </bean>
+  
+  <bean id="newsletterEngine" 
+        class="al.ozone.engine.batch.BatchEngine"
+        scope="singleton"
+        init-method="init">
+        <property name="emailRobot" ref="emailRobot" />
+        <property name="jobs">
+			<list>
+		        <ref bean="sendNewsletterJob"/>
+			</list>        
+        </property>
+  </bean>
+
+</beans>

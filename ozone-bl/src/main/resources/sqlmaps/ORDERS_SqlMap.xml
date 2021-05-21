@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="ORDERS">
+	<resultMap id="ordersResultMap" type="al.ozone.bl.model.Orders">
+	   <id column="ID" property="id" jdbcType="DECIMAL" />
+	   <result column="QUANTITY" property="quantity" jdbcType="DECIMAL" />
+	   <result column="SINGLE_PRICE" property="singlePrice" jdbcType="DECIMAL" />	   
+	   <result column="MONEY_SPENT" property="moneySpent" jdbcType="DECIMAL" />
+	   <result column="CREDIT_USED" property="creditUsed" jdbcType="DECIMAL" />
+	   <result column="OP_DATE" property="date" jdbcType="DECIMAL" />
+	   <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+	   <result column="TEL" property="tel" jdbcType="VARCHAR" />
+	   <result column="EXCHANGE_RATE" property="exchangeRate" jdbcType="VARCHAR" />
+	   <result column="TYPE" property="orderType" jdbcType="DECIMAL" />
+	   <result column="PURCHASE_ID" property="purchaseId" jdbcType="DECIMAL" />
+	   <result column="NOTE" property="note" jdbcType="VARCHAR" />
+	   <result column="CANCELED" property="canceled" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+	   <association property="dealChoice" column="{dealId=DEAL_ID,choiceNr=DEAL_CHOICE}" select="DEAL_CHOICE.getSimple"/>
+	   <association property="customer" column="CUSTOMER_ID" select="CUSTOMER.get"/>
+  	</resultMap>
+  	
+	<select id="get" resultMap="ordersResultMap" parameterType="int" >
+		select *
+		from ORDERS
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	
+	<select id="getAll" resultMap="ordersResultMap" parameterType="int" >
+		select *
+		from ORDERS
+	</select>
+	
+	<select id="search" resultMap="ordersResultMap" parameterType="al.ozone.bl.bean.SearchOrderBean" >
+		SELECT o.*, c.email, p.id as PURCHASE_ID
+	    from  customer c, orders o
+	            LEFT JOIN  purchase p on o.id  = p.order_id 
+	    where o.customer_id = c.id
+		<if test="orderId!=null and orderId!=0">and o.ID = #{orderId,jdbcType=DECIMAL}</if>
+		<if test="dealId!=null and dealId!=0">and o.DEAL_ID = #{dealId,jdbcType=DECIMAL}</if>
+		<if test="dealChoiceTitle!=null and dealChoiceTitle!=''">and o.DEAL_CHOICE like CONCAT('%', #{dealChoiceTitle,jdbcType=VARCHAR}, '%')</if>
+		<if test="customer!=null and customer!=''">and c.email like CONCAT('%', #{customer,jdbcType=VARCHAR}, '%')</if>
+		<if test="type!=null and type!=''">and o.type = #{type,jdbcType=VARCHAR}</if>
+		<if test="from!=null">and UNIX_TIMESTAMP(DATE(o.OP_DATE)) >= UNIX_TIMESTAMP(#{from,jdbcType=TIMESTAMP})</if>
+		<if test="to!=null">and UNIX_TIMESTAMP(#{to,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(o.OP_DATE)) </if>
+		<if test="withPurchase==true ">and p.id is not null </if>		
+		<if test="withPurchase==false ">and p.id is null </if>		
+		<if test="contacted==true">
+			and o.note is not null			
+		</if>		
+		<if test="contacted==false ">and o.note is null </if>	
+		<if test="canceled!=null">and o.CANCELED = #{canceled,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler} </if>
+        order by o.id desc
+	</select>
+	
+	<insert id="insert" parameterType="al.ozone.bl.model.Orders">
+		insert into ORDERS (CUSTOMER_ID, QUANTITY, SINGLE_PRICE, MONEY_SPENT, CREDIT_USED
+							, OP_DATE, TYPE, ADDRESS, TEL, EXCHANGE_RATE, DEAL_ID, DEAL_CHOICE)
+		values (#{customer.id,jdbcType=DECIMAL},
+				#{quantity,jdbcType=DECIMAL},
+				#{singlePrice,jdbcType=DECIMAL},
+				#{moneySpent,jdbcType=DECIMAL},
+				#{creditUsed,jdbcType=DECIMAL},
+				#{date,jdbcType=TIMESTAMP},
+				#{orderType,jdbcType=VARCHAR},
+				#{address,jdbcType=VARCHAR},
+				#{tel,jdbcType=VARCHAR},
+				#{exchangeRate,jdbcType=DECIMAL},
+				#{dealChoice.dealId,jdbcType=DECIMAL},
+				#{dealChoice.choiceNr,jdbcType=DECIMAL})
+				
+		<selectKey keyProperty="id" resultType="java.lang.Integer"  >
+			VALUES NEXT VALUE FOR seq_order;
+	   	</selectKey>
+	</insert>
+	
+	<update id="addNote" parameterType="map">
+		update orders
+	    set NOTE = #{note,jdbcType=VARCHAR},
+	    	CANCELED = #{canceled,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler}
+	    where ID = #{orderId,jdbcType=DECIMAL}
+	</update>
+</mapper>

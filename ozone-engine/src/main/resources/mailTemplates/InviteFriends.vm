@@ -1,0 +1,16 @@
+<html>
+<body>
+<h3>Ftese per ne OZone.al</h3>
+
+<div>
+	Miku juaj ${userFullName} ($userEmail) ju ka derguar nje ftese per te pare ofertat tek siti
+	<a href="http://www.ozone.al/main.faces?inv=${userId}">www.ozone.al</a>
+	<br/>
+	Regjistrohuni duke perdorur link-un ne email nese deshironi qe mikut tuaj ti shtohen 300L leke nga kjo ftese.
+	
+	<br/><br/>
+	Me OZone jetoni qytetin tuaj duke shpenzuar me pak!
+</div>
+
+</body>
+</html>

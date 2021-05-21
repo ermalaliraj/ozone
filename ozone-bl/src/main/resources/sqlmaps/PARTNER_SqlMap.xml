@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="PARTNER">
+
+	<resultMap id="partnerResultMap" type="al.ozone.bl.model.Partner">
+	   <id column="ID" property="id" jdbcType="DECIMAL" />
+	   <result column="NAME" property="name" jdbcType="VARCHAR" />
+	   <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+	   <result column="TEL" property="tel" jdbcType="VARCHAR" />
+	   <result column="CEL" property="cel" jdbcType="VARCHAR" />
+	   <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+	   <result column="WEB_SITE" property="webSite" jdbcType="VARCHAR" />
+	   <result column="LAT" property="lat" jdbcType="DOUBLE" />
+	   <result column="LNG" property="lng" jdbcType="DOUBLE" />
+	   <result column="ZOOM_LEVEL" property="zoomLevel" jdbcType="DECIMAL" />
+	   <result column="PWD" property="password" jdbcType="VARCHAR" />
+	   <result column="ACTIVE" property="active" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+	   <association property="category" column="CATEGORY_ID" select="getCategory"/>
+	   <association property="city" column="CITY_ID" select="CITY.get"/>
+  	</resultMap> 
+
+	<resultMap id="categoryResultMap" type="al.ozone.bl.model.Category">
+	   <id column="ID" property="id" jdbcType="DECIMAL" />
+	   <result column="NAME_EN" property="nameEn" jdbcType="VARCHAR" />
+	   <result column="NAME_AL" property="nameAl" jdbcType="VARCHAR" />
+	   <result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+  	</resultMap>
+	
+	<select id="getAllCategories" resultMap="categoryResultMap">
+		select *
+		from PARTNER_CATEGORIES
+	</select>
+	
+	<select id="getCategory" resultMap="categoryResultMap" parameterType="long" >
+		select *
+		from PARTNER_CATEGORIES
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+
+	<select id="get" resultMap="partnerResultMap" parameterType="long" >
+		select *
+		from PARTNER
+		where ID = #{id,jdbcType=DECIMAL}
+		order by NAME asc
+	</select>
+  
+	<delete id="delete" parameterType="al.ozone.bl.model.Partner" >
+		delete from PARTNER
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+
+	<insert id="insert" parameterType="al.ozone.bl.model.Partner">
+		insert into PARTNER (NAME, CITY_ID, ADDRESS, TEL, CEL, EMAIL, PWD,
+						WEB_SITE, LAT, LNG, ZOOM_LEVEL, CATEGORY_ID)
+		values (
+				#{name,jdbcType=VARCHAR}, 
+				#{city.id,jdbcType=VARCHAR},
+				#{address,jdbcType=VARCHAR}, 
+				#{tel,jdbcType=VARCHAR}, 
+				#{cel,jdbcType=VARCHAR}, 
+				#{email,jdbcType=VARCHAR},
+				#{password,jdbcType=VARCHAR},
+				#{webSite,jdbcType=VARCHAR},
+				#{lat,jdbcType=DOUBLE},
+				#{lng,jdbcType=DOUBLE},
+				#{zoomLevel,jdbcType=DECIMAL},
+				#{category.id,jdbcType=DECIMAL})
+		<selectKey keyProperty="id" resultType="java.lang.Integer"  >
+			VALUES NEXT VALUE FOR seq_partner;
+	   	</selectKey>
+	</insert>
+	
+	<update id="update" parameterType="al.ozone.bl.model.Partner" >
+	    update PARTNER
+	    set NAME = #{name,jdbcType=VARCHAR}, 
+	    CITY_ID = #{city.id,jdbcType=VARCHAR}, 
+	    ADDRESS = #{address,jdbcType=VARCHAR}, 
+	    TEL = #{tel,jdbcType=VARCHAR}, 
+	    CEL = #{cel,jdbcType=VARCHAR}, 	    
+	    CATEGORY_ID = #{category.id,jdbcType=DECIMAL}
+	    , EMAIL = #{email,jdbcType=VARCHAR}
+	    , PWD = #{password,jdbcType=VARCHAR}
+		<if test="webSite != null">, WEB_SITE = #{webSite,jdbcType=VARCHAR}</if>
+		<if test="lat != null">, LAT = #{lat,jdbcType=DOUBLE}</if>
+		<if test="lng != null">, LNG = #{lng,jdbcType=DOUBLE}</if>
+		<if test="zoomLevel != null">, ZOOM_LEVEL = #{zoomLevel,jdbcType=DECIMAL}</if>
+   		where ID = #{id,jdbcType=DECIMAL}
+    </update>
+  
+  	<sql id="search_fragment">
+		select p.* 
+		from PARTNER p, CITY city
+		where p.CITY_ID = city.ID
+		<if test="name!=null">and upper(p.NAME) like CONCAT('%', upper(#{name,jdbcType=VARCHAR}), '%')</if>
+		<if test="city.id != null and city.id!='' and city.id!='ALL'"> and p.CITY_ID = #{city.id,jdbcType=VARCHAR} </if>
+ 		<if test="category.id != null and category.id>0"> and p.CATEGORY_ID = #{category.id,jdbcType=DECIMAL} </if>	
+	</sql>
+	
+	<select id="search" resultMap="partnerResultMap" parameterType="al.ozone.bl.model.Partner">
+		<include refid="search_fragment"/>
+	</select>
+	
+	<select id="searchCount" resultType="int" parameterType="al.ozone.bl.model.Partner">
+		select count(1) 
+		from (
+		    <include refid="search_fragment"/>
+		) t
+	</select>
+		 	
+	<select id="searchLazy" resultMap="partnerResultMap" parameterType="al.ozone.bl.model.Partner">
+		<include refid="search_fragment"/>
+		<if test="sortColumn != null"> order by ${sortColumn} </if>
+ 		<if test="sortDirection == 'DESC'"> DESC </if>
+	</select>
+
+	<select id="getAll" resultMap="partnerResultMap" parameterType="al.ozone.bl.model.Partner">
+		select * 
+		from PARTNER
+	</select>	
+	
+	<select id="loginPartner" resultMap="partnerResultMap" parameterType="map">
+		select * 
+		from PARTNER
+		where EMAIL = #{emailPartner,jdbcType=VARCHAR}
+		and PWD = #{password,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getByEmail" resultMap="partnerResultMap" parameterType="string">
+		select *
+		from PARTNER
+		where EMAIL = #{email,jdbcType=VARCHAR}
+	</select>
+</mapper>

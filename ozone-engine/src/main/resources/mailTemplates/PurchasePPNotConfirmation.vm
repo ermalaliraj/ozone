@@ -1,0 +1,20 @@
+<html>
+<body>
+<h3>Pagesa nuk mund te kryhet!</h3>
+
+<div>
+	Pagesa prej $moneySpent $currency, per oferten <b>$deal.title</b>, nuk u krye me sukses!
+	
+	<br/><br/>
+	Kontrolloni gjendjen e llogarise suaj PayPal, ose kartes se debitit ne rast se keni perdorur nje te tille, dhe provoni perseri.
+	
+	<br/><br/>
+	Ju kujtojme gjithashtu se Ozone.al ofron menyra alternative pagesash.
+	
+	<br/><br/>
+	Gjithe te mirat<br/>
+	Stafi Ozone.al
+</div>
+
+</body>
+</html>

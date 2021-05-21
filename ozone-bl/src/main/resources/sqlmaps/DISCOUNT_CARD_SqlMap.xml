@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="DISCOUNTCARD">
+
+	<resultMap id="discountCardResultMap" type="al.ozone.bl.model.DiscountCard">
+	   <id column="ID" property="id" jdbcType="CHAR" />
+	   <result column="PERC_DISCOUNT" property="percDiscount" jdbcType="DECIMAL" />
+	   <result column="USED_DATE" property="usedDate" jdbcType="TIMESTAMP" />
+  	</resultMap>   	
+	
+	<resultMap id="discountCardDetailResultMap" type="al.ozone.bl.model.DiscountCard">
+	   <id column="ID" property="id" jdbcType="CHAR" />
+	   <result column="PERC_DISCOUNT" property="percDiscount" jdbcType="DECIMAL" />
+	   <result column="USED_DATE" property="usedDate" jdbcType="TIMESTAMP" />	   
+	   <result column="EMAIL" property="customerEmail" jdbcType="VARCHAR" />
+	   <result column="USED" property="used" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler" />
+  	</resultMap>   	
+  	
+	<sql id="get_fragment">
+		select *
+		from DISCOUNT_CARD
+		where ID = #{id,jdbcType=CHAR}
+	</sql>
+  
+  	<select id="get" resultMap="discountCardResultMap" parameterType="string">
+  		<include refid="get_fragment"/>
+	</select>
+	
+  	<select id="countById" resultType="int"  parameterType="string">
+  		select count(1) 
+		from (
+		    <include refid="get_fragment"/>
+		) t
+	</select>
+	
+	<resultMap id="discountCardGroupResultMap" type="al.ozone.bl.model.DiscountCardGroup">
+	   <id column="percentage" property="percentage" jdbcType="DECIMAL" />
+	   <result column="total" property="total" jdbcType="DECIMAL" />
+	   <result column="totalUsed" property="totalUsed" jdbcType="DECIMAL" />
+	   <result column="totalUnused" property="totalUnused" jdbcType="DECIMAL" />
+  	</resultMap> 
+	
+	<select id="getGroups" resultMap="discountCardGroupResultMap">
+		select perc_discount as 'percentage', count(*) as 'total', count(USED_DATE) as 'totalUsed', (count(*) - count(USED_DATE)) as 'totalUnused'
+		FROM DISCOUNT_CARD
+		group by perc_discount
+	</select>
+	
+  	<select id="getAll" resultMap="discountCardResultMap">
+		select *
+		from DISCOUNT_CARD
+	</select>
+	
+	<delete id="delete" parameterType="al.ozone.bl.model.DiscountCard" >
+		delete from DISCOUNT_CARD
+		where ID = #{id,jdbcType=CHAR}
+	</delete>
+	
+	<insert id="insert" parameterType="al.ozone.bl.model.DiscountCard">
+		insert into DISCOUNT_CARD (ID, PERC_DISCOUNT)
+		values (#{id,jdbcType=CHAR}, 
+				#{percDiscount,jdbcType=DECIMAL})
+	</insert>
+	
+	<update id="setAsUsed" parameterType="al.ozone.bl.model.DiscountCard" >
+	    
+    </update>
+    
+    <select id="search" resultMap="discountCardDetailResultMap" parameterType="al.ozone.bl.model.DiscountCard">
+		select *
+		from (
+		    select t1.*, ifnull(c.EMAIL, '') as EMAIL, if (USED_DATE is null, 'N','Y') as USED
+		    from (
+		        select d.*, p.CUSTOMER_ID
+		        from DISCOUNT_CARD d LEFT JOIN  PURCHASE p
+		            ON  d.ID = p.DISCOUNT_ID
+		    )t1 LEFT JOIN CUSTOMER c
+		            ON t1.CUSTOMER_ID = c.ID
+		) a
+		where 1=1
+		<if test="customerEmail!=null and customerEmail!=''">and upper(a.EMAIL) like upper(CONCAT('%', #{customerEmail,jdbcType=VARCHAR}, '%'))</if>
+		<if test="percDiscount!=null and percDiscount!=0">and a.PERC_DISCOUNT = #{percDiscount,jdbcType=DECIMAL}</if>
+		<if test="used!=null">and a.USED = #{used,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler} </if>
+		
+	</select>
+	
+</mapper>

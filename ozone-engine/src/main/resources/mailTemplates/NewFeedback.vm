@@ -1,0 +1,14 @@
+<html>
+<body>
+<h3>Feedback i ri</h3>
+
+<div>
+	Klienti ${cusId} sapo ka lene nje koment per partnerin <i>${partner}</i>
+	DealID: ${dealId}<br/> <br/>
+	<b>${msg}</b><br/> <br/>
+	Duhet aprovuar per te dale ne Front-End<br/>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition >    	
+	<h:form id="paymentDetailForm">
+		<p:dialog header="#{msg['payment.detail']}" 
+				   		widgetVar="paymentDetailDialog" 
+				   		resizable="false"
+						modal="true" 
+			           	width="500" 
+			           	style="position:fixed; top:0%; left:0%;">
+			           	
+			<!-- Each payment has his own personalized fields, for this
+			every new payment must implement the method getDetailPageName() which returns
+			the name of the .xhtml file where this fields are implemented.
+			Example PaymentCash.getDetailPageName() returns "paymentCashDetailDlg.xhtml" -->
+			<h:panelGrid id="paymentDetailDlgPanel" columns="3" cellpadding="2" style="margin:0 left;" border="0"> 
+				<h:panelGrid columns="2" cellpadding="2" style="margin:0 auto;" border="0">  	
+					<h:outputLabel value="#{msg['payment.id']} "/>
+					<h:outputText value="#{paymentController.paymentSelected.id}"/>
+					
+					<h:outputLabel value="#{msg['payment.type']} : "/>
+					<h:outputText value="#{paymentController.paymentSelected.paymentType}">
+						<f:converter converterId="paymentTypeFormatter" />
+					</h:outputText>
+					
+					<h:outputLabel value="#{msg['payment.amount']} : "/>
+					<h:outputText value="#{paymentController.paymentSelected.amount}L"/>			         
+					
+					<h:outputLabel value="E shtuar ne sistem : "/>
+					<h:outputText value="#{paymentController.paymentSelected.operationDate}">
+						<f:converter converterId="dateWithHourFormatter" />
+					</h:outputText>			         
+					
+					<ui:include src="#{paymentController.paymentSelected.detailPageName}"/>
+				</h:panelGrid>
+			</h:panelGrid>
+				
+			<f:facet name="footer">
+				<h:panelGroup>
+					<center>	
+					<p:commandButton value="#{msg['buttonClose']}" onclick="paymentDetailDialog.hide()" type="button" icon="ui-icon ui-icon-close"/>  
+					</center>
+				</h:panelGroup>
+			</f:facet>
+	
+		</p:dialog>
+	</h:form>
+</ui:composition>
+</html>
+
+
+

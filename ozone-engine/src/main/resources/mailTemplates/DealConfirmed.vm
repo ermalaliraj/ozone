@@ -1,0 +1,25 @@
+<html>
+<body>
+<h3>Konfirmim blerje</h3>
+
+
+Blerja juaj per sherbimin <b>${dc.choiceTitle}</b> u konfirmua.<br/>
+<br/>
+
+Per te printuar kuponin lidhuni tek <a href="www.ozone.al">www.ozone.al</a> dhe shkoni tek seksioni "Blerjet e mia"
+<br/><br/><br/>
+
+Ju kujtojme se kuponi eshte i vlefshem deri me date <b>${dc.deal.expirationDiscountFormatted}</b>.
+<br/><br/>
+
+Ju ngelet vetem te printoni kuponin dhe te shijoni sherbimin tek
+<b>${dc.deal.partner.name}</b>
+<br/><br/>
+
+Gjithe te mirat<br/>
+Stafi Ozone.al
+<br><br><br/><br/><br/>
+<center>Zone Sh.p.k<center>
+</body>
+
+</html>

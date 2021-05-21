@@ -1,0 +1,23 @@
+<html>
+<body>
+<h3>Pagesa u krye me sukses!</h3>
+
+<div>
+	Pagesa prej $moneySpent Leke ($moneySpentEUR e)*, per oferten <b>${deal.title}</b>, u krye me sukses.
+	
+	<br/><br/>
+	Oferta mbyllet ne oren 23.59 te dates <b>${deal.endDateFormatted}</b>.
+	Kuponi do te jete i disponueshem per tu printuar dhe perdorur, <u>vetem</u> pas mbylljes se ofertes.
+	
+	<br/><br/>
+	Emaili me instruksionet e perdorimit do te dergohet ne momentin e mbylljes se ofertes.
+	
+	<br/><br/>
+	Duke uruar qe sherbimi t'ju pelqeje, stafi OZone ju uron gjithe te mirat!
+	
+	<br/><br/>
+	* Vlera nga Lek ne Euro u llogarit sipas kursit $exchangeRate
+</div>
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+<f:view>
+<h:body>    
+<ui:composition template="/template/common/commonLayout.xhtml">    	
+    <ui:define name="title">
+    	<h:outputText value="#{msg['title.publications.cal']}"/>
+    </ui:define>
+    
+	<ui:define name="content" >
+  		<h:form id="form" >        
+        	<p:growl id="message" showDetail="true" /> 
+ 			<!-- p:message id="message" showDetail="true"/-->  
+
+     		<p:panel id="publicationCalPanel" header="#{msg['publication.cal.headerPanel']}" >
+     		
+     		<h:panelGrid columns="2" cellpadding="0" border="0">	
+		 		<h:outputLabel value="#{msg['city.name']}"/>				                
+				<p:selectOneMenu id="mainCityId"
+						value="#{publicationCalController.cityChoosed}"
+		        		immediate="true"
+		        		update="publicationCalPanel">  
+		            <f:selectItems value="#{publicationCalController.allCityItems}" />  
+           			<p:ajax event="change" update="publicationCalPanel" oncomplete="myschedule.update();"
+           					listener="#{publicationCalController.onCityChanged}"/>
+		        </p:selectOneMenu>
+		        			                
+		        <p:commandButton value="#{msg['publication.cal.refresh']}"    
+		        				update="message"
+		        				immediate="true"
+		        				global="true"
+								oncomplete="myschedule.update();"
+				                actionListener="#{publicationCalController.refreshDeals}" />
+				<ui:include src="../common/ajaxloading.xhtml" />  
+			</h:panelGrid>
+			
+			<center>
+			<h:panelGrid columns="1" cellpadding="0" border="0" style="width:100%">
+				<h:panelGroup>
+					<center>
+					<h:outputText value="#{publicationCalController.cityNameChoosed} - #{msg['publication.cal.header']}"/>	
+					</center>
+				</h:panelGroup>
+	     		<p:schedule value="#{publicationCalController.eventModel}" widgetVar="myschedule"  style="width:100%;" startWeekday="1" >  
+  			        <p:ajax event="dateSelect" listener="#{publicationCalController.onDateSelect}" update="calNewForm:publicationCalNewDlgPanel" oncomplete="publicationCalNewDialog.show()" />  
+			        <p:ajax event="eventSelect" listener="#{publicationCalController.onEventSelect}" update="publicationCalEditPanel" oncomplete="publicationCalEditDialog.show()" />  
+			        <p:ajax event="eventMove" listener="#{publicationCalController.onEventMove}" update="message" oncomplete="myschedule.update()" />  
+			        <p:ajax event="eventResize" listener="#{publicationCalController.onEventResize}" update="message" oncomplete="myschedule.update()"/>  
+    			</p:schedule> 
+		    </h:panelGrid>
+		    </center>
+		    </p:panel>
+		    
+		    <ui:include src="publicationCalEditDlg.xhtml" />
+ 		</h:form>
+ 		
+ 		<ui:include src="publicationCalNewDlg.xhtml" />
+		
+	</ui:define>    		
+
+</ui:composition>    
+</h:body>
+</f:view>	
+</html>
+	
+	

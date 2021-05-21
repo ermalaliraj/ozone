@@ -1,0 +1,94 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+<ui:composition>
+	<h:form id="calNewForm">
+	    <!-- New Publication Dialog -->
+       	<p:dialog header="#{msg['publication.cal']} - #{msg['publication.new']}" 
+		   		widgetVar="publicationCalNewDialog" 
+		   		resizable="false"
+				modal="true" 
+	           	width="720" 
+	           	style="position:fixed; top:0%; left:0%;"> 
+	           	            
+			<h:panelGrid id="publicationCalNewDlgPanel" columns="3" cellpadding="2" style="margin:0 auto;" border="0"> 
+              <p:fieldset legend="#{msg['publication.data']}">    
+              <h:panelGrid  columns="3" cellpadding="2" style="margin:0 auto;" border="0">  
+	        	
+	        	<h:outputLabel for="nDeal" value="#{msg['publication.dealTitle']} *"/>				                	
+		        <p:selectOneMenu id="nDeal"
+		        				required="true"
+		        				label="#{msg['publication.dealTitle']}"
+		        				binding="#{publicationCalController.newDeal}">
+		            <f:selectItem itemLabel="--" itemValue="#{null}" noSelectionOption="true"/>
+		            <f:selectItems value="#{publicationCalController.dealsList}"
+		            		 var="d" itemLabel="#{d.id}. #{d.title}" itemValue="#{d}"/> 
+		            <f:converter converterId="dealConverter" />
+		            		 
+		            <p:ajax event="blur" update="nDealMsg" />
+		        </p:selectOneMenu>			
+	        	<p:message id="nDealMsg" for="nDeal" display="icon"/>  
+	        	
+	        	<h:outputLabel for="nFrom" value="#{msg['publication.from']} *"/>	
+	        	<p:calendar id="nFrom" 
+	        				pattern="dd/MM/yyyy" 
+	        				required="true"
+	        				value="#{publicationCalController.newFrom}"
+	        				label="#{msg['publication.from']}"
+	        				mindate="#{publicationCalController.nFromMinDate}"
+	        				maxdate="#{publicationCalController.nFromMaxDate}">
+	        		<p:ajax event="dateSelect" update="nTo"/>
+	        	</p:calendar>  
+	        	<p:message id="nFromMsg" for="nFrom"  display="icon"/> 
+	        	
+				<h:outputLabel for="nTo" value="#{msg['publication.to']} *"/>
+				<p:calendar id="nTo" 
+							pattern="dd/MM/yyyy" 
+							required="true"
+							value="#{publicationCalController.newTo}" 
+							label="#{msg['publication.to']}"
+							mindate="#{publicationCalController.nToMinDate}">
+					<p:ajax event="dateSelect" update="nFrom"/>
+				</p:calendar>			                	
+		        <p:message id="nToMsg" for="nTo" display="icon"/>   
+		        
+		        <h:outputLabel for="nOrder" value="#{msg['publication.order']}"/>
+		 		<p:inputText id="nOrder" binding="#{publicationCalController.newOrder}" label="#{msg['publication.order']}" size="2">
+		 			<f:convertNumber/>
+		 		</p:inputText>
+                <p:message for="nOrder"/>  
+                   
+                <f:facet name="footer">
+					<h:panelGroup>
+						<center>	
+						<p:commandButton value="#{msg['publication.buttonAdd']}"  
+									update="form:message"
+									oncomplete="myschedule.update();handleNewCallbackRequest(xhr, status, args)"
+					                actionListener="#{publicationCalController.addEvent}" /> 
+						<p:commandButton value="#{msg['buttonClose']}" type="button" icon="ui-icon ui-icon-close"
+									onclick="publicationCalNewDialog.hide()"/>  
+						</center>
+					</h:panelGroup>
+                </f:facet>
+                
+                </h:panelGrid>
+				</p:fieldset>	  
+           	</h:panelGrid>
+   		</p:dialog>
+   		
+   		<script type="text/javascript">  
+		    function handleNewCallbackRequest(xhr, status, args) { 
+		        if(!args.validationFailed) {  
+		        	publicationCalNewDialog.hide();
+		        }
+		    }  
+		</script> 	
+	</h:form>
+</ui:composition>    	
+
+</html>
+	
+	

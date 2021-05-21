@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="CUSTOMER">
+
+	<resultMap id="customerResultMap" type="al.ozone.bl.model.Customer">
+	   <result column="ID" property="id" jdbcType="DECIMAL" />
+	   <result column="FB_ID" property="fb_Id" jdbcType="DECIMAL" />
+	   <result column="NAME" property="name" jdbcType="VARCHAR" />
+	   <result column="SURNAME" property="surname" jdbcType="VARCHAR" />
+	   <result column="BIRTHDATE" property="birthdate" jdbcType="TIMESTAMP" />
+	   <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+	   <result column="PWD" property="password" jdbcType="VARCHAR" />
+	   <result column="TEL" property="phone" jdbcType="VARCHAR" />	   
+	   <result column="SEX" property="sex" jdbcType="VARCHAR" />	   
+	   <result column="ACTIVE" property="active" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+	   <result column="CITY_ID" property="cityId" jdbcType="VARCHAR" />
+	   <result column="REG_DATE" property="reg_Date" jdbcType="TIMESTAMP" />
+	   <result column="LST_LOGIN" property="lst_login" jdbcType="TIMESTAMP" />		
+	   <!-- association property="credits" column="ID" select="CREDIT.getForUser"/-->
+	  <!--  <association property="subscriptions" column="ID" select="getCustomerSubscriptions"/>		
+ -->  	
+ </resultMap>   
+ 
+ <resultMap id="customerWithOnlyEmailResultMap" type="al.ozone.bl.model.Customer">
+	<result column="ID" property="id" jdbcType="DECIMAL" />
+	<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+	<result column="PWD" property="password" jdbcType="VARCHAR" />
+	<result column="REG_DATE" property="reg_Date" jdbcType="TIMESTAMP" />
+ </resultMap>
+  	
+	<select id="get" resultMap="customerResultMap" parameterType="long" >
+		select *
+		from CUSTOMER
+		where ID = #{id,jdbcType=DECIMAL}
+		order by NAME asc
+	</select>
+	
+	<select id="getWithOnlyEmail" resultMap="customerWithOnlyEmailResultMap" parameterType="long" >
+		select *
+		from CUSTOMER
+		where ID = #{id,jdbcType=DECIMAL}
+		order by NAME asc
+	</select>
+  
+  	<select id="getAll" resultMap="customerResultMap" parameterType="string" >
+		select *
+		from CUSTOMER
+	</select>
+	
+	<select id="getCountCustomers" resultType="int">
+		select count(*)
+		from CUSTOMER
+	</select>
+	
+	<delete id="delete" parameterType="al.ozone.bl.model.Customer" >
+		delete from CUSTOMER
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+  
+	<insert id="insert" parameterType="al.ozone.bl.model.Customer">
+		insert into CUSTOMER (FB_ID, NAME, SURNAME, BIRTHDATE, EMAIL, PWD, TEL, SEX, ACTIVE, ADDRESS, CITY_ID, REG_DATE)
+		values (#{fb_Id,jdbcType=VARCHAR}, 
+				#{name,jdbcType=VARCHAR}, 
+				#{surname,jdbcType=VARCHAR}, 
+				#{birthdate,jdbcType=TIMESTAMP}, 
+				#{email,jdbcType=VARCHAR}, 
+				#{password,jdbcType=VARCHAR}, 
+				#{phone,jdbcType=VARCHAR},
+				#{sex,jdbcType=VARCHAR},
+				#{active,jdbcType=VARCHAR},
+				#{address,jdbcType=VARCHAR},
+				#{cityId,jdbcType=VARCHAR},
+				#{reg_Date,jdbcType=TIMESTAMP})
+		<selectKey keyProperty="id" resultType="java.lang.Integer"  >
+			VALUES NEXT VALUE FOR seq_customer;
+	   	</selectKey>
+	</insert>
+	
+	<update id="update" parameterType="al.ozone.bl.model.Customer" >
+	    update CUSTOMER
+	    set	NAME = #{name,jdbcType=VARCHAR}, 
+	    	SURNAME = #{surname,jdbcType=VARCHAR}, 
+		    BIRTHDATE = #{birthdate,jdbcType=TIMESTAMP}, 
+		    EMAIL = #{email,jdbcType=VARCHAR},
+		    PWD =  #{password,jdbcType=VARCHAR},
+		    TEL = #{phone,jdbcType=VARCHAR},
+		    SEX = #{sex,jdbcType=VARCHAR},
+		    ACTIVE = #{active,jdbcType=VARCHAR},
+		    ADDRESS = #{address,jdbcType=VARCHAR},
+		    CITY_ID = #{cityId,jdbcType=VARCHAR}
+	    where ID = #{id,jdbcType=DECIMAL}
+    </update>
+    
+    <update id="updateFromFE" parameterType="al.ozone.bl.model.Customer" >
+	    update CUSTOMER
+	    set	NAME = #{name,jdbcType=VARCHAR}, 
+	    	SURNAME = #{surname,jdbcType=VARCHAR}, 
+		    BIRTHDATE = #{birthdate,jdbcType=TIMESTAMP}, 
+		    EMAIL = #{email,jdbcType=VARCHAR}, 
+		    TEL = #{phone,jdbcType=VARCHAR},
+		    SEX = #{sex,jdbcType=VARCHAR},
+		    ADDRESS = #{address,jdbcType=VARCHAR},
+		    CITY_ID = #{cityId,jdbcType=VARCHAR},
+		    PWD = #{password,jdbcType=VARCHAR}
+		    <if test="fb_Id!=null and fb_Id!=''">, FB_ID = #{fb_Id,jdbcType=VARCHAR}</if>
+	    where ID = #{id,jdbcType=DECIMAL}
+    </update>
+  
+  
+  	<insert id="insertNewsletter" parameterType="map">
+		insert into NEWSLETTER (CUSTOMER_ID, CITY_ID)
+		values (
+				#{customerId,jdbcType=DECIMAL}, 
+				#{cityId,jdbcType=VARCHAR})
+	</insert>
+	
+	<delete id="deleteNewsletters" parameterType="int">
+		delete from NEWSLETTER 
+		where CUSTOMER_ID = #{customerId,jdbcType=DECIMAL}
+	</delete>
+	
+	<select id="searchSelective" resultMap="customerResultMap" parameterType="al.ozone.bl.bean.SearchCustomerBean">
+		select * 
+		from CUSTOMER c
+		where 1=1
+		<if test="fullname!=null and fullname!=''"> and CONCAT(c.NAME, ' ', c.SURNAME) like CONCAT('%', #{fullname,jdbcType=VARCHAR}, '%')</if>
+		<if test="email!=null and email!=''">and upper(c.EMAIL) like upper(CONCAT('%', #{email,jdbcType=VARCHAR}, '%'))</if>
+		<if test="active!=null">and c.ACTIVE = #{active,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler}</if>
+		<if test="sex!=null and sex!=''"> and c.SEX = #{sex,jdbcType=VARCHAR}</if>
+	</select>
+	
+	<select id="getCityNewsletterSubscribers" resultType="string" parameterType="string">
+		SELECT c.EMAIL
+		FROM CUSTOMER c
+	</select>
+	
+	<select id="getCityNewsletterSubscribers_backup" resultType="string" parameterType="string">
+		SELECT c.EMAIL
+		FROM CUSTOMER c, NEWSLETTER n
+		where n.CUSTOMER_ID = c.ID
+		and n.CITY_ID = #{cityId,jdbcType=VARCHAR}
+	</select>
+	
+	<resultMap id="cityResultMap" type="al.ozone.bl.model.City">
+	   <result column="ID" property="id" jdbcType="VARCHAR" />
+	   <result column="NAME" property="name" jdbcType="VARCHAR" />
+  	</resultMap> 
+  	
+	<select id="getCustomerNewsletters" resultMap="cityResultMap" parameterType="int" >
+		select c.ID, c.NAME
+		from NEWSLETTER n, CITY c
+		where n.CITY_ID = c.id
+		and n.CUSTOMER_ID = #{customerId,jdbcType=DECIMAL}
+	</select>
+	
+	<sql id="search_fragment">
+		select * 
+		from CUSTOMER
+		where 1=1
+		<if test="id!=null">and ID = #{id,jdbcType=VARCHAR}</if>
+		<if test="name!=null">and upper(NAME) like CONCAT('%', upper(#{name,jdbcType=VARCHAR}),'%')</if>
+		<if test="surname!=null">and upper(SURNAME) like CONCAT('%', upper(#{surname,jdbcType=VARCHAR}),'%')</if>
+		<if test="email!=null">and upper(EMAIL) like CONCAT('%', upper(#{email,jdbcType=VARCHAR}),'%')</if>
+		<if test="sex!=null and sex!=''"> and SEX = #{sex,jdbcType=VARCHAR}</if>
+		<if test="active!=null">and ACTIVE = #{active,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler}</if>
+	</sql>
+	
+	<select id="search" resultMap="customerResultMap" parameterType="al.ozone.bl.model.Customer">
+		<include refid="search_fragment"/>
+	</select>
+	
+	<select id="searchLazy" resultMap="customerResultMap" parameterType="al.ozone.bl.bean.SearchCustomerBean">
+		<include refid="search_fragment"/>
+		<if test="sortColumn != null"> order by ${sortColumn} </if>
+ 		<if test="sortDirection == 'DESC'"> DESC </if>
+	</select>
+	
+	<select id="searchCount" resultType="int" parameterType="al.ozone.bl.bean.SearchCustomerBean">
+		select count(1) 
+		from (
+		    <include refid="search_fragment"/>
+		) t
+	</select>
+	
+	<select id="login" resultMap="customerResultMap" parameterType="map">
+		select * 
+		from CUSTOMER
+		where EMAIL = #{email,jdbcType=VARCHAR}
+		and PWD = #{password,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="changePassword" parameterType="al.ozone.bl.model.Customer">
+		update CUSTOMER
+		set PWD = #{password,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	
+	<select id="getByEmail" resultMap="customerResultMap" parameterType="string">
+		select *
+		from CUSTOMER
+		where EMAIL = #{email,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getAllEmails" resultType="string">
+		select email
+		from CUSTOMER
+	</select>
+	
+	<resultMap id="resultStatsResultMap" type="al.ozone.bl.bean.ResultStatisticBean">
+	   <result column="month" property="key" jdbcType="VARCHAR" />
+	   <result column="nr" property="value" jdbcType="DECIMAL" />
+ 	</resultMap>   
+ 
+	<select id="getCustomersGroupByRegMonths" resultMap="resultStatsResultMap">
+		select 
+	        CASE MONTH(REG_DATE) 
+	            WHEN 1 THEN 'Janar' 
+	            WHEN 2 THEN 'Shkurt' 
+	            WHEN 3 THEN 'Mars' 
+	            WHEN 4 THEN 'Prill' 
+	            WHEN 5 THEN 'Maj' 
+	            WHEN 6 THEN 'Qershor' 
+	            WHEN 7 THEN 'Korrik' 
+	            WHEN 8 THEN 'Gusht' 
+	            WHEN 9 THEN 'Shtator' 
+	            WHEN 10 THEN 'Tetor' 
+	            WHEN 11 THEN 'Nentor' 
+	            WHEN 12 THEN 'Dhjetor' 
+	        END as month
+	        , count(*) as nr
+		from customer 
+		group by YEAR(REG_DATE), MONTH(REG_DATE)
+	</select>
+	
+	
+	<select id="countFBUser" parameterType="string" resultType="int">
+		select count(1) 
+		from CUSTOMER
+		where FB_ID = #{fb_Id,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getFBCustomer" resultMap="customerResultMap" parameterType="string" >
+		select *
+		from CUSTOMER
+		where FB_ID = #{fb_Id,jdbcType=DECIMAL}
+	</select>
+	
+	<update id="updateLastLogin">
+		update CUSTOMER
+	    set	LST_LOGIN = NOW()
+	    where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	
+	<resultMap id="topCustomersResultMap" type="al.ozone.bl.bean.TopCustomersBean">
+	   <result column="email" property="email" jdbcType="VARCHAR" />
+	   <result column="nrPurchases" property="nrPurchases" jdbcType="VARCHAR" />
+	   <result column="moneySpent" property="moneySpent" jdbcType="VARCHAR" />
+ 	</resultMap> 
+	<select id="getTopCustomers" resultMap="topCustomersResultMap">
+		<![CDATA[
+		select customer_id, c.email, count(*) nrPurchases, sum(money_spent) moneySpent
+		from purchase p, customer c
+		where p.customer_id = c.id
+		and customer_id<>82
+		and p.confirmed='Y'
+		group by customer_id
+		order by count(*) desc, sum(money_spent) desc
+		LIMIT 10
+		]]>
+	</select>
+	
+	<!-- 
+	<select id="countCustomerByEmail">
+		select count(1) 
+		from CUSTOMER
+		where EMAIL = #{email,jdbcType=VARCHAR}
+	</select>
+	 -->
+</mapper>

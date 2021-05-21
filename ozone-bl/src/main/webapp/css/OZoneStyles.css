@@ -1,0 +1,101 @@
+.textFooter {
+	FONT-WEIGHT: bold;
+	FONT-SIZE: 10px;
+	COLOR: black;
+	FONT-FAMILY: Verdana
+}
+
+.nowrapColumn {
+	white-space: nowrap;
+}
+
+.newItemTableCol1 {
+    width: 90%;
+    text-align: left;
+}
+
+.newItemTableCol2 {
+    width: 10%;
+    text-align: right;
+}
+
+.ui-widget, .ui-widget .ui-widget {
+	font-size: 87% !important;
+}             
+.wijmo-wijmenu-link .ui-icon-triangle-1-s {
+    display: none;
+}
+
+.alignedTopPanelGrid{
+	width:100%;
+}
+.alignedTopPanelGrid td{
+	vertical-align: top; 
+}
+
+
+.payment-icon {
+	background: url(../images/payment-icon_16x16.gif) !important;
+}
+  				
+.dealApproved{
+	background-color:#74DCAF; !important;
+	background-image:none !important;
+	color:#000000 !important;
+}
+.dealNotApproved {
+	background-color:#E4EB78; !important;
+	background-image:none !important;
+	color:#000000 !important;
+}
+.dealActive {
+	background-color:#C2E0FF; !important;
+	background-image:none !important;
+	color:#000000 !important;
+}
+.dealDeleted {
+	background-color:grey; !important;
+	background-image:none !important;
+	color:#000000 !important;
+}
+.dealActiveNoEndDate{
+	background-color:#2590ff; !important;
+	background-image:none !important;
+	color:#000000 !important;
+}
+.dealError {
+	background-color:red; !important;
+	background-image:none !important;
+	color:#000000 !important;
+}
+.dealOfferExpiration{
+	background-color:#FCCFE1; !important;
+	background-image:none !important;
+	color:#000000 !important;
+}
+
+.calClosedDealColor .fc-event-skin{
+    background-color: #aaaaaa;
+    border-color: #aaaaaa;
+}
+
+.calApprovedColor .fc-event-skin{
+    background-color: #21c77f;
+    border-color: #21c77f;
+}
+
+.calDealActiveNoEndDate .fc-event-skin{
+	background-color:#2590ff; !important;
+	background-image:none !important;
+	color:#000000 !important;
+}
+
+.calNotApprovedColor .fc-event-skin{
+    background-color: #d2dd1e;
+    border-color: #d2dd1e;
+}
+
+.calErrorColor .fc-event-skin{
+    background-color: red;
+    border-color: red;
+}

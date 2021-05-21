@@ -1,0 +1,46 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" >
+
+
+<f:view>
+<h:body>  
+	<ui:composition template="/template/common/commonLayout.xhtml">
+		<ui:define name="title">
+    		<h:outputText value="#{msg['title.customers.detail']}"/>
+    	</ui:define>
+		
+		<ui:define name="content">
+		
+			<p:tabView id="tabViewId" dynamic="true"> 
+				<p:ajax event="tabChange" listener="#{customerDetailController.onTabChange}" 
+						update="customerDetailsForm:customerMessage,customerPurchasesForm:purchasesMessage,customerCreditsForm:customerCreditsMessage,newsletterForm:newsletterMessage"/>  
+  
+				<p:tab title="#{msg['customer.tab.details']}" id="detailsTab">   		
+		       		<ui:include src="customerDetailsTab.xhtml" />
+			    </p:tab> 
+			    
+			  	<p:tab title="#{msg['customer.tab.purchases']}" id="purchasesTab">   		
+			   		<ui:include src="customerPurchasesTab.xhtml"/>
+			    </p:tab>  	
+			    
+			    <p:tab title="#{msg['customer.tab.credits']}" id="creditsTab">  
+			    	<ui:include src="customerCreditsTab.xhtml" />	       
+			    </p:tab>
+				
+			    <p:tab title="#{msg['customer.tab.newsletters']}" id="newslettersTab">  
+					<ui:include src="customerNewslettersTab.xhtml" />
+			    </p:tab>
+			    
+			    <p:tab title="#{msg['customer.tab.invitations']}" id="invitationsTab">  
+					<ui:include src="customerInvitations.xhtml" />
+			    </p:tab>
+			    
+		    </p:tabView>  
+		</ui:define>
+	</ui:composition>
+</h:body>
+</f:view>
+</html>

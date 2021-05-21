@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="ROLE">
+	<resultMap id="roleResult" type="al.ozone.bl.model.Role">
+	    <result column="ID" property="id" jdbcType="VARCHAR" />
+	    <result column="DESCRIPTION" property="description" jdbcType="VARCHAR"  />
+  	</resultMap> 
+
+	<select id="getRolesByUserId" resultMap="roleResult" parameterType="string">
+		select *
+		from USER_ROLE usr_rol, ROLE rol
+		where usr_rol.roleid = rol.id
+		and usr_rol.USERNAME = #{username,jdbcType=VARCHAR}
+  	</select>    
+  	
+  	<select id="getAll" resultMap="roleResult">
+		select *
+		from ROLE
+  	</select>  
+</mapper>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="DEAL_CHOICE">
+	
+	<resultMap id="dealChoiceResultMap" type="al.ozone.bl.model.DealChoice">
+		<id column="DEAL_ID" property="dealId" jdbcType="DECIMAL" />
+		<id column="CHOICE_NR" property="choiceNr" jdbcType="DECIMAL" />
+	   	<result column="DEAL_TITLE" property="dealTitle" jdbcType="VARCHAR" />  
+	   	<result column="TITLE_CHOICE" property="choiceTitle" jdbcType="VARCHAR" />  
+	   	<result column="PRICE" property="price" jdbcType="DECIMAL" />
+	   	<result column="FULL_PRICE" property="fullPrice" jdbcType="DECIMAL" />
+	   	<result column="COMMISSION" property="commission" jdbcType="DECIMAL" />
+	   	<result column="NR_MIN_CUSTOMERS" property="minCustomers" jdbcType="DECIMAL" />
+	   	<result column="NR_MAX_CUSTOMERS" property="maxCustomers" jdbcType="DECIMAL" />
+	   	<result column="TOT_PURCHASE" property="totPurchases" jdbcType="DECIMAL" />
+	   	<association property="deal" column="DEAL_ID" select="DEAL.getDealForDealChoice"/>
+  	</resultMap> 
+  	
+	<resultMap id="simpleChoiceResultMap" type="al.ozone.bl.model.DealChoice">
+		<id column="DEAL_ID" property="dealId" jdbcType="DECIMAL" />
+		<id column="CHOICE_NR" property="choiceNr" jdbcType="DECIMAL" />
+	   	<result column="DEAL_TITLE" property="dealTitle" jdbcType="VARCHAR" />  
+	   	<result column="TITLE_CHOICE" property="choiceTitle" jdbcType="VARCHAR" />  
+	   	<result column="PRICE" property="price" jdbcType="DECIMAL" />
+	   	<result column="FULL_PRICE" property="fullPrice" jdbcType="DECIMAL" />
+	   	<result column="NR_MIN_CUSTOMERS" property="minCustomers" jdbcType="DECIMAL" />
+	   	<result column="NR_MAX_CUSTOMERS" property="maxCustomers" jdbcType="DECIMAL" />
+	   	<result column="TOT_PURCHASE" property="totPurchases" jdbcType="DECIMAL" />
+  	</resultMap>
+  	
+  	<resultMap id="dealChoiceFullResultMap" type="al.ozone.bl.model.DealChoice">
+		<id column="DEAL_ID" property="dealId" jdbcType="DECIMAL" />
+		<id column="CHOICE_NR" property="choiceNr" jdbcType="DECIMAL" />
+	   	<result column="DEAL_TITLE" property="dealTitle" jdbcType="VARCHAR" />  
+	   	<result column="TITLE_CHOICE" property="choiceTitle" jdbcType="VARCHAR" />  
+	   	<result column="PRICE" property="price" jdbcType="DECIMAL" />
+	   	<result column="FULL_PRICE" property="fullPrice" jdbcType="DECIMAL" />
+	   	<result column="NR_MIN_CUSTOMERS" property="minCustomers" jdbcType="DECIMAL" />
+	   	<result column="NR_MAX_CUSTOMERS" property="maxCustomers" jdbcType="DECIMAL" />
+	   	<result column="TOT_PURCHASE" property="totPurchases" jdbcType="DECIMAL" />
+	   	<association property="deal" column="DEAL_ID" select="DEAL.get"/>
+  	</resultMap>  
+	
+	<select id="get" resultMap="dealChoiceResultMap" parameterType="map" >
+		select dc.*, d.TITLE DEAL_TITLE
+		from DEAL_CHOICE dc, DEAL d
+		where dc.DEAL_ID = d.ID
+		and dc.DEAL_ID = #{dealId,jdbcType=DECIMAL}
+		and dc.CHOICE_NR = #{choiceNr,jdbcType=DECIMAL}
+	</select>
+	
+	<delete id="delete" parameterType="al.ozone.bl.model.DealChoice">
+		delete from DEAL_CHOICE
+		where DEAL_ID = #{dealId,jdbcType=DECIMAL}
+		and CHOICE_NR = #{choiceNr,jdbcType=DECIMAL}
+	</delete>
+	
+	<!-- used for information showed on coupon -->
+	<select id="getFull" resultMap="dealChoiceFullResultMap" parameterType="map" >
+		select dc.*, d.TITLE DEAL_TITLE
+		from DEAL_CHOICE dc, DEAL d
+		where dc.DEAL_ID = d.ID
+		and dc.DEAL_ID = #{dealId,jdbcType=DECIMAL}
+		and dc.CHOICE_NR = #{choiceNr,jdbcType=DECIMAL}
+	</select>
+	
+	<select id="getSimple" resultMap="dealChoiceResultMap" parameterType="map" >
+		select dc.*
+		from DEAL_CHOICE dc
+		where dc.DEAL_ID = #{dealId,jdbcType=DECIMAL}
+		and dc.CHOICE_NR = #{choiceNr,jdbcType=DECIMAL}
+	</select>
+	
+	<select id="getChoicesForDeal" resultMap="simpleChoiceResultMap" parameterType="int" >
+		select *
+		from DEAL_CHOICE
+		where DEAL_ID = #{dealId,jdbcType=DECIMAL}
+	</select>
+	
+	<insert id="insert" parameterType="al.ozone.bl.model.DealChoice">
+		insert into DEAL_CHOICE (DEAL_ID, CHOICE_NR, TITLE_CHOICE, PRICE, FULL_PRICE,
+						COMMISSION, NR_MIN_CUSTOMERS, NR_MAX_CUSTOMERS)
+		values (#{dealId,jdbcType=DECIMAL}, 
+				#{choiceNr,jdbcType=DECIMAL},  
+				#{choiceTitle,jdbcType=VARCHAR}, 
+				#{price,jdbcType=DECIMAL}, 
+				#{fullPrice,jdbcType=DECIMAL}, 
+				#{commission,jdbcType=DOUBLE}, 				
+				#{minCustomers,jdbcType=DECIMAL}, 
+				#{maxCustomers,jdbcType=DECIMAL})
+	</insert>
+	
+	<select id="searchDealChoice" resultMap="simpleChoiceResultMap" parameterType="al.ozone.bl.bean.SearchDealChoiceBean" >
+		select dc.*, d.TITLE DEAL_TITLE
+		from DEAL_CHOICE dc, DEAL d, PARTNER P
+		where dc.DEAL_ID = d.ID
+    	and d.PARTNER_ID = p.ID
+		<if test="dealId!=null and dealId!='' and dealId!=0">and dc.DEAL_ID = #{dealId,jdbcType=DECIMAL}</if>
+		<if test="choiceNr!=null and choiceNr!='' and choiceNr!=0">and dc.CHOICE_NR = #{choiceNr,jdbcType=DECIMAL}</if>
+		<if test="dealTitle!=null">and upper(d.TITLE) like upper(CONCAT('%', #{dealTitle,jdbcType=VARCHAR}, '%'))</if>
+		<if test="choiceTitle!=null">and upper(dc.TITLE_CHOICE) like upper(CONCAT('%', #{choiceTitle,jdbcType=VARCHAR}, '%'))</if>
+		<if test="partnerName!=null">and upper(p.NAME) like upper(CONCAT('%', #{partnerName,jdbcType=VARCHAR}, '%'))</if>
+	</select>
+	
+	<select id="getActiveDealsChoice" resultMap="simpleChoiceResultMap">
+		select dc.*
+		from DEAL_CHOICE dc, DEAL d
+		where dc.DEAL_ID = d.ID
+		and status = 'A'
+    </select>
+    
+    <update id="increasePurchases" parameterType="map">
+		update DEAL_CHOICE
+		set TOT_PURCHASE = IFNULL(TOT_PURCHASE,0) + #{totPurchase,jdbcType=DECIMAL}
+		where DEAL_ID = #{dealId,jdbcType=DECIMAL}
+		and CHOICE_NR = #{choiceNr,jdbcType=DECIMAL}
+	</update>
+	
+	<update id="update" parameterType="al.ozone.bl.model.DealChoice">
+		update DEAL_CHOICE
+		set TITLE_CHOICE = #{choiceTitle,jdbcType=VARCHAR}, 
+			PRICE = #{price,jdbcType=DECIMAL}, 
+			FULL_PRICE = #{fullPrice,jdbcType=DECIMAL}, 
+			COMMISSION = #{commission,jdbcType=DECIMAL}, 	
+			NR_MIN_CUSTOMERS = #{minCustomers,jdbcType=DECIMAL}, 
+			NR_MAX_CUSTOMERS = #{maxCustomers,jdbcType=DECIMAL}
+		where DEAL_ID = #{dealId,jdbcType=DECIMAL}
+		and CHOICE_NR = #{choiceNr,jdbcType=DECIMAL}
+	</update>
+	
+	<delete id="deleteDealChoicesForDeal" parameterType="int">
+		delete from DEAL_CHOICE
+		where DEAL_ID = #{dealId,jdbcType=DECIMAL}
+	</delete>
+
+</mapper>

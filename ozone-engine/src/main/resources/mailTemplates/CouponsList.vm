@@ -1,0 +1,32 @@
+<html>
+<body>
+<h3>Lista e kuponave per oferten: $deal.title <br/>
+	(DealId $deal.id - Skadon me $deal.expirationDiscountFormatted)</h3>
+
+<div>
+DETAJET E OFERTES:<br/>
+	 $deal.synthesis
+	 
+	 <br/><br/>
+KUSHTET:<br/>
+	 $deal.conditions
+	
+	<br/><br/>
+	List e kuponave te shitur:<br/>
+	<table>
+		<tr>
+			<td>Kodi</td>
+			<td align="right">Zgjedhja</td>
+		
+		 	#foreach( $c in $couponList )
+		 		<tr>
+		   			<td>$c.code </td>
+		   			<td align="right">$c.dealChoiceNr </td>
+		    	</tr>
+		    #end
+	</table>
+   
+</div>
+
+</body>
+</html>

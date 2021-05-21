@@ -1,0 +1,73 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+<f:view lang="#{systemConfigController.language}">
+<h:body>    
+<ui:composition template="/template/common/commonLayout.xhtml">    
+    <ui:define name="title">
+    	<h:outputText value="Emails ALL"/>
+    </ui:define>
+    	
+	<ui:define name="content" >
+  		<h:form id="form">        
+        	<p:growl id="message" showDetail="true" /> 
+
+ 			<!-- Search Panel -->
+			<p:panel id="emailsSearchPanel" header="Kerko email" >
+				<h:panelGrid columns="9" cellpadding="5" border="0" styleClass="nowrapColumn">			
+			 		<h:outputLabel value="Email"/>
+			 		<p:inputText id="emailId" size="30" binding="#{emailsIntroController.sEmail}"/>
+			 		
+			 		<h:outputLabel value="Pranon Newsletter"/>				                
+			        <p:selectOneMenu
+			        		value="ALL"
+			        		binding="#{emailsIntroController.sAcceptNewsletter}">  
+			        	<f:selectItem itemLabel="ALL" itemValue="" />
+			            <f:selectItem itemLabel="#{msg['yes']}" itemValue="true" />
+			            <f:selectItem itemLabel="#{msg['no']}" itemValue="false" />
+			        </p:selectOneMenu>				
+					
+					<f:facet name="footer">
+						<h:panelGroup>
+						<center>					
+							<p:commandButton value="#{msg['buttonSearch']}" update="emailsListPanel,message" actionListener="#{emailsIntroController.search}"/>
+							<p:spacer width="10"/>
+							<p:commandButton value="#{msg['buttonReset']}" update="emailsSearchPanel,message" actionListener="#{emailsIntroController.cleanSearchForm}" />  							
+						</center>
+						</h:panelGroup>
+					</f:facet>
+				</h:panelGrid>	
+			</p:panel>	
+        	
+        	<ui:include src="../common/ajaxloading.xhtml" />
+			
+        	<!-- Table Panel -->
+        	<p:panel id="emailsListPanel" header="Te gjitha emailet"  >	
+        		<h:panelGrid columns="2" cellpadding="5"  style="width:40%;" border="0">	
+		    		<p:dataTable id="emailsTable" var="en" value="#{emailsIntroController.lazyModel}"
+				    			paginator="true" rows="50" rowsPerPageTemplate="10,50,100,500,1000"
+				    			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} Nr. Rows: #{emailsIntroController.emailsList.size()}"
+				    			>
+						<p:column headerText="Email" sortBy="#{en.email}" style="width:50%;">
+							<h:outputText value="#{en.email}"/>
+						</p:column>	
+						
+						<p:column headerText="Pranon dergesen" style="width:5%;">
+							<p:selectBooleanCheckbox value="#{en.acceptNewsletter}" disabled="true" />
+						</p:column>	
+			 		</p:dataTable >		
+			 	</h:panelGrid>	
+		 	</p:panel>	
+
+		</h:form>	
+	</ui:define>    		
+
+</ui:composition>    
+</h:body>
+</f:view>	
+</html>
+	
+	

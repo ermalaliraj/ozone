@@ -1,0 +1,81 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	  	
+<ui:composition template="/template/common/commonLayout.xhtml">    	
+    <ui:define name="title">
+    	<h:outputText value="#{msg['title.cities']}"/>
+    </ui:define>
+    
+	<ui:define name="content">
+		<h:form id="cityForm"> 
+		<p:growl id="message" showDetail="true" /> 
+		
+		<ui:include src="../common/ajaxloading.xhtml" />
+		
+		<p:panel id="citiesListPanel" header="#{msg['city.list']}" >
+			<h:panelGrid columns="2" cellpadding="5"  width="700px" border="0">	
+				<p:dataTable id="citiesTable" var="c" value="#{cityController.citiesList}"> 
+				
+					<p:column headerText="#{msg['city.id']}" sortBy="#{c.id}">
+						<h:outputText value="#{c.id}"/>
+					</p:column>
+					
+					<p:column headerText="#{msg['city.name']}" sortBy="#{c.name}" filterBy="#{c.name}">
+						<h:outputText value="#{c.name}"/>
+					</p:column>
+					
+					<p:column headerText="#{msg['city.active']}">
+							<p:selectBooleanCheckbox value="#{c.active}" disabled="true" />
+					</p:column>	
+					
+					<p:column headerText="#{msg['city.lat']}">
+						<h:outputText value="#{c.lat}"/>
+					</p:column>
+					
+					<p:column headerText="#{msg['city.lng']}">
+						<h:outputText value="#{c.lng}"/>
+					</p:column>
+					
+					 <p:column headerText="Edit">   
+		                  	<p:commandButton  title="Edit" update=":cityForm:updateCityPanel" oncomplete="updateCityDialog.show()" icon="ui-icon ui-icon-pencil">  
+								<f:setPropertyActionListener value="#{c}" target="#{cityController.citySelected}" />  
+								<f:setPropertyActionListener value="#{true}" target="#{cityController.editMode}" />  
+							</p:commandButton>  
+				     </p:column> 
+				      
+				     <p:column headerText="Delete"> 		
+		                  	<p:commandButton title="Delete" update=":cityForm:updateCityPanel" oncomplete="confirmation.show()" icon="ui-icon ui-icon-close">  
+		                       	<f:setPropertyActionListener value="#{c}" target="#{cityController.citySelected}" />  
+		                  	</p:commandButton>  
+		          	</p:column>  
+		          	
+		          	<f:facet name="footer">  
+						<p:commandButton oncomplete="newCityDialog.show()" value="#{msg['city.buttonAdd']}" icon="ui-icon ui-icon-newwin"/>		
+					</f:facet> 
+					
+				</p:dataTable> 
+			</h:panelGrid>	
+		</p:panel>
+		
+		<p:confirmDialog widgetVar="confirmation" width="400" severity="alert"
+					style="position:fixed; top:0px; left:0px;"
+    				message="#{msg['city.confirmDeleteMsg']}"  header="#{msg['confirm']}"  > 
+    		<center>       
+	            <p:commandButton value="#{msg['yes']}" update="citiesListPanel,message" actionListener="#{cityController.deleteCity}" oncomplete="confirmation.hide()"/>  
+	            <p:commandButton value="#{msg['no']}" onclick="confirmation.hide()" type="button" />  
+        	</center>
+        </p:confirmDialog>  
+
+	       <ui:include src="cityEditDlg.xhtml" />	
+		
+		</h:form>
+		
+	    <ui:include src="cityNewDlg.xhtml" />
+		
+	</ui:define>
+</ui:composition>
+</html>
+

@@ -1,0 +1,89 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template/common/commonLayout.xhtml"> 
+    <ui:define name="title">
+    	<h:outputText value="#{msg['title.discountCards']}"/>
+    </ui:define>
+    
+	<ui:define name="content">   	
+		<h:form id="discountCardForm"> 
+		<p:growl id="message" showDetail="true" /> 
+	
+		<ui:include src="../common/ajaxloading.xhtml" />
+		
+		<!-- Table Panel -->
+		<p:panel id="discountCardGroupPanel" header="#{msg['discountCard.list']}" >
+		
+			<h:panelGrid columns="2" cellpadding="5" border="0">
+				<p:dataTable id="discountCardGroupTable" var="c" value="#{discountCardController.discountCardGroup}" 
+							paginator="true" rows="10" rowsPerPageTemplate="10,20,50,100"
+					    	paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} Nr. Rows: #{discountCardController.discountCardGroup.size()}"
+					    	rowStyleClass="#{d.colorStatus}"
+					    	style="text-align:center;"> 
+					    	
+					<p:column headerText="%" sortBy="#{c.percentage}">
+						<h:outputText value="#{c.percentage}"/>
+					</p:column>
+					
+					<p:column headerText="#{msg['discountCard.total']}" sortBy="#{c.total}">
+						<h:outputText value="#{c.total}" />
+					</p:column>
+					
+					<p:column headerText="#{msg['discountCard.totalUsed']}" sortBy="#{c.totalUsed}">
+						<h:outputText value="#{c.totalUsed}"/>
+					</p:column>
+					
+					<p:column headerText="#{msg['discountCard.totalUnused']}" sortBy="#{c.totalUnused}">
+						<h:outputText value="#{c.totalUnused}"/>
+					</p:column>
+					
+					 <p:column> 
+						<p:commandButton  title="#{msg['discountCard.groupDetail']} #{c.percentage} %"
+										value="#{msg['discountCard.detail']}" 
+										update="discountCardDetailForm" 
+										oncomplete="discountCardDetailDialog.show()" 
+										image="ui-icon ui-icon-search">  
+							<f:setPropertyActionListener value="#{c}" target="#{discountCardController.discountCardGroupSelected}" />  
+						</p:commandButton>  
+			         </p:column>
+					
+					<p:column> 
+						<p:commandButton  title="#{msg['discountCard.delete']}"
+										value="#{msg['discountCard.delete']}" 
+										update="discountCardGroupPanel,message" 
+										oncomplete="confirmation.show()" 
+										icon="ui-icon ui-icon-close">  
+							<f:setPropertyActionListener value="#{c}" target="#{discountCardController.discountCardGroupSelected}" />  
+						</p:commandButton>  
+			         </p:column>
+					
+					<f:facet name="footer">  
+						   <p:commandButton oncomplete="newDiscountCardDialog.show()" update="discountCardGroupPanel" value="#{msg['discountCard.buttonAdd']}" icon="ui-icon ui-icon-newwin"/>			  
+					</f:facet> 
+				</p:dataTable>
+			</h:panelGrid>	 	
+		</p:panel>
+				
+		<p:confirmDialog widgetVar="confirmation" width="400" severity="alert"
+					style="position:fixed; top:0%; left:0%; text-align:center;"
+    				message="#{msg['discountCard.confirmDeleteMsg']}"  header="#{msg['confirm']}"  >        
+	        <center>
+	            <p:commandButton value="#{msg['yes']}" update="discountCardGroupPanel,message" actionListener="#{discountCardController.deleteDiscountCard}" oncomplete="confirmation.hide()"/>  
+	            <p:commandButton value="#{msg['no']}" onclick="confirmation.hide()" type="button" />  
+        	</center>
+        </p:confirmDialog>  
+		
+		</h:form>
+
+		
+	<ui:include src="discountCardNewDlg.xhtml" />
+    <ui:include src="discountCardsDetails.xhtml" />
+ 		
+	</ui:define>
+</ui:composition>
+</html>
+

@@ -1,0 +1,122 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+<ui:composition>
+	<h:form id="newCityForm">
+       	<p:dialog header="#{msg['city.new']}" 
+		   		widgetVar="newCityDialog" 
+		   		resizable="false"
+				modal="true" 
+	           	width="750"
+	           	style="position:fixed; top:0%; left:0%;"> 
+	           	
+	    <h:panelGrid id="newCityPanel" columns="2" cellpadding="2" style="margin:0 auto;" border="0"> 
+          <p:fieldset legend="#{msg['city.data']}">  	            
+			<h:panelGrid  columns="3" cellpadding="2" style="margin:0 auto;" border="0"> 
+			
+			   <h:outputLabel for="nId" value="#{msg['city.id']} *"/>           
+	            <p:inputText id="nId"
+	            			size="2"
+	            			required="true"
+	               			label="#{msg['city.id']}"
+					        binding="#{cityController.newId}"> 
+						<f:validator validatorId="cityIdValidator"/>
+					    <f:validateLength minimum="2" maximum="2"/>
+					    <p:ajax event="blur" update="nIdMsg"/> 
+				</p:inputText>       
+                <p:message id="nIdMsg" for="nId" display="icon"/>	     
+  				
+              	
+           	 	<h:outputLabel for="nName" value="#{msg['city.name']} *"/>             
+	            <p:inputText id="nName" syle="width:100%"
+	            			required="true"
+	               			label="#{msg['city.name']}"
+					        binding="#{cityController.newName}"> 
+					     <f:validator validatorId="cityNameValidator"/>
+					 <p:ajax event="blur" update="nNameMsg"/> 
+				</p:inputText>
+		        <p:message id="nNameMsg" for="nName" display="icon"/>
+
+			 	<h:outputLabel for="newActive" value="#{msg['city.active']}"/>                
+	       		<p:selectBooleanCheckbox id="newActive" 
+	               			binding="#{cityController.newActive}"/>
+	           <p:message for="newActive" /> 
+	            
+              </h:panelGrid>
+	        </p:fieldset>
+	        
+	        <p:fieldset legend="#{msg['city.position']}">  	            
+			<h:panelGrid columns="3" cellpadding="2" style="margin:0 auto;" border="0"> 
+				 <h:outputLabel for="nLat" value="#{msg['city.lat']}"/>           
+	            <p:inputText id="nLat"
+	               			label="#{msg['city.lat']}"
+					        binding="#{cityController.newLat}">
+					    <!--  <f:convertNumber pattern="#0.00000000000000"/> -->
+					    <f:convertNumber minFractionDigits="1" maxFractionDigits="15"/>
+					    <p:ajax event="blur" update="nLatMsg"/> 
+				</p:inputText>       
+                <p:message id="nLatMsg" for="nLat" display="icon"/>	     
+              	
+           	 	 <h:outputLabel for="nLng" value="#{msg['city.lng']}"/>           
+	            <p:inputText id="nLng"
+	               			label="#{msg['city.lng']}"
+					        binding="#{cityController.newLng}"> 
+					    <!-- <f:convertNumber minFractionDigits="10"/> -->
+					    <f:convertNumber minFractionDigits="1" maxFractionDigits="15"/>
+					    <p:ajax event="blur" update="nLngMsg"/> 
+				</p:inputText>       
+                <p:message id="nLngMsg" for="nLng" display="icon"/>	
+	            
+	            <h:outputLabel for="nZoomLevel" value="#{msg['city.zoomLevel']}"/>           
+	            <p:inputText id="nZoomLevel"
+	               			label="#{msg['city.zoomLevel']}"
+					        binding="#{cityController.newZoomLevel}"> 
+					    <f:convertNumber/>
+					    <f:validateLength minimum="1" maximum="2"/>
+					    <p:ajax event="blur" update="nZoomLevelMsg"/> 
+				</p:inputText>       
+                <p:message id="nZoomLevelMsg" for="nZoomLevel" display="icon"/>	  
+	            
+              </h:panelGrid>
+	        </p:fieldset> 
+	        
+	        
+            <f:facet name="footer">
+				<h:panelGroup>
+					<center>	
+						<p:commandButton 
+							value="#{msg['city.buttonAdd']}"
+							update="cityForm:citiesListPanel,cityForm:message,newCityForm:newCityPanel" 
+							oncomplete="handleCallbackRequestNew(xhr, status, args)"								
+							actionListener="#{cityController.addCity}"/>	
+							
+  						<p:commandButton 
+ 							value="#{msg['buttonClose']}" 
+							onclick="newCityDialog.hide()" 
+							type="button" 
+							icon="ui-icon ui-icon-close"/>  
+					</center>
+				</h:panelGroup>
+            </f:facet>
+                
+             
+           	</h:panelGrid>
+   		</p:dialog>
+
+	</h:form>   
+	<script type="text/javascript">  
+		    function handleCallbackRequestNew(xhr, status, args) { 
+		    //	alert('Callback: '+args.validationFailed);
+		        if(!args.validationFailed) {  
+		        	newCityDialog.hide();
+		        }
+		    }  
+	  </script> 		
+</ui:composition>    	
+
+</html>
+	
+	

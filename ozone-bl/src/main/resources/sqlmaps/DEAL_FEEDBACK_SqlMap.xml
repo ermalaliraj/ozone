@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="DEALFEEDBACK">
+
+	<resultMap id="dealFBackResultMap" type="al.ozone.bl.model.DealFeedback">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="DEAL_ID" property="dealId" jdbcType="DECIMAL" />  
+		<result column="CUSTOMER_ID" property="customerId" jdbcType="DECIMAL" />  
+		<result column="CUSTOMER_EMAIL" property="cusEmail" jdbcType="DECIMAL" /> 		
+		<result column="BODY" property="body" jdbcType="VARCHAR" />   	
+		<result column="OP_DATE" property="opDate" jdbcType="TIMESTAMP" />	  		
+		<result column="APPROVED" property="approved" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+		<result column="RATE" property="rate" jdbcType="DECIMAL" /> 
+  	</resultMap>   	
+  	
+	<select id="get" resultMap="dealFBackResultMap" parameterType="int" >
+		select df.*, c.EMAIL as CUSTOMER_EMAIL
+		from DEAL_FEEDBACK df, CUSTOMER c
+		where df.CUSTOMER_ID = c.ID
+		and ID = #{id,jdbcType=DECIMAL}
+	</select>
+	
+	<insert id="insert" parameterType="al.ozone.bl.model.DealFeedback">
+		insert into DEAL_FEEDBACK (DEAL_ID, CUSTOMER_ID,
+						 BODY, OP_DATE, APPROVED, RATE)
+		values (
+				#{dealId,jdbcType=DECIMAL}, 
+				#{customerId,jdbcType=DECIMAL}, 
+				#{body,jdbcType=VARCHAR},
+				#{opDate,jdbcType=TIMESTAMP},	
+				#{approved,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler}, 
+				#{rate,jdbcType=DECIMAL}
+			   )
+		<selectKey keyProperty="id" resultType="java.lang.Integer"  >
+			VALUES NEXT VALUE FOR seq_deal_feedback;
+	   	</selectKey>
+	</insert>
+
+	<delete id="delete" parameterType="al.ozone.bl.model.DealFeedback">
+		delete from DEAL_FEEDBACK
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+	
+	<select id="search" resultMap="dealFBackResultMap" parameterType="al.ozone.bl.model.DealFeedback">
+		select df.*, 
+			if(CONCAT(ifnull(name, ''), ' ',ifnull(surname,''))='', SUBSTRING(email, 1, LOCATE('@', email)-1), CONCAT(ifnull(name, ''), ' ',ifnull(surname,''))) as CUSTOMER_EMAIL
+		from DEAL_FEEDBACK df, CUSTOMER c
+		where df.CUSTOMER_ID = c.ID
+		<if test="id!=null and id!='' and id!=0">and ID = #{id,jdbcType=DECIMAL}</if>
+		<if test="dealId!=null and dealId!='' and dealId!=0">and DEAL_ID = #{dealId,jdbcType=DECIMAL}</if>
+		<if test="customerId!=null and customerId!='' and customerId!=0">and CUSTOMER_ID = #{customerId,jdbcType=DECIMAL}</if>
+		<if test="onlyApproved!=null">and APPROVED = #{onlyApproved,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler} </if>
+	</select>
+
+</mapper>

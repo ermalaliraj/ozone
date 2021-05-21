@@ -1,0 +1,104 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+<f:view lang="#{userPreferences.language}">
+<ui:composition template="/template/common/commonLayout.xhtml">   
+	<ui:define name="title">
+    	<h:outputText value="#{msg['title.systemConfig']}"/>
+    </ui:define>
+     	
+	<ui:define name="content">	
+		<h:form id="form"> 
+		<p:panel>
+			<p:messages id="message2" showDetail="true" />
+			
+			<p:fieldset legend="#{msg['systemConfig.sessionVariables']}" style="width:300px;">
+				<h:panelGrid id="applicationPanel" columns="2"
+						cellpadding="2" style="margin:0 auto;" border="0">
+
+					<h:outputLabel for="fLanguage" value="#{msg['systemConfig.language']}" />
+					<p:selectOneMenu id="fLanguage" onchange="submit()"
+							value="#{userPreferences.language}" >
+			   			<f:selectItem itemLabel="Shqip" itemValue="al" />
+						<f:selectItem itemLabel="English" itemValue="en" />
+			   		</p:selectOneMenu>
+
+					<h:outputLabel for="fTheme" value="#{msg['systemConfig.theme']}" />
+				    <p:themeSwitcher id="fTheme" value="#{systemConfigController.theme}" style="width:150px" effect="fade">   
+						<f:selectItems value="#{systemConfigController.themes}" />  
+			            <p:ajax listener="#{systemConfigController.onThemeChange}" />  
+			        </p:themeSwitcher>  
+
+				</h:panelGrid>
+			</p:fieldset>
+			
+			<p:separator/>
+			
+			<p:fieldset legend="#{msg['systemConfig.systemVariables']}" style="width:300px;">
+				<h:panelGrid id="sysVariablesPanel" columns="3"
+						cellpadding="2" style="margin:0 auto; white-space: nowrap;" border="0">
+
+					<h:outputLabel for="fPublicationDuration" value="#{msg['systemConfig.publicationDuration']}" />
+					<h:panelGroup>
+						<p:inputText id="fPublicationDuration" required="true" 
+							size="2"
+							label="#{msg['systemConfig.publicationDuration']}"
+							value="#{systemConfigController.publicationDuration}"
+					        binding="#{systemConfigController.fPublicationDuration}"/>
+						<h:outputLabel value="#{msg['systemConfig.days']}" /> 
+					</h:panelGroup>
+					<p:message for="fPublicationDuration" />
+					
+					<h:outputLabel for="fDealDuration" value="#{msg['systemConfig.dealDuration']}" />
+					<h:panelGroup>
+						<p:inputText id="fDealDuration" required="true"
+							size="2" 
+							label="#{msg['systemConfig.dealDuration']}"
+							value="#{systemConfigController.dealDuration}"
+					        binding="#{systemConfigController.fDealDuration}"/> 
+						<h:outputLabel value="#{msg['systemConfig.months']}" />
+					</h:panelGroup>
+					<p:message for="fDealDuration" />
+					
+					<h:outputLabel for="fBonusValue" value="#{msg['systemConfig.bonusValue']}" />
+					<h:panelGroup>
+						<p:inputText id="fBonusValue" required="true" 
+							size="5"
+							label="#{msg['systemConfig.bonusValue']}"
+							value="#{systemConfigController.bonusValue}"
+					        binding="#{systemConfigController.fBonusValue}"/> 
+					    <h:outputLabel value="Leke" />
+					</h:panelGroup>
+					<p:message for="fBonusValue" />
+					
+					<h:outputLabel for="fInviteMessage" value="#{msg['systemConfig.inviteMessage']}" />
+					<h:panelGroup>
+						<p:inputTextarea id="fInviteMessage" required="true" 
+							style="width:380px;height:150px;"
+							label="#{msg['systemConfig.inviteMessage']}"
+							value="#{systemConfigController.inviteMessage}"
+					        binding="#{systemConfigController.fInviteMessage}"/> 
+					</h:panelGroup>
+					<p:message for="fInviteMessage" />
+
+				</h:panelGrid>
+			</p:fieldset>
+			
+			<f:facet name="footer">
+				<h:panelGroup>
+						<p:commandButton value="#{msg['buttonUpdate']}"
+							update="form"
+							actionListener="#{systemConfigController.save}"
+							icon="ui-icon ui-icon-check" />
+				</h:panelGroup>
+			</f:facet>
+			
+		</p:panel> 
+		</h:form>  
+	</ui:define>
+</ui:composition>
+</f:view>
+</html>

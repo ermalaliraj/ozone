@@ -1,0 +1,136 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:form id="customerDetailsForm"> 
+	<p:panel id="updateCustomerPanel" header="#{msg['customer.tab.details']} - Id. #{customerDetailController.customerSelected.id}"
+			columns="3" cellpadding="2" style="margin:0 auto;" border="0">
+		<p:messages id="customerMessage" showDetail="true"/>  
+		
+		<h:panelGrid id="updateCustomerGrid" columns="3" cellpadding="2" style="margin:0 auto;" border="0">
+			<h:outputLabel for="fName" value="#{msg['customer.name']} "/>         
+			<p:inputText id="fName"
+					style="width:100%"
+					rendered="#{customerDetailController.editMode}" 
+					value="#{customerDetailController.customerSelected.name}"
+					label="#{msg['customer.name']}"
+					binding="#{customerDetailController.fName}"> 
+				<p:ajax event="blur" update="fNameMsg"/> 
+			</p:inputText>
+			<p:message id="fNameMsg" for="fName" display="icon"/>
+			  
+			<h:outputLabel for="fSurname" value="#{msg['customer.surname']} "/>         
+			<p:inputText 
+		       			id="fSurname"
+		       			style="width:100%"
+		    			rendered="#{customerDetailController.editMode}" 
+						value="#{customerDetailController.customerSelected.surname}"
+						label="#{msg['customer.surname']}"
+				        binding="#{customerDetailController.fSurname}"> 
+				        <p:ajax event="blur" update="fSurnameMsg"/> 
+		    </p:inputText>
+		    <p:message id="fSurnameMsg" for="fSurname" display="icon"/>
+			    
+		    <h:outputLabel for="fBirthdate" value="#{msg['customer.birthdate']}"/>        
+			<p:calendar id="fBirthdate" value="#{customerDetailController.customerSelected.birthdate}" navigator="true" pattern="dd/MM/yyyy"/> 
+			<p:message for="fBirthdate"/>
+			  
+			<h:outputLabel for="fEmail" value="#{msg['customer.email']} *"/>                
+	        <p:inputText id="fEmail" syle="width:100%" 
+         			required="true"   
+           			size="30"    
+           			rendered="#{customerDetailController.editMode}" 
+					value="#{customerDetailController.customerSelected.email}"             
+                    binding="#{customerDetailController.fEmail}"> 
+             	<f:validator validatorId="emailValidator" />
+         		<p:ajax event="blur" update="fEmailMsg" /> 
+	        </p:inputText>
+	        <p:message id="fEmailMsg" for="fEmail" />  
+			      
+		    <h:outputText value="Password *" />  
+           	<p:inputText id="fPassword" 
+		 			size="30"
+		 			feedback="true"
+		 			value="#{customerDetailController.customerSelected.password}"    	 			
+		 			rendered="#{customerDetailController.editMode}" 
+		 			binding="#{customerDetailController.fPassword}" />            	 			  
+           	<p:message id="fPasswordMsg" for="fPassword" />
+			      
+			<h:outputLabel for="fPhone" value="#{msg['customer.phone']}"/>                
+	        <p:inputText id="fPhone" syle="width:100%" 
+          			rendered="#{customerDetailController.editMode}" 
+					value="#{customerDetailController.customerSelected.phone}"      
+                    binding="#{customerDetailController.fPhone}"> 
+	   			<p:ajax event="blur" update="fPhoneMsg" /> 
+			</p:inputText>
+			<p:message id="fPhoneMsg" for="fPhone" />  
+					        
+			<h:outputLabel for="fSex" value="#{msg['customer.sex']}"/>   
+			<h:panelGroup>
+				<p:selectOneMenu id="fSex"
+					label="#{msg['customer.sex']}"
+					value="#{customerDetailController.customerSelected.sex}"
+					binding="#{customerDetailController.fSex}">	
+					<f:selectItem itemLabel="ALL" itemValue=""/>	
+					<f:selectItem itemLabel="#{msg['customer.male']}" itemValue="M"/>
+					<f:selectItem itemLabel="#{msg['customer.female']}" itemValue="F"/>																
+					<p:ajax event="blur" update="fSexMsg" />
+				</p:selectOneMenu>
+			</h:panelGroup>
+			<p:message id="fSexMsg" for="fSex"/>
+			
+			<h:outputLabel value="Address"/>
+			<p:inputTextarea id="fAddress" style="width:250px;height:60px;"
+               		maxlength="200"
+               		resisable="false"
+        			value="#{customerDetailController.customerSelected.address}"
+        			binding="#{customerDetailController.fAddress}" 
+        			label="Adress">
+          	</p:inputTextarea> 
+          	<p:message id="fAddressMsg" for="fAddress"/>
+	         		   
+			<h:outputLabel value="City *"/>
+			<h:selectOneMenu id="fCity"
+          			value="#{customerDetailController.customerSelected.cityId}" 
+          			binding="#{customerDetailController.fCity}" >   
+       			<f:selectItem itemLabel="--" itemValue="" />  
+                <f:selectItems value="#{customerDetailController.allCities}" 
+                	var="c" itemLabel="#{c.name}" itemValue="#{c.id}"/>   
+            </h:selectOneMenu>  
+            <p:message id="fCityMsg" for="fCity"/>
+	    	       		
+			<h:outputLabel for="fActive" value="#{msg['customer.active']}"/>                
+			<p:selectBooleanCheckbox id="fActive" 
+						rendered="#{customerDetailController.editMode}"
+						value="#{customerDetailController.customerSelected.active}"
+		       			binding="#{customerDetailController.fActive}">
+		       			<p:ajax event="blur" update="fActiveMsg" />
+		    </p:selectBooleanCheckbox>   			
+			<p:message id="fActiveMsg" for="fActive"/>
+		
+			<h:outputLabel value="#{msg['customer.regDate']}"/>
+			<p:inputText id="fRegDate"  value="#{customerDetailController.customerSelected.reg_Date}" disabled="true">
+				<f:converter converterId="dateFormatter"/>
+			</p:inputText>
+			<p:message id="fRegDateMsg" for="fRegDate"/>
+			
+	        <f:facet name="footer">
+				<h:panelGroup>
+					<center>
+						<p:commandButton		
+									value="#{msg['customer.buttonUpdate']}" 
+									actionListener="#{customerDetailController.updateCustomer}"
+									update="updateCustomerPanel"
+									rendered="#{customerDetailController.editMode}"
+									icon="ui-icon ui-icon-check">		
+						</p:commandButton>												 									 
+					</center>
+				</h:panelGroup>
+			</f:facet>
+	 
+		</h:panelGrid>
+	</p:panel>	
+</h:form>
+</html>

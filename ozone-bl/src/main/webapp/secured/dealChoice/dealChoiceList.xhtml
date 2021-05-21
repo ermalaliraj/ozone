@@ -1,0 +1,171 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+<ui:composition template="/template/common/commonLayout.xhtml">    	
+    <ui:define name="title">
+    	<h:outputText value="Akordet - Zgjedhjet"/>
+    </ui:define>
+    
+	<ui:define name="content">
+  		<h:form id="dealChoiceForm">       
+        	<p:growl id="message" showDetail="true" /> 
+ 			<!--p:messages id="message2" showDetail="true"/-->  
+ 			
+			<p:panel id="dealChoiceSearcPanel" header="Kerko Zgjedhjet per cdo Akord" styleClass="nowrapColumn">
+				<h:panelGrid columns="5" cellpadding="5" border="0">		
+				
+					<h:panelGrid columns="2" cellpadding="0" border="0">		
+	       				<h:outputLabel value="Nr. Kontrates"/>
+				 		<p:inputText id="dealNr" binding="#{dealChoiceController.sDealNr}" label="#{msg['deal.nr']}" size="5">
+				 			<f:convertNumber/>
+				 			<p:ajax event="blur" update="dealNr"/> 
+				 		</p:inputText>
+				 		
+	       				<h:outputLabel value="Titulli Kontrates"/>
+				 		<p:inputText id="dealTitle" binding="#{dealChoiceController.sDealTitle}" size="30"/>
+				 	</h:panelGrid>
+				 	
+				 	<h:panelGrid columns="2" cellpadding="0" border="0">		
+	       				<h:outputLabel value="Nr. Zgjedhjes"/>
+				 		<p:inputText id="choiceNr" binding="#{dealChoiceController.sChoiceNr}" label="Zgjedhja Nr." size="5">
+				 			<f:convertNumber/>
+				 			<p:ajax event="blur" update="choiceNr"/> 
+				 		</p:inputText>
+				 		
+	       				<h:outputLabel value="Titulli Zgjedhjes"/>
+				 		<p:inputText id="choiceTitle" binding="#{dealChoiceController.sChoiceTitle}" size="30"/>
+				 	</h:panelGrid>
+				 	
+				 	<h:panelGrid columns="3" cellpadding="0" border="0">
+						<h:outputLabel value="#{msg['deal.partner']}"/>
+				 		<p:inputText id="sPartner" 
+				 					binding="#{dealChoiceController.sPartner}" 
+				 					size="25">
+				 			<!--p:ajax event="focus" oncomplete="searchPartnerDialog.show()" /-->
+				 		</p:inputText>
+				 		<!-- <p:commandButton oncomplete="searchPartnerDialog.show()" icon="ui-icon ui-icon-search"/> -->
+				 	</h:panelGrid>		
+			 		
+					<f:facet name="footer">
+						<h:panelGroup>
+						<center>					
+							<p:commandButton value="#{msg['buttonSearch']}" update="dealChoiceListPanel,message" actionListener="#{dealChoiceController.searchDealChoice}"/>
+							<p:spacer width="10"/>
+							<p:commandButton value="#{msg['buttonReset']}" update="dealChoiceSearcPanel,message" actionListener="#{dealChoiceController.cleanSearchForm}" />  							
+						</center>
+						</h:panelGroup>
+					</f:facet>
+				</h:panelGrid>		
+			</p:panel>	
+        	
+        	<ui:include src="../common/ajaxloading.xhtml" />
+			
+        	<p:panel id="dealChoiceListPanel" header="Lista e Zgjedhjeve" >	
+        		
+	    		<p:dataTable id="dealsTable" var="c" value="#{dealChoiceController.dealChoiceList}" 
+			    			paginator="true" rows="20" rowsPerPageTemplate="10,20,50,100"
+			    			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}  Nr. Rows: #{dealChoiceController.dealChoiceList.size()}"
+			    			rowStyleClass="#{deal.colorStatus}">   
+  	
+					<p:column style="width:1%;">
+						<f:facet name="header" >  
+				        	<h:outputText value="" />  
+				      	</f:facet> 
+						<h:outputLabel value="#{dealChoiceController.dealChoiceList.indexOf(c) + 1}"/>
+					</p:column>	
+					
+					<p:column sortBy="#{c.dealId}" style="width:8%;">  
+				    	<f:facet name="header" >  
+				        	<h:outputText value="Kontarta&lt;br/&gt;Nr." escape="false"/>  
+				      	</f:facet>  
+				       	<h:outputText value="#{c.dealId}"/>
+				   	</p:column>  
+				   	
+				   	<p:column sortBy="#{c.choiceNr}" style="width:9%;">  
+				    	<f:facet name="header" >  
+				        	<h:outputText value="Zgjedhja&lt;br/&gt; Nr." escape="false"/>  
+				      	</f:facet>  
+				       	<h:outputText value="#{c.choiceNr}"/>
+				   	</p:column>  
+						
+					<p:column sortBy="#{c.dealTitle}" style="width:26%" >  
+						<f:facet name="header" >  
+				        	<h:outputText value="Titulli Kontrates" />  
+				      	</f:facet>  
+						<h:outputText value="#{c.dealTitle}"/>
+					</p:column>		
+						
+					<p:column sortBy="#{c.choiceTitle}" style="width:25%" >  
+						<f:facet name="header" >  
+				        	<h:outputText value="Titulli i zgjedhjes" />  
+				      	</f:facet>  
+						<h:outputText value="#{c.choiceTitle}"/>
+					</p:column>	
+					
+										
+					<p:column sortBy="#{c.fullPrice}" style="width:7%"> 
+						<f:facet name="header" >  
+				        	<h:outputText value="Cmimi &lt;br/&gt; Plote" escape="false"/>  
+				      	</f:facet>  
+						<h:outputText value="#{c.fullPrice}"/>
+					</p:column>		
+					<p:column sortBy="#{c.price}" style="width:6%">
+						<f:facet name="header" >  
+				        	<h:outputText value="Sko- &lt;br/&gt; ntuar" escape="false" />  
+				      	</f:facet>  
+						<h:outputText value="#{c.price}"/>
+					</p:column>	
+					<p:column sortBy="#{100-(c.price/c.fullPrice*100)}" style="width:6%">
+						<f:facet name="header">  
+				        	<h:outputText value="Sko- &lt;br/&gt; nto" escape="false"/>  
+				      	</f:facet>  
+						
+						<h:outputText value="#{100-(c.price/c.fullPrice*100)}">
+							<f:converter converterId="currencyFormatter" />
+						</h:outputText>
+					</p:column>	
+					<p:column sortBy="#{c.commission} %" style="width:6%">
+						<f:facet name="header">  
+				        	<h:outputText value="Komi- &lt;br/&gt; sion" escape="false"/>  
+				      	</f:facet>						
+						<h:outputText value="#{c.commission}"/>
+					</p:column>						
+					<p:column sortBy="#{c.minCustomers}" style="width:6%">  
+						<f:facet name="header">  
+				        	<h:outputText value="#{msg['deal.min']}" />  
+				      	</f:facet>  
+						<h:outputText value="#{c.minCustomers}"/>
+					</p:column>	
+					<p:column sortBy="#{c.maxCustomers}" style="width:6%">  
+						<f:facet name="header">  
+				        	<h:outputText value="#{msg['deal.max']}" />  
+				      	</f:facet> 
+						<h:outputText value="#{c.maxCustomers}"/>
+					</p:column>	
+					<p:column style="width:6%">  
+						<f:facet name="header">  
+				        	<h:outputText value="Tot.&lt;br/&gt;Blerje" escape="false"/>  
+				      	</f:facet> 
+						<h:outputText value="#{c.totPurchases}"/>
+					</p:column>	
+					<p:column>   
+						<p:commandButton title="Shko tek Kontrata" action="#{dealChoiceController.goToDeal}" icon="ui-icon ui-icon-calendar">   
+	                       <f:setPropertyActionListener value="#{c}" target="#{dealChoiceController.dealChoiceSelected}" />
+	                   	</p:commandButton> 
+		          	</p:column>  
+					   
+		 		</p:dataTable >			
+		 		
+		 	</p:panel>	
+
+		</h:form>		
+		
+	</ui:define>    		
+
+</ui:composition>    	
+</html>
+	
+	

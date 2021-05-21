@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	                       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"
+       default-lazy-init="true">
+
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+
+    <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder"/>
+
+    <!--bean id="auditTrailManager" class="al.ozone.bl.manager.impl.AuditTrailManagerImpl">
+        <property name="auditTrailDAO" ref="auditTrailDAO" />
+    </bean-->
+
+    <bean id="applicationConfig" class="al.ozone.bl.manager.impl.ApplicationConfig"
+          scope="singleton">
+        <constructor-arg ref="dataSourceAutoCommit"/>
+        <constructor-arg value="CONFIG"/>
+        <constructor-arg value="CONFIG_KEY"/>
+        <constructor-arg value="CONFIG_VALUE"/>
+    </bean>
+
+    <bean id="userManager" class="al.ozone.bl.manager.impl.UserManagerImpl">
+        <!--property name="auditTrailManager" ref="auditTrailManager" /-->
+        <property name="passwordEncoder" ref="passwordEncoder"/>
+        <property name="userDAO" ref="userDAO"/>
+        <property name="roleDAO" ref="roleDAO"/>
+        <!--<aop:scoped-proxy proxy-target-class="false"/>-->
+    </bean>
+
+    <bean id="auditTrailManager" class="al.ozone.bl.manager.impl.AuditTrailManagerImpl">
+        <property name="auditTrailDAO" ref="auditTrailDAO"/>
+        <aop:scoped-proxy proxy-target-class="false"/>
+    </bean>
+
+    <bean id="partnerManager" class="al.ozone.bl.manager.impl.PartnerManagerImpl">
+        <property name="partnerDAO" ref="partnerDAO"/>
+        <!--<aop:scoped-proxy proxy-target-class="false"/>-->
+    </bean>
+
+    <bean id="customerManager" class="al.ozone.bl.manager.impl.CustomerManagerImpl">
+        <!-- property name="passwordEncoder" ref="passwordEncoder" /-->
+        <property name="applicationConfig" ref="applicationConfig"/>
+        <property name="customerDAO" ref="customerDAO"/>
+        <property name="creditDAO" ref="creditDAO"/>
+        <!--<aop:scoped-proxy proxy-target-class="false"/>-->
+    </bean>
+
+    <bean id="creditManager" class="al.ozone.bl.manager.impl.CreditManagerImpl">
+        <property name="creditDAO" ref="creditDAO"/>
+        <!--<aop:scoped-proxy proxy-target-class="false"/>-->
+    </bean>
+
+    <bean id="discountCardManager" class="al.ozone.bl.manager.impl.DiscountCardManagerImpl">
+        <property name="discountCardDAO" ref="discountCardDAO"/>
+        <!--<aop:scoped-proxy proxy-target-class="false"/>-->
+    </bean>
+
+    <bean id="cityManager" class="al.ozone.bl.manager.impl.CityManagerImpl">
+        <property name="cityDAO" ref="cityDAO"/>
+        <!--<aop:scoped-proxy proxy-target-class="false"/>-->
+    </bean>
+
+    <bean id="dealManager" class="al.ozone.bl.manager.impl.DealManagerImpl">
+        <property name="dealDAO" ref="dealDAO"/>
+        <property name="dealChoiceDAO" ref="dealChoiceDAO"/>
+        <property name="codeGeneratorDAO" ref="codeGeneratorDAO"/>
+        <property name="couponDAO" ref="couponDAO"/>
+        <property name="userDAO" ref="userDAO"/>
+        <property name="purchaseDAO" ref="purchaseDAO"/>
+        <property name="creditDAO" ref="creditDAO"/>
+        <property name="cityDAO" ref="cityDAO"/>
+        <property name="inviteManager" ref="inviteManager"/>
+        <property name="applicationConfig" ref="applicationConfig"/>
+        <!--<dwr:remote javascript="DealManager">-->
+        <!--<dwr:include method="get" />-->
+        <!--<dwr:include method="getActiveDeals" />					-->
+        <!--</dwr:remote>-->
+        <!--<aop:scoped-proxy proxy-target-class="false"/>-->
+    </bean>
+
+    <bean id="purchaseManager" class="al.ozone.bl.manager.impl.PurchaseManagerImpl">
+        <property name="purchaseDAO" ref="purchaseDAO"/>
+        <property name="paymentDAO" ref="paymentDAO"/>
+        <property name="creditDAO" ref="creditDAO"/>
+        <property name="dealDAO" ref="dealDAO"/>
+        <property name="dealChoiceDAO" ref="dealChoiceDAO"/>
+        <!--<aop:scoped-proxy proxy-target-class="false"/>-->
+    </bean>
+
+    <bean id="couponManager" class="al.ozone.bl.manager.impl.CouponManagerImpl">
+        <property name="couponDAO" ref="couponDAO"/>
+        <property name="purchaseDAO" ref="purchaseDAO"/>
+        <!--<aop:scoped-proxy proxy-target-class="false"/>-->
+    </bean>
+
+    <bean id="paymentManager" class="al.ozone.bl.manager.impl.PaymentManagerImpl">
+        <property name="paymentDAO" ref="paymentDAO"/>
+        <!--<aop:scoped-proxy proxy-target-class="false"/>-->
+    </bean>
+
+    <bean id="systemConfigManager" class="al.ozone.bl.manager.impl.SystemConfigManagerImpl">
+        <property name="systemConfigDAO" ref="systemConfigDAO"/>
+        <!--<aop:scoped-proxy proxy-target-class="false"/>-->
+    </bean>
+
+    <bean id="inviteManager" class="al.ozone.bl.manager.impl.InviteManagerImpl">
+        <property name="inviteDAO" ref="inviteDAO"/>
+        <property name="creditDAO" ref="creditDAO"/>
+        <!--<aop:scoped-proxy proxy-target-class="false"/>-->
+    </bean>
+
+    <bean id="ordersManager" class="al.ozone.bl.manager.impl.OrdersManagerImpl">
+        <property name="ordersDAO" ref="ordersDAO"/>
+        <!--<aop:scoped-proxy proxy-target-class="false"/>-->
+    </bean>
+
+    <bean id="customerLogManager" class="al.ozone.bl.manager.impl.CustomerLogManagerImpl">
+        <property name="customerLogDAO" ref="customerLogDAO"/>
+        <!--<aop:scoped-proxy proxy-target-class="false"/>-->
+    </bean>
+
+    <bean id="emailsIntroManager" class="al.ozone.bl.manager.impl.EmailsIntroManagerImpl">
+        <property name="emailsIntroDAO" ref="emailsIntroDAO"/>
+        <!--<aop:scoped-proxy proxy-target-class="false"/>-->
+    </bean>
+
+    <bean id="reportManager" class="al.ozone.bl.manager.impl.ReportManagerImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="dealFeedbackManager" class="al.ozone.bl.manager.impl.DealFeedbackManagerImpl">
+        <property name="dealFeedbackDAO" ref="dealFeedbackDAO"/>
+        <!--<aop:scoped-proxy proxy-target-class="false"/>-->
+    </bean>
+
+</beans>
+

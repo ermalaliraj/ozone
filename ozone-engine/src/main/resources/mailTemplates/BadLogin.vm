@@ -1,0 +1,14 @@
+<html>
+<body>
+<h3>Number of bad login count exceeded</h3>
+
+<div>
+   The user ${user.username} (${user.name} ${user.surname}) has exceeded the maximum number of consecutive bad login count and his account has been blocked.<br>
+   <br>
+   The last access has been tried by the address ${remoteAddress}.<br>
+   <br>
+   For information please contact ${user.username} to his email address <a href="mailto:${user.email}">${user.email}</a>.
+</div>
+
+</body>
+</html>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="USER">
+
+	<resultMap id="userResultMap" type="al.ozone.bl.model.User" >
+		<id column="USERNAME" property="username" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR"/>
+		<result column="SURNAME" property="surname" jdbcType="VARCHAR" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />		
+		<result column="PWD" property="password" jdbcType="VARCHAR" />
+		<result column="ENABLED" property="enabled" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler" />
+		<result column="LOCKED" property="locked" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+		<result column="FAILED_LOGIN_COUNT" property="failedLoginCount" jdbcType="DECIMAL" />
+		<result column="LAST_IP" property="lastIp" jdbcType="VARCHAR" />
+		<association property="roles" column="USERNAME" select="ROLE.getRolesByUserId"/>		
+	</resultMap>
+
+	<select id="getById" parameterType="string" resultMap="userResultMap">
+		select * from USERS
+		where USERNAME = #{username,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getAll" parameterType="string" resultMap="userResultMap">
+		select * from USERS
+	</select>
+
+	<update id="update" parameterType="al.ozone.bl.model.User" >
+	    update USERS
+	    set NAME = #{name,jdbcType=VARCHAR}, 
+	    SURNAME = #{surname,jdbcType=VARCHAR}, 
+	    EMAIL = #{email,jdbcType=VARCHAR}, 
+	    PWD = #{password,jdbcType=VARCHAR}, 
+	    ENABLED = #{enabled,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler}, 
+	    LOCKED = #{locked,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler},
+	    FAILED_LOGIN_COUNT = #{failedLoginCount,jdbcType=DECIMAL}
+	    where USERNAME = #{username,jdbcType=VARCHAR}
+    </update>
+        
+    <insert id="insert" parameterType="al.ozone.bl.model.User">
+		insert into USERS (USERNAME, NAME, SURNAME, EMAIL, PWD, FAILED_LOGIN_COUNT)
+		values (
+				#{username,jdbcType=VARCHAR}, 
+				#{name,jdbcType=VARCHAR},
+				#{surname,jdbcType=VARCHAR}, 
+				#{email,jdbcType=VARCHAR}, 
+				#{password,jdbcType=VARCHAR}, 
+				#{failedLoginCount,jdbcType=DECIMAL})
+	</insert>
+	
+	
+	<delete id="delete" parameterType="al.ozone.bl.model.User">
+		delete from USERS
+		where USERNAME = #{username,jdbcType=VARCHAR}
+	</delete>
+	
+	<delete id="deleteUserRoles" parameterType="al.ozone.bl.model.User">
+		delete from USER_ROLE 
+		where USERNAME = #{username,jdbcType=VARCHAR}
+	</delete>
+
+    <insert id="insertUserRoles" parameterType="map">
+		insert into USER_ROLE (USERNAME, ROLEID)
+		values (
+				#{userId,jdbcType=VARCHAR}, 
+				#{roleId,jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="search" parameterType="map" resultMap="userResultMap">
+		 select distinct u.USERNAME, u.NAME, u.SURNAME, u.EMAIL, u.PWD, u.ENABLED, u.LOCKED, u.FAILED_LOGIN_COUNT, u.LAST_IP
+		 from USERS u LEFT OUTER JOIN USER_ROLE ur
+		        ON u.USERNAME = ur.USERNAME
+		 WHERE upper(u.USERNAME) like upper(CONCAT('%', #{userId,jdbcType=VARCHAR}, '%'))
+		 and CONCAT(IFNULL(u.name, ''), ' ', IFNULL(u.SURNAME, '') ) like CONCAT('%', #{userFullName,jdbcType=VARCHAR}, '%')
+		<if test="roleId != null and roleId!=''">and ur.ROLEID = #{roleId,jdbcType=VARCHAR} </if>
+	</select>
+	
+	<update id="setLastIpForUser" parameterType="al.ozone.bl.model.User" >
+	    update USERS
+	    set LAST_IP = #{lastIp,jdbcType=VARCHAR}
+	    where USERNAME = #{username,jdbcType=VARCHAR}
+    </update>
+    
+    <select id="getUsersByRoleId" resultMap="userResultMap" parameterType="string">
+		select usr.*
+		from USER_ROLE rol, USERS usr
+		where rol.username = usr.username    
+		and rol.ROLEID = #{roleId,jdbcType=VARCHAR}
+  	</select>
+
+	<update id="updateOnBadLogin" parameterType="al.ozone.bl.model.User" >
+	    update USERS
+	    set LOCKED = #{locked,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler},
+	    FAILED_LOGIN_COUNT = #{failedLoginCount,jdbcType=DECIMAL},
+	    LAST_IP = #{lastIp,jdbcType=DECIMAL}
+	    where USERNAME = #{username,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="updateOnSuccessLogin" parameterType="al.ozone.bl.model.User" >
+	    update USERS
+	    set FAILED_LOGIN_COUNT = #{failedLoginCount,jdbcType=DECIMAL},
+	    LAST_IP = #{lastIp,jdbcType=DECIMAL}
+	    where USERNAME = #{username,jdbcType=VARCHAR}
+    </update>
+	
+</mapper>

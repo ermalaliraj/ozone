@@ -1,0 +1,68 @@
+		dealWiz.xhtml
+		
+		<p:confirmDialog widgetVar="dlg" width="400" severity="info" fixedCenter="true" close="false"  effect="FADE"
+		    		message="aggiungee qui il punto?" header="#{msg['confirm']}" >      
+		    	<h:form prependId="false">  
+	            <p:commandButton value="#{msg['yes']}" update="messages" actionListener="#{dealController.addMarker}" oncomplete="markerAddComplete()"/>  
+	            <p:commandButton value="#{msg['no']}" onclick="return cancel()"/>  
+	            
+	            <h:inputHidden id="mapLat" value="#{dealController.mapLat}" />  
+		        <h:inputHidden id="mapLng" value="#{dealController.mapLng}" />  
+		        <h:inputHidden id="title" value="#{dealController.partnerSelected.name}" />
+		        </h:form>
+        </p:confirmDialog>  
+        
+        
+        
+        <script type="text/javascript">  
+		    var currentMarker = null; 
+		    var markerSet = ${dealController.markerSet};  
+		    function handlePointClick(event) {  
+		        if(markerSet == false) {  
+		            document.getElementById('mapLat').value = event.latLng.lat();  
+		            document.getElementById('mapLng').value = event.latLng.lng();  
+		  
+		            currentMarker = new google.maps.Marker({  
+		                position:new google.maps.LatLng(event.latLng.lat(), event.latLng.lng()) ,
+		                draggable:true
+		            });  
+		                              
+		            mapWidget.addOverlay(currentMarker);  
+		            markerSet = true;
+		            dlg.show();  
+		        }else{
+		        	if(currentMarker != null) {
+		                currentMarker.setMap(null);
+		            }
+		        } 
+		    }
+		  
+		    function markerAddComplete() {  
+		        var title = document.getElementById('title');  
+		        currentMarker.setTitle(title.value);  
+		        title.value = "";  
+		  
+		        currentMarker = null;  
+		        dlg.hide();  
+		    }  
+		  
+		    function cancel() {  
+		        dlg.hide();  
+		        currentMarker.setMap(null);  
+		        currentMarker = null;  
+		  
+		        return false;  
+		    }  
+		</script>
+		
+		
+		
+		
+		dealPartnerTab-xhtml
+		<p:gmap id="gmap" widgetVar="mapWidget"
+					center="#{dealController.partnerSelected.lat},#{dealController.partnerSelected.lng}"
+					zoom="#{dealController.partnerSelected.zoomLevel}" type="ROADMAP"
+					style="width:600px;height:310px" 
+					model="#{dealController.mapEmptyModel}" 
+					onPointClick="handlePointClick(event);"   
+					markerDragListener="#{dealController.onMarkerDrag}"/>

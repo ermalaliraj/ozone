@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+	xmlns:p="http://www.springframework.org/schema/p"
+
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"
+	default-lazy-init="true">
+
+	<!-- user management -->
+	<bean id="userManagementMenu" class="al.ozone.bl.model.MenuItem" p:id="userManagementMenu" p:label="User Management" p:roles="ROLE_ADMIN" p:link="secured/userManagement/usersList.faces"/>
+	<bean id="auditTrailMenu" class="al.ozone.bl.model.MenuItem" p:id="auditTrailMenu" p:label="Audit Trail" p:roles="ROLE_ADMIN" p:link="secured/auditTrail/auditTrailsList.faces"/>
+
+	<!-- Registries -->
+	<bean id="managementPartnerMenu" class="al.ozone.bl.model.MenuItem" p:id="managementPartnerMenu" p:label="Partners" p:roles="ROLE_ADMIN,ROLE_PUBLISH,ROLE_WRITE" p:link="secured/partner/partnersList.faces"/>
+	<bean id="managementDealMenu" class="al.ozone.bl.model.MenuItem" p:id="managementDealMenu" p:label="Deals/Contracts" p:roles="ROLE_ADMIN,ROLE_PUBLISH,ROLE_WRITE" p:link="secured/deal/dealsList.faces"/>
+	<bean id="managementDealChoiceMenu" class="al.ozone.bl.model.MenuItem" p:id="managementDealChoiceMenu" p:label="Deal Choice" p:roles="ROLE_ADMIN,ROLE_PUBLISH,ROLE_WRITE" p:link="secured/dealChoice/dealChoiceList.faces"/>
+	
+	<bean id="publicationCalendarMenu" class="al.ozone.bl.model.MenuItem" p:id="publicationCalendarMenu" p:label="Publication Calendar" p:roles="ROLE_ADMIN,ROLE_PUBLISH,ROLE_WRITE" p:link="secured/publication/publicationCal.faces"/>
+	<bean id="contractCalendarMenu" class="al.ozone.bl.model.MenuItem" p:id="contractCalendarMenu" p:label="Contrats Calendar" p:roles="ROLE_ADMIN,ROLE_PUBLISH,ROLE_WRITE" p:link="secured/contractCalendar/contractCal.faces"/>
+
+	<bean id="managementCustomerMenu" class="al.ozone.bl.model.MenuItem" p:id="managementCustomerMenu" p:label="Customers" p:roles="ROLE_ADMIN,ROLE_PUBLISH,ROLE_WRITE" p:link="secured/customer/customersList.faces"/>
+	<bean id="creditMenu" class="al.ozone.bl.model.MenuItem" p:id="creditMenu" p:label="Credits" p:roles="ROLE_ADMIN,ROLE_PUBLISH,ROLE_WRITE" p:link="secured/credit/creditsList.faces"/>
+	<bean id="inviteMenu" class="al.ozone.bl.model.MenuItem" p:id="inviteMenu" p:label="Invites" p:roles="ROLE_ADMIN,ROLE_PUBLISH,ROLE_WRITE" p:link="secured/customer/invitesList.faces"/>
+
+	<bean id="purchaseMenu" class="al.ozone.bl.model.MenuItem" p:id="purchaseMenu" p:label="Purchases" p:roles="ROLE_ADMIN" p:link="secured/purchase/purchaseList.faces"/>
+	<bean id="paymentMenu" class="al.ozone.bl.model.MenuItem" p:id="paymentMenu" p:label="Payments" p:roles="ROLE_ADMIN" p:link="secured/payment/paymentList.faces"/>
+	<bean id="couponMenu" class="al.ozone.bl.model.MenuItem" p:id="couponMenu" p:label="Coupons" p:roles="ROLE_ADMIN" p:link="secured/coupon/couponsList.faces"/>
+	<bean id="discountCardMenu" class="al.ozone.bl.model.MenuItem" p:id="discountCardMenu" p:label="Discount Cards" p:roles="ROLE_ADMIN" p:link="secured/discountCard/discountCardsList.faces"/>
+	<bean id="ordersMenu" class="al.ozone.bl.model.MenuItem" p:id="ordersMenu" p:label="Orders" p:roles="ROLE_ADMIN" p:link="secured/order/ordersList.faces"/>
+	
+    <bean id="managementCityMenu" class="al.ozone.bl.model.MenuItem" p:id="managementCityMenu" p:label="Cities" p:roles="ROLE_ADMIN,ROLE_PUBLISH,ROLE_WRITE" p:link="secured/city/citiesList.faces"/>
+	<bean id="systemConfigurationMenu" class="al.ozone.bl.model.MenuItem" p:id="systemConfigurationMenu" p:label="System Configurations" p:roles="ROLE_ADMIN,ROLE_PUBLISH" p:link="secured/systemConfig/systemConfig.faces"/>
+	<bean id="emailsAllMenu" class="al.ozone.bl.model.MenuItem" p:id="emailsAllMenu" p:label="Newsletter Emails" p:roles="ROLE_ADMIN,ROLE_PUBLISH,ROLE_WRITE" p:link="secured/customer/emailsAllList.faces"/>
+	<bean id="customerLogMenu" class="al.ozone.bl.model.MenuItem" p:id="customerLogMenu" p:label="Customer Log" p:roles="ROLE_ADMIN,ROLE_PUBLISH,ROLE_WRITE" p:link="secured/customer/customerLog.faces"/>
+	
+	<bean id="dealsReportMenu" class="al.ozone.bl.model.MenuItem" p:id="dealsReportMenu" p:label="Deals Report" p:roles="" p:link="secured/stats/dealsReport.faces"/>
+	<bean id="dealsSumReportMenu" class="al.ozone.bl.model.MenuItem" p:id="dealsSumReportMenu" p:label="Deals Sum Report" p:roles="" p:link="secured/stats/dealsSumReport.faces"/>
+	<bean id="dealsRepLiquidationMenu" class="al.ozone.bl.model.MenuItem" p:id="dealsRepLiquidationMenu" p:label="Deals Liquidations" p:roles="" p:link="secured/stats/dealsReportLiquidation.faces"/>
+	<bean id="dealsPurchasesMenu" class="al.ozone.bl.model.MenuItem" p:id="dealsPurchasesMenu" p:label="Deals Purchases - Agent" p:roles="" p:link="secured/stats/dealsPurchases.faces"/>
+	<bean id="weeklyStatisticMenu" class="al.ozone.bl.model.MenuItem" p:id="weeklyStatisticMenu" p:label="Weekly Statistics" p:roles="" p:link="secured/stats/stat1.faces"/>
+	<bean id="monthlyStatisticMenu" class="al.ozone.bl.model.MenuItem" p:id="monthlyStatisticMenu" p:label="Monthly Statistics" p:roles="" p:link="secured/city/cityPage.faces"/>
+	<bean id="yearlyStatisticMenu" class="al.ozone.bl.model.MenuItem" p:id="yearlyStatisticMenu" p:label="Yearly Statistics" p:roles="" p:link="secured/city/cityPage.faces"/>
+
+	<bean id="menu" class="al.ozone.bl.model.MenuItem" p:id="root">
+	  <property name="childs">
+	    <list> 
+          
+          <!-- User Management -->
+          <bean id="userManagementTopMenu" class="al.ozone.bl.model.MenuItem" p:id="userManagementTopMenu" p:label="User Management" p:roles="ROLE_ADMIN">
+          	<property name="childs">
+	          <list>
+	           	<ref bean="userManagementMenu" />
+	            <ref bean="auditTrailMenu" />
+	          </list>
+            </property>
+          </bean>
+          
+          <!-- Registries Management -->
+		  <bean id="dealTopMenu" class="al.ozone.bl.model.MenuItem" p:id="dealTopMenu" p:label="Deal" p:roles="ROLE_ADMIN,ROLE_PUBLISH,ROLE_WRITE">
+	        <property name="childs">
+	          <list>
+	            <ref bean="managementPartnerMenu" />
+	            <ref bean="managementDealMenu" />	 
+	            <ref bean="publicationCalendarMenu" />
+	            <ref bean="contractCalendarMenu" />
+	            <ref bean="managementDealChoiceMenu" />	
+	          </list>
+	        </property>
+	      </bean> 
+	      
+	      <bean id="customerTopMenu" class="al.ozone.bl.model.MenuItem" p:id="customerTopMenu" p:label="Customers" p:roles="ROLE_ADMIN,ROLE_PUBLISH,ROLE_WRITE">
+			<property name="childs">
+		      <list>
+			  	<ref bean="managementCustomerMenu" />
+			  	<ref bean="inviteMenu"/> 
+ 			  	<ref bean="creditMenu" />    
+ 			  	<ref bean="discountCardMenu"/>      
+ 			  	<ref bean="emailsAllMenu" />	
+ 			  	<ref bean="customerLogMenu" />	
+    		  </list>
+			</property>
+		  </bean>  
+	      
+	      <!-- Purchase -->
+		  <bean id="purchaseTopMenu" class="al.ozone.bl.model.MenuItem" p:id="purchaseTopMenu" p:label="Purchase" p:roles="ROLE_ADMIN">
+	        <property name="childs">
+	          <list>
+	            <ref bean="purchaseMenu" />
+	            <ref bean="paymentMenu" />	
+	            <ref bean="couponMenu"/>	   
+	            <ref bean="ordersMenu"/>
+	          </list>
+	        </property>
+	      </bean>  
+		  
+		  <!-- System Configuration -->
+		  <bean id="systemConfigurationTopMenu" class="al.ozone.bl.model.MenuItem" p:id="systemConfigurationTopMenu" p:label="Configuration" p:roles="ROLE_ADMIN,ROLE_PUBLISH,ROLE_WRITE">
+			<property name="childs">
+		      <list>
+		      	<ref bean="managementCityMenu" />         
+			    <ref bean="systemConfigurationMenu" />	 
+			  </list>
+			</property>
+		  </bean> 
+	  
+	      <!-- Statistics Management -->
+		  <bean id="statisticTopMenu" class="al.ozone.bl.model.MenuItem" p:id="statisticTopMenu" p:label="Statistics" p:roles="ROLE_ADMIN,ROLE_PUBLISH,ROLE_WRITE,ROLE_READ">
+			<property name="childs">
+		      <list>
+		     	<ref bean="dealsReportMenu" />
+		     	<ref bean="dealsSumReportMenu" />
+		     	<ref bean="dealsRepLiquidationMenu" />	
+		     	<ref bean="dealsPurchasesMenu" />	
+		     	<ref bean="weeklyStatisticMenu" />
+				<ref bean="monthlyStatisticMenu" />		
+				<ref bean="yearlyStatisticMenu" />	               
+			  </list>
+			</property>
+		  </bean>   
+		  	           	        	      
+		</list>
+	  </property>
+	</bean>
+
+	<bean id="menuManager" class="al.ozone.admin.menu.MenuManager">
+		<property name="menuData" ref="menu" />
+	</bean>
+
+</beans>

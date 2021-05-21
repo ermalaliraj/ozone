@@ -1,0 +1,18 @@
+<html>
+<body>
+<h3>Pagesa u krye me sukses!</h3>
+
+<div>
+	Kerkesa juaj per kthimin mbrapa te shumes $moneySpentEUR e ($moneySpent Leke) perdorur per blerjen
+	e ofertes <b>${deal.title}</b> u kthye ne llogarine tuaj PayPal.
+	
+	<br/><br/>
+	Per cdo paqartesi mbetemi ne dispozicionin tuaj.
+	
+	<br/><br/>
+	Gjithe te mirat,
+	Stafi OZone
+</div>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+<html>
+<body>
+<h3>Konfirmim blerje</h3>
+
+
+Blerja juaj per sherbimin <b>${deal.title}</b> u konfirmua.<br/>
+<br/>
+
+Shuma e paguar $moneySpentEUR e u llogarit duke perdorur kete kurs kembimi $exchangeRate, nga Lek ne Euro.
+
+<br/><br/>
+Per te printuar kuponin lidhuni tek <a href="www.ozone.al">www.ozone.al</a> dhe shkoni tek seksioni "Blerjet e mia"
+<br/><br/><br/>
+
+Ju kujtojme se kuponi eshte i vlefshem deri me date <b>${deal.expirationDiscountFormatted}</b>.
+<br/><br/>
+
+Ju ngelet vetem te printoni kuponin dhe te shijoni sherbimin tek
+<b>${deal.partner.name}</b>
+<br/><br/>
+
+
+Gjithe te mirat<br/>
+Stafi Ozone.al
+<br><br><br/><br/><br/>
+<center>Zone Sh.p.k<center>
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition >    		           	
+	<h:outputLabel value="#{msg['payment.pp.txnId']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.txnId}"/>
+
+	<h:outputLabel value="#{msg['payment.pp.invoice']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.invoice}"/>
+	
+	<h:outputLabel value="#{msg['payment.pp.payerEmail']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.payerEmail}"/>
+	
+	<h:outputLabel value="#{msg['payment.pp.receiverEmail']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.receiverEmail}"/>
+	
+	<h:outputLabel value="#{msg['payment.pp.amountEUR']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.amountEUR}"/>
+	
+	<h:outputLabel value="#{msg['payment.pp.currency']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.currency}"/>
+	
+	<h:outputLabel value="#{msg['payment.pp.exchangeRate']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.exchangeRate}"/>
+	
+	<h:outputLabel value="#{msg['payment.pp.paymentStatus']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.paymentStatus}"/>
+	
+	<h:outputLabel value="#{msg['payment.pp.paymentDate']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.paymentDate}"/>
+	
+	<h:outputLabel value="#{msg['payment.pp.payerStatus']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.payerStatus}"/>
+	
+	<h:outputLabel value="#{msg['payment.pp.responseString']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.responseString}"/>
+	
+	<h:outputLabel value="#{msg['payment.pp.queryString']} : "/>
+	<p:inputTextarea style="width:250px;height:80px;"
+        		resisable="false"
+   				value="#{paymentController.paymentSelected.queryString}" > 
+    </p:inputTextarea>   	                		
+	
+</ui:composition>
+</html>

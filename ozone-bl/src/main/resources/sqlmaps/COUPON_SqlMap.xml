@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="COUPON">
+
+    <resultMap id="couponResultMap" type="al.ozone.bl.model.Coupon">
+	   <id column="CODE" property="code" jdbcType="VARCHAR" />
+	   <result column="SECURITY_CODE" property="securityCode" jdbcType="VARCHAR" />
+	   <!-- result column="" property="securityCode" jdbcType="VARCHAR" /-->
+	   <result column="PURCHASE_ID" property="purchaseId" jdbcType="DECIMAL" />
+	   <result column="DEAL_ID" property="dealId" jdbcType="DECIMAL" />
+	   <result column="CHOICE_NR" property="dealChoiceNr" jdbcType="DECIMAL" />
+	   <result column="TITLE_CHOICE" property="titleChoice" jdbcType="VARCHAR" />	   
+	   <result column="VALID_FROM" property="from" jdbcType="TIMESTAMP" />
+	   <result column="VALID_TO" property="to" jdbcType="TIMESTAMP" />
+	   <result column="HTML_LINK" property="htmlLink" jdbcType="VARCHAR" />
+	   <result column="COUPON_STATUS" property="status" jdbcType="VARCHAR" />
+	   <result column="LST_STATUS_CHANGE_DATE" property="lastStatusChange" jdbcType="TIMESTAMP"/>
+	   <result column="NOTE" property="note" jdbcType="VARCHAR" />
+  	</resultMap> 
+  	
+  	<select id="getCouponsByPurchase" resultMap="couponResultMap"  parameterType="int">
+		select c.*, dc.DEAL_ID, dc.CHOICE_NR, dc.TITLE_CHOICE, cus.email
+		from COUPON c, PURCHASE p, DEAL_CHOICE dc, CUSTOMER cus
+		where c.PURCHASE_ID = p.ID
+		and p.DEAL_ID = dc.DEAL_ID
+		and p.DEAL_CHOICE = dc.CHOICE_NR
+   		and p.CUSTOMER_ID = cus.ID
+    	and c.PURCHASE_ID = #{id,jdbcType=DECIMAL}
+    	order by COUPON_STATUS asc
+	</select>
+	
+	<sql id="get_fragment">
+		select c.*, dc.DEAL_ID, dc.CHOICE_NR, dc.TITLE_CHOICE, cus.email
+		from COUPON c, PURCHASE p, DEAL_CHOICE dc, CUSTOMER cus
+		where c.PURCHASE_ID = p.ID
+		and p.DEAL_ID = dc.DEAL_ID
+		and p.DEAL_CHOICE = dc.CHOICE_NR
+   		and p.CUSTOMER_ID = cus.ID
+		and c.CODE = #{code,jdbcType=VARCHAR}
+    </sql>
+    
+	<select id="get" resultMap="couponResultMap" parameterType="string">
+  		<include refid="get_fragment"/>
+	</select>
+	
+	<select id="countById" resultType="int"  parameterType="string">
+  		select count(1) 
+		from (
+		    <include refid="get_fragment"/>
+		) t
+	</select>
+	
+	<select id="countBySecurityCode" resultType="int"  parameterType="string">
+  		select count(1) 
+		from (
+			select *
+			from COUPON c
+    		where c.SECURITY_CODE = #{securityCode,jdbcType=VARCHAR}
+		) t
+	</select>
+	
+	<insert id="insert" parameterType="al.ozone.bl.model.Coupon">
+		insert into COUPON (CODE, VALID_FROM, VALID_TO, HTML_LINK, 
+			COUPON_STATUS, PURCHASE_ID, LST_STATUS_CHANGE_DATE, SECURITY_CODE, NOTE)
+		values (#{code,jdbcType=VARCHAR}, 
+				#{from,jdbcType=TIMESTAMP}, 
+				#{to,jdbcType=TIMESTAMP},
+				#{htmlLink,jdbcType=VARCHAR},  
+				#{status,jdbcType=VARCHAR},
+				#{purchaseId,jdbcType=DECIMAL},
+				#{lastStatusChange,jdbcType=TIMESTAMP},
+				#{securityCode,jdbcType=VARCHAR},
+				#{note,jdbcType=VARCHAR})
+	</insert>
+	
+	<resultMap id="couponSearchResultMap" type="al.ozone.bl.model.Coupon">
+	   <id column="CODE" property="code" jdbcType="VARCHAR" />
+	   <result column="SECURITY_CODE" property="securityCode" jdbcType="VARCHAR" />
+	   <result column="PURCHASE_ID" property="purchaseId" jdbcType="DECIMAL" />
+	   <result column="DEAL_ID" property="dealId" jdbcType="DECIMAL" />
+	   <result column="TITLE_CHOICE" property="titleChoice" jdbcType="VARCHAR" />
+	   <result column="VALID_FROM" property="from" jdbcType="TIMESTAMP" />
+	   <result column="VALID_TO" property="to" jdbcType="TIMESTAMP" />
+	   <result column="HTML_LINK" property="htmlLink" jdbcType="DECIMAL" />
+	   <result column="COUPON_STATUS" property="status" jdbcType="VARCHAR" />
+	   <result column="LST_STATUS_CHANGE_DATE" property="lastStatusChange" jdbcType="TIMESTAMP"/>
+	   <result column="EMAIL" property="customerEmail" jdbcType="VARCHAR"/>
+  	</resultMap> 
+	
+	
+	<select id="search" resultMap="couponSearchResultMap" parameterType="al.ozone.bl.bean.SearchCouponBean">
+		select c.*, dc.DEAL_ID, dc.CHOICE_NR, dc.TITLE_CHOICE, cus.email
+		from COUPON c, PURCHASE p, DEAL_CHOICE dc, CUSTOMER cus
+		where c.PURCHASE_ID = p.ID
+		and p.DEAL_ID = dc.DEAL_ID
+		and p.DEAL_CHOICE = dc.CHOICE_NR
+   		and p.CUSTOMER_ID = cus.ID
+		<if test="purchaseId!=null and purchaseId!='' and purchaseId!=0">and c.PURCHASE_ID = #{purchaseId,jdbcType=DECIMAL}</if>
+		<if test="contractId!=null and contractId!='' and contractId!=0">and dc.DEAL_ID = #{contractId,jdbcType=DECIMAL}</if>
+		<if test="dealTitle!=null and dealTitle!=''">and upper(dc.TITLE_CHOICE) like upper(CONCAT('%', #{dealTitle,jdbcType=VARCHAR}, '%'))</if>
+		<if test="couponCode!=null and couponCode!=''">and upper(c.CODE) like upper(CONCAT('%', #{couponCode,jdbcType=VARCHAR}, '%'))</if>
+		<if test="couponSecCode!=null and couponSecCode!=''">and upper(c.SECURITY_CODE) like upper(CONCAT('%', #{couponSecCode,jdbcType=VARCHAR}, '%'))</if>
+		<if test="email!=null and email!=''">and upper(cus.email) like upper(CONCAT('%', #{email,jdbcType=VARCHAR}, '%'))</if>
+		<if test="status!=null and status!=''">and c.coupon_status = #{status,jdbcType=VARCHAR}</if>
+		<if test="noFake==true">
+			 <![CDATA[and cus.id <> 82 ]]>
+		</if>
+		<if test="sortColumn != null"> order by ${sortColumn} </if>
+		<if test="sortDirection == 'DESC'"> DESC </if>
+	</select>
+	
+	<update id="changeStatus" parameterType="al.ozone.bl.model.Coupon" >
+	    update COUPON
+	    set COUPON_STATUS = #{status,jdbcType=VARCHAR},
+	    LST_STATUS_CHANGE_DATE = #{lastStatusChange,jdbcType=TIMESTAMP},
+	    NOTE = #{note,jdbcType=VARCHAR}
+	    where CODE = #{code,jdbcType=DECIMAL}
+    </update>
+    
+	<select id="getAllCouponsForDeal" resultMap="couponResultMap" parameterType="int">
+    	<![CDATA[
+		select p.DEAL_CHOICE as CHOICE_NR, c.CODE
+		from COUPON c, PURCHASE p
+		where c.PURCHASE_ID = p.ID
+		and p.DEAL_ID = #{dealId,jdbcType=DECIMAL}
+		and p.customer_id <> 82
+		order by p.DEAL_CHOICE, c.CODE
+       	]]>
+	</select>
+	
+	<select id="getAllUsedCouponsForDeal" resultMap="couponResultMap"  parameterType="al.ozone.bl.model.Coupon">
+		select p.DEAL_CHOICE as CHOICE_NR, p.DEAL_ID, c.CODE, c.LST_STATUS_CHANGE_DATE
+		from COUPON c, PURCHASE p
+		where c.PURCHASE_ID = p.ID
+		<![CDATA[and p.customer_id <> 82]]>
+		and c.COUPON_STATUS = 'U'
+		and p.DEAL_ID = #{dealId,jdbcType=DECIMAL}
+		<if test="code!=null and code!=''">and upper(c.CODE) like upper(CONCAT('%', #{code,jdbcType=VARCHAR}, '%'))</if>
+		order by c.LST_STATUS_CHANGE_DATE asc
+	</select>
+	
+	
+    
+</mapper>

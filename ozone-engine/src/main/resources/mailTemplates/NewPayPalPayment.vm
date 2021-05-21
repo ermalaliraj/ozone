@@ -1,0 +1,16 @@
+<html>
+<body>
+<h3>Blerje e re me PayPal</h3>
+
+<div>
+	Klienti $cusEmail sapo ka kryer nje blerje te re. <br/> <br/>
+	<b>Te dhenat e blerjes:</b> <br/>
+	Oferta: $dealTitle<br/>
+	Sasia: $quantity<br/>
+	Shuma e paguar: $amount<br/>
+	
+	Eshte PROVE: mos u ekzaltoni kot ;-)  (Ermali)
+</div>
+
+</body>
+</html>

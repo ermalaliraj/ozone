@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+    version="2.0">
+
+	<!-- Navigation Rules -->
+	<navigation-rule>
+		<from-view-id>/secured/deal/dealsList.xhtml</from-view-id>
+	    <navigation-case>
+	      <from-action>#{dealController.newDealWiz}</from-action>
+	      <from-outcome>success</from-outcome>
+	      <to-view-id>/secured/deal/dealWiz.faces</to-view-id>
+	      <redirect/>
+	    </navigation-case>
+	    <navigation-case>
+	      <from-action>#{dealController.editDealWiz}</from-action>
+	      <from-outcome>success</from-outcome>
+	      <to-view-id>/secured/deal/dealWiz.faces</to-view-id>
+	      <redirect/>
+	    </navigation-case>
+	    <navigation-case>
+	      <from-action>#{dealController.goToDealChoice}</from-action>
+	      <from-outcome>success</from-outcome>
+	      <to-view-id>/secured/dealChoice/dealChoiceList.faces</to-view-id>
+	      <redirect/>
+	    </navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/secured/dealChoice/dealChoiceList.xhtml</from-view-id>
+	    <navigation-case>
+	      <from-action>#{dealChoiceController.goToDeal}</from-action>
+	      <from-outcome>success</from-outcome>
+	      <to-view-id>/secured/deal/dealsList.faces</to-view-id>
+	      <redirect/>
+	    </navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/secured/partner/partnersList.xhtml</from-view-id>
+	    <navigation-case>
+	      <from-action>#{partnerController.newDealForPartner}</from-action>
+	      <from-outcome>success</from-outcome>
+	      <to-view-id>/secured/deal/dealWiz.faces</to-view-id>
+	      <redirect/>
+	    </navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/secured/publication/publicationCal.xhtml</from-view-id>
+	    <navigation-case>
+	      <from-action>#{publicationCalController.goToDeal}</from-action>
+	      <from-outcome>success</from-outcome>
+	      <to-view-id>/secured/deal/dealWiz.faces</to-view-id>
+	      <redirect/>
+	    </navigation-case>
+	</navigation-rule>
+ 
+ 	<navigation-rule>
+		<from-view-id>/secured/customer/customersList.xhtml</from-view-id>
+	    <navigation-case>
+	      <from-outcome>customerDetails</from-outcome>
+	      <to-view-id>/secured/customer/customerDetails.faces</to-view-id>
+	      <redirect/>
+	    </navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/secured/deal/dealWiz.xhtml</from-view-id>
+	    <navigation-case>
+	      <from-outcome>provisorPublish</from-outcome>
+	      <to-view-id>/secured/deal/testDealPublished.faces</to-view-id>
+	      <redirect/>
+	    </navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/secured/customer/customerDetails.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{customerDetailController.checkCoupon}</from-action>
+			<from-outcome>success</from-outcome>
+			<to-view-id>/secured/coupon/coupon.faces</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+ <!-- 	<navigation-rule>
+		<from-view-id>/secured/coupon/couponsList.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{couponController.checkCoupon}</from-action>
+			<from-outcome>success</from-outcome>
+			<to-view-id>/secured/coupon/coupon.faces</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+ --> 
+ 
+ 	<navigation-rule>
+		<from-view-id>/secured/coupon/couponsList.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>printCoupon</from-outcome>
+			<to-view-id>/printCoupon</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/secured/purchase/purchaseList.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{purchaseController.checkCoupon}</from-action>
+			<from-outcome>success</from-outcome>
+			<to-view-id>/secured/coupon/coupon.faces</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/secured/order/ordersList.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>printInvoice</from-outcome>
+			<to-view-id>/printInvoice</to-view-id>
+			<redirect/>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/secured/contractCalendar/contractCal.xhtml</from-view-id>
+	    <navigation-case>
+	      <from-action>#{contractCalController.goToDealWiz}</from-action>
+	      <from-outcome>success</from-outcome>
+	      <to-view-id>/secured/deal/dealWiz.faces</to-view-id>
+	      <redirect/>
+	    </navigation-case>
+	</navigation-rule>
+</faces-config>

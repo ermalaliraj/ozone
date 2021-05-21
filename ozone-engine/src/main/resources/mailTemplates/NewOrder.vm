@@ -1,0 +1,30 @@
+<html>
+<body>
+<h3>Porosi e re</h3>
+
+<div>
+	Klienti ${cus.email} sapo ka kryer nje porosi te re. <br/> <br/>
+	<b>Te dhenat e porosise:</b> <br/>
+	Oferta: ${order.dealChoice.choiceTitle}<br/>
+	Sasia: ${order.quantity}<br/>
+	Shuma per tu paguar: ${order.moneySpent}<br/>
+	Kredit te perdorur: ${order.creditUsed}<br/>
+	Adresa e dorezimit: ${order.address}<br/>
+	Nr. Telefoni i klientit: ${order.tel}<br/>
+	<br/>
+	Te dhenat e klientit:<br/>
+	Emri ${cus.name}<br/>
+	Mbiemri: ${cus.surname}<br/>
+	Emaili: ${cus.email}<br/>
+	ID: ${cus.id}<br/>
+	<br/>
+	
+	<b>Nr. fatures ${order.id}</b><br/>
+	<b>Nr. i porosise ${order.dealChoice.id}</b><br/>
+	
+	
+	
+</div>
+
+</body>
+</html>

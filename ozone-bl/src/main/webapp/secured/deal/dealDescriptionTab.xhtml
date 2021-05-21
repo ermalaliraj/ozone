@@ -1,0 +1,68 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+<ui:composition>
+	<p:panel header="Pershkrimi i Kontrates - Nr. #{dealWizController.dealSelected.id}" id="dealWizDescPanel" > 
+    	<p:messages id="descMessage" showDetail="true"/> 
+    	
+    	<ui:include src="../common/ajaxloading.xhtml" />
+	       	
+		<h:panelGrid columns="2" styleClass="nowrapColumn">
+		
+			<h:panelGrid columns="1" >
+			    <h:outputLabel value="Description"/>			                
+			  	<p:editor value="#{dealWizController.dealSelected.description}" widgetVar="editor" width="800" height="307"/>
+			</h:panelGrid> 
+		
+			<h:panelGrid columns="1" >
+			
+		     	<h:panelGrid columns="1" >
+		     	
+			     	<!-- <p:commandLink update="imgShowPanel" oncomplete="imgDialog.show()" style="margin-right:20px;">  
+				        	<h:outputText value="click here"/>  
+					</p:commandLink>   -->
+			
+			      	<p:fileUpload fileUploadListener="#{dealWizController.handleFileUpload}" auto="true"  
+							allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+							disabled="#{!dealWizController.dealSelected.editable}"
+							multiple="true"
+							description="Images" 
+							update="fileUploadedTable,descMessage"/> 
+				</h:panelGrid>
+				
+				<h:panelGroup>
+					<p:dataTable id="fileUploadedTable" var="f" value="#{dealWizController.uploadedFiles}">   
+						<p:column headerText="#{msg['deal.fileName']}">
+							<p:commandLink update="imgShowForm:imgShowPanel" oncomplete="imgDialog.show()" style="margin-right:20px;">  
+						        <f:setPropertyActionListener value="#{f}" target="#{dealWizController.loadedFileName}" /> 
+						        <h:outputText value="#{f}" />   
+							</p:commandLink>  
+						</p:column>						
+						<p:column headerText="#{msg['delete']}">
+							<p:commandButton title="#{msg['delete']}" update="dealForm:fileUploadedTable" 
+									action="#{dealWizController.deleteUploadedFile}" icon="ui-icon ui-icon-close"
+									disabled="#{!dealWizController.dealSelected.editable}">
+								<f:setPropertyActionListener value="#{f}" target="#{dealWizController.loadedFileName}" />    
+		                    </p:commandButton> 
+						</p:column>	
+					</p:dataTable>
+				</h:panelGroup>						
+		  	</h:panelGrid>
+		  	
+		</h:panelGrid>
+	   
+	    <center>
+		<h:panelGrid>
+			<p:commandButton update="dealWizDescPanel,descMessage"
+					value="#{msg['deal.buttonUpdate']}"
+					rendered="#{dealWizController.editMode and !!dealWizController.dealSelected.editable}"
+					actionListener="#{dealWizController.updateDescription}"/>
+			</h:panelGrid>
+		</center>  
+	</p:panel>
+	
+</ui:composition>
+</html>

@@ -1,0 +1,98 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition>
+
+	<p:panel header="Partneri - Kontrata Nr. #{dealWizController.dealSelected.id}" id="dealPartnerPanel">
+		<p:messages id="partnerMessage2" showDetail="true" />
+		<ui:include src="../common/ajaxloading.xhtml" />
+		
+		<h:panelGrid columns="2" cellpadding="2" border="0" style="width:100%">
+			<h:panelGrid columns="2">
+			<h:panelGrid columns="1" rendered="#{!dealWizController.editMode}">
+				<p:commandButton value="Select a Present Partner"
+					style="width:100px;height:80px;"
+					process="@this"
+					oncomplete="searchPartnerDialog.show()"
+					icon="ui-icon ui-icon-search">					
+				</p:commandButton>
+			</h:panelGrid>
+			  
+			<p:fieldset legend="#{msg['deal.partner']}" style="width:350px;height:328px"  styleClass="nowrapColumn">
+				<h:panelGrid id="dealUpdatePartnerPanel" columns="2"
+					cellpadding="2" style="margin:0 auto;" border="0">
+					<h:outputLabel for="fName" value="#{msg['partner.name']} *" />
+					<p:inputText id="fName" required="true" disabled="true" style="width:250px;"
+						value="#{dealWizController.partnerSelected.name}"/>
+
+					<h:outputLabel for="fCat" value="#{msg['partner.category']}"/>
+			        <p:inputText id="fCat" disabled="true" style="width:250px;"
+			        	value="#{dealWizController.partnerSelected.category.name}"/>
+			        
+					<h:outputLabel for="fcity" value="#{msg['partner.city']}" />
+					<p:selectOneMenu id="fcity" disabled="true" 
+		       				value="#{dealWizController.partnerSelected.city.id}" >
+		           		<f:selectItem itemLabel="--" itemValue="" />
+		           		<f:selectItems value="#{partnerController.allCityItems}" />
+		       		</p:selectOneMenu>
+						
+					<h:outputLabel for="faddress" value="#{msg['partner.address']} *" />
+					<p:inputTextarea id="faddress" disabled="true" style="width:250px;height:40px;"
+						required="true" maxlength="200" resisable="false"
+						value="#{dealWizController.partnerSelected.address}"/>
+
+					<h:outputLabel for="ftel" value="#{msg['partner.tel']}" />
+					<p:inputText id="ftel" disabled="true"
+						value="#{dealWizController.partnerSelected.tel}"/>
+
+					<h:outputLabel for="fcel" value="#{msg['partner.cel']} *" />
+					<p:inputText id="fcel" required="true" disabled="true"
+						value="#{dealWizController.partnerSelected.cel}"/>
+
+					<h:outputLabel for="femail" value="#{msg['partner.email']}" />
+					<p:inputText id="femail" disabled="true" style="width:250px;"
+						value="#{dealWizController.partnerSelected.email}"/>
+						
+					<h:outputLabel for="fWebsite" value="#{msg['partner.website']}"/> 
+					<p:inputText id="fWebsite" disabled="true" style="width:250px;"
+						value="#{dealWizController.partnerSelected.webSite}"/>
+				</h:panelGrid>
+			</p:fieldset>
+			</h:panelGrid>
+			
+			<p:fieldset legend="Address Map" image="ui-icon ui-icon-pin-s" style="width:600px;height:328px" styleClass="nowrapColumn">
+				<p:gmap id="gmap" widgetVar="mapWidget"
+					center="#{dealWizController.partnerSelected.lat},#{dealWizController.partnerSelected.lng}"
+					zoom="#{dealWizController.partnerSelected.zoomLevel}" type="ROADMAP"
+					style="width:600px;height:295px" 
+					model="#{dealWizController.mapEmptyModel}" >		
+					<p:ajax event="stateChange" listener="#{dealWizController.onMapStateChange}"/>  
+					<p:ajax event="markerDrag" listener="#{dealWizController.onMarkerDrag}" update="dealPartnerPanel"/>  		
+				</p:gmap>
+			</p:fieldset>
+			
+			<h:panelGrid columns="2" rendered="#{dealWizController.editMode}">
+				<h:outputText value="Skip to last: "/>  
+	            <p:selectBooleanCheckbox value="#{dealWizController.skipToLast}"/>  
+			</h:panelGrid>
+			
+			<f:facet name="footer">
+				<h:panelGroup>
+					<center>
+						<p:commandButton value="#{msg['partner.buttonUpdate']}"
+							update="dealPartnerPanel,gmap"
+							rendered="#{dealWizController.dealSelected.editable}"
+							actionListener="#{dealWizController.updatePartner}"
+							oncomplete="mapWidget.checkResize()"
+							icon="ui-icon ui-icon-check" />
+					</center>
+				</h:panelGroup>
+			</f:facet>
+		</h:panelGrid>
+	</p:panel>
+
+</ui:composition>
+</html>

@@ -1,0 +1,225 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+<ui:composition template="/template/common/commonLayout.xhtml">    	
+    <ui:define name="title">
+    	<h:outputText value="#{msg['title.deals']}"/>
+    </ui:define>
+    
+	<ui:define name="content">
+  		<h:form id="dealListForm">       
+        	<p:growl id="message" showDetail="true" /> 
+ 			<!--p:messages id="message2" showDetail="true"/-->  
+ 			
+			<p:panel id="dealSearchPanel" header="#{msg['deal.panelSearch']}" styleClass="nowrapColumn">
+				<h:panelGrid columns="5" cellpadding="5" border="0">		
+					<h:panelGrid columns="3" cellpadding="0" border="0">
+						<h:outputLabel value="#{msg['deal.partner']}"/>
+				 		<p:inputText id="sPartner" 
+				 					binding="#{dealController.sPartner}" 
+				 					size="25">
+				 			<!--p:ajax event="focus" oncomplete="searchPartnerDialog.show()" /-->
+				 		</p:inputText>
+				 		<p:commandButton oncomplete="searchPartnerDialog.show()" icon="ui-icon ui-icon-search"/>
+				 	</h:panelGrid>		
+				
+					<h:panelGrid columns="2" cellpadding="0" border="0">		
+	       				<h:outputLabel value="#{msg['deal.nr']}"/>
+				 		<p:inputText id="dealNr" binding="#{dealController.sDealNr}" label="#{msg['deal.nr']}" size="5">
+				 			<f:convertNumber/>
+				 			<p:ajax event="blur" update="dealNr"/> 
+				 		</p:inputText>
+				 		
+	       				<h:outputLabel value="#{msg['deal.title']}"/>
+				 		<p:inputText id="dealTitle" binding="#{dealController.sDealTitle}" size="30"/>
+				 	</h:panelGrid>
+
+			 		<h:panelGrid columns="2" cellpadding="0" border="0">	
+				 		<h:outputLabel value="#{msg['deal.published']}"/>				                
+				        <p:selectOneMenu 
+				        		value="ALL"
+				        		binding="#{dealController.sPublished}">  
+				        	<f:selectItem itemLabel="ALL" itemValue="" />
+				            <f:selectItem itemLabel="#{msg['yes']}" itemValue="true" />
+				            <f:selectItem itemLabel="#{msg['no']}" itemValue="false" />
+				        </p:selectOneMenu>
+				        
+				        <h:outputLabel value="#{msg['deal.approvedForPublish']}"/>				                
+				        <p:selectOneMenu
+					        	value="ALL"
+					        	binding="#{dealController.sApprovePublish}">  
+				        	<f:selectItem itemLabel="ALL" itemValue="" />
+				            <f:selectItem itemLabel="#{msg['yes']}" itemValue="true" />
+				            <f:selectItem itemLabel="#{msg['no']}" itemValue="false" />
+				        </p:selectOneMenu>
+			        </h:panelGrid>
+			        
+			        <h:panelGrid id="fromToPanel" columns="2" cellpadding="0" border="0">		
+				        <h:outputLabel value="#{msg['from']}"/>	
+				        <p:calendar id="sFrom"
+				        			value="#{dealController.sFrom}" 
+				        			maxdate="#{dealController.sFromMaxDate}" 
+				        			pattern="dd/MM/yyyy">
+				        			<p:ajax event="dateSelect" update="sTo"/>
+				        </p:calendar>
+				        			
+				        <h:outputLabel value="#{msg['to']}"/> 				
+				        <p:calendar id="sTo"
+				        			value="#{dealController.sTo}" 
+				        			mindate="#{dealController.sToMinDate}" 
+				       				pattern="dd/MM/yyyy">
+				       				<p:ajax event="dateSelect" update="sFrom"/>
+				       	</p:calendar>
+				       	
+			        </h:panelGrid>
+		
+					<f:facet name="footer">
+						<h:panelGroup>
+						<center>					
+							<p:commandButton value="#{msg['buttonSearch']}" update="dealsListPanel,message" actionListener="#{dealController.searchDeal}"/>
+							<p:spacer width="10"/>
+							<p:commandButton value="#{msg['buttonReset']}" update="dealSearchPanel,message" actionListener="#{dealController.cleanSearchForm}" />  							
+						</center>
+						</h:panelGroup>
+					</f:facet>
+				</h:panelGrid>		
+			</p:panel>	
+        	
+        	<ui:include src="../common/ajaxloading.xhtml" />
+			
+        	<p:panel id="dealsListPanel" header="#{msg['deal.panelResult']}" >	
+        	
+        		<h:panelGrid columns="4">  
+			        <h:commandLink>  
+			            <p:graphicImage value="/images/excel.png" />  
+			            <p:dataExporter type="xls" target="dealsTable" fileName="OZone_DealList" excludeColumns="11"
+			            		/>  
+			        </h:commandLink>  
+			  
+			        <h:commandLink>  
+			            <p:graphicImage value="/images/pdf.png" />  
+			            <p:dataExporter type="pdf" target="dealsTable" fileName="OZone_DealList"/>  
+			        </h:commandLink>
+			        
+			        <h:commandLink>  
+			            <p:graphicImage value="/images/csv.png" />  
+			            <p:dataExporter type="csv" target="dealsTable" fileName="cars" pageOnly="true"/>  
+			        </h:commandLink>  
+			          
+			        <h:commandLink>  
+			            <p:graphicImage value="/images/xml.png" />  
+			            <p:dataExporter type="xml" target="dealsTable" fileName="cars" pageOnly="true"/>  
+			        </h:commandLink>   
+				</h:panelGrid> 	
+				
+	    		<p:dataTable id="dealsTable" var="deal" value="#{dealController.dealsList}" 
+			    			paginator="true" rows="20" rowsPerPageTemplate="10,20,50,100"
+			    			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			    			rowStyleClass="#{deal.colorStatus}">   
+
+				
+					
+					
+					<p:column sortBy="#{deal.id}">  
+				    	<f:facet name="header" sortBy="#{deal.id}" style="width:5%;">  
+				        	<h:outputText value="#{msg['deal.id']}" />  
+				      	</f:facet>  
+				       	<h:outputText value="#{deal.id}"/>
+				   	</p:column>  
+						
+					<p:column headerText="#{msg['deal.title']}" sortBy="#{deal.title}">  
+						<h:outputText value="#{deal.title}"/>
+					</p:column>							
+					<p:column headerText="#{msg['deal.full']}" > 
+						<h:outputText value="#{deal.fullPrice}"/>
+					</p:column>		
+					<p:column headerText="#{msg['deal.discounted']}" >
+						<h:outputText value="#{deal.price}"/>
+					</p:column>	
+					<p:column headerText="#{msg['deal.percDiscount']}" sortBy="#{100-(deal.price/deal.fullPrice*100)}" style="width:7%">
+						<h:outputText value="#{100-(deal.price/deal.fullPrice*100)}">
+							<f:converter converterId="currencyFormatter" />
+						</h:outputText>
+					</p:column>	
+					<p:column headerText="#{msg['deal.min']}" >  
+						<h:outputText value="#{deal.minCustomers}"/>
+					</p:column>	
+					<p:column headerText="#{msg['deal.max']}" >  
+						<h:outputText value="#{deal.maxCustomers}"/>
+					</p:column>	
+					<p:column headerText="#{msg['deal.insertedDate']}" sortBy="#{deal.insertedDate}" style="width:12%">
+						<h:outputText value="#{deal.insertedDate}">
+							<f:converter converterId="dateFormatter" />
+						</h:outputText>
+					</p:column>	
+					<p:column headerText="#{msg['deal.partner']}" sortBy="#{deal.partner.name}">
+						<h:outputText value="#{deal.partner.name}"/>
+					</p:column>	
+					<p:column headerText="#{msg['deal.approved']}" sortBy="#{deal.approvedForPublish}" style="width:9%">
+						<h:outputText value="#{deal.approvedForPublish}">
+							<f:converter converterId="yesNoFormatter" />
+						</h:outputText>
+					</p:column>	  
+					<p:column headerText="#{msg['deal.published']}" > 
+						<h:outputText value="#{deal.published}">
+							<f:converter converterId="yesNoFormatter" />
+						</h:outputText>
+					</p:column>	  
+					   
+		            <p:column>   
+						<p:commandButton title="Edit" action="#{dealController.editDealWiz}" update="dealForm:dealPartnerPanel" icon="ui-icon ui-icon-pencil">  
+							<f:setPropertyActionListener value="#{d}" target="#{dealController.dealSelected}" />  
+						</p:commandButton>  	
+	                   	<p:commandButton title="Delete" update=":form:updateDealPanel" oncomplete="confirmation.show()" icon="ui-icon ui-icon-close">  
+	                       <f:setPropertyActionListener value="#{d}" target="#{dealController.dealSelected}" />  
+	                   	</p:commandButton>  
+	                   	<p:commandButton title="Kopjo Akordin" oncomplete="copyConfirmation.show()" update="dealListForm:dealsListPanel,dealListForm:message" icon="ui-icon ui-icon-arrowrefresh-1-n">  
+							<f:setPropertyActionListener value="#{d}" target="#{dealController.dealSelected}" />  
+						</p:commandButton>  	
+		          	</p:column>  
+		          	
+		          	<f:facet name="footer">  
+						<p:commandButton action="#{dealController.newDealWiz}" value="#{msg['deal.buttonAdd']}" icon="ui-icon ui-icon-newwin"/>
+					</f:facet>            
+		 		</p:dataTable >			
+		 		
+		 	</p:panel>	
+		 	
+		 	
+		    
+			<p:confirmDialog widgetVar="confirmation" width="400" severity="alert"
+						modal="true"
+						style="position:fixed; top:0%; left:0%; text-align:center;"						
+			    		message="#{msg['deal.confirmDeleteMsg']}" header="#{msg['confirm']}" > 
+			    <center>      
+		            <p:commandButton value="#{msg['yes']}" update="dealsListPanel,message" actionListener="#{dealController.deleteDeal}" oncomplete="confirmation.hide()"/>  
+		            <p:commandButton value="#{msg['no']}" onclick="confirmation.hide()" type="button" />  
+        		</center> 
+        	</p:confirmDialog> 		
+        	
+        	<p:confirmDialog widgetVar="copyConfirmation" width="400" severity="alert"
+					modal="true"
+					style="position:fixed; top:0%; left:0%; text-align:center;"						
+		    		message="Deshiron te krijosh nje akord te ri duke kopjuar ate ekzistuesin?" header="#{msg['confirm']}" > 
+			    <center>
+		            <p:commandButton value="#{msg['yes']}" update="dealListForm:dealsListPanel,dealListForm:message" actionListener="#{dealController.copyDeal}" oncomplete="copyConfirmation.hide()"/>  
+		            <p:commandButton value="#{msg['no']}" onclick="copyConfirmation.hide()" type="button" />  
+	       		</center> 
+	        </p:confirmDialog> 		
+
+		</h:form>		
+		
+
+		
+		<!-- 
+		<ui:include src="../partner/partnerSearchDlg.xhtml" />
+		 -->
+	</ui:define>    		
+
+</ui:composition>    	
+</html>
+	
+	

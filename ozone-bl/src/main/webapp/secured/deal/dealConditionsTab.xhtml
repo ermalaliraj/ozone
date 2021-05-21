@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+<ui:composition>
+	<p:panel header="Kushtet e Kontrates - Kontrata Nr. #{dealWizController.dealSelected.id}" id="dealWizCondPanel">
+		<p:messages id="conditionMessage" showDetail="true"/>  
+		<ui:include src="../common/ajaxloading.xhtml" />
+		
+		<h:panelGrid columns="2" cellpadding="2" style="margin:0 auto;" border="0">
+			<h:outputLabel value="Synthesis"/>		
+			<h:outputLabel value="Condition"/>			                
+	        <p:editor value="#{dealWizController.dealSelected.synthesis}" widgetVar="editor" width="500" height="307"/>  
+	        <p:editor value="#{dealWizController.dealSelected.conditions}" widgetVar="editor" width="500" height="307"/>  
+	    </h:panelGrid>
+	       
+	    <center>
+		<h:panelGrid>
+			<p:commandButton update="dealWizCondPanel,conditionMessage"
+					value="#{msg['deal.buttonUpdate']}"
+					rendered="#{dealWizController.editMode and dealWizController.dealSelected.editable}"
+					actionListener="#{dealWizController.updateSynthConditions}"/>
+		</h:panelGrid>
+		</center>
+	</p:panel>
+</ui:composition>
+</html>

@@ -1,0 +1,120 @@
+Stabil with 
+JSF 2.0 (Mojarra 2.0.3-FCS)
+primefaces-3.0
+primefaces-3.1.1 -  INFO: Cannot find component.... are thrown as exceptions
+ 
+- @ViewScoped
+init() is calling on each backing method calls. Example calling searchBean() causes running 
+searchBean() two times: 1 from init, 1 directly from the jsf code)
+
+- dopo immediate=true (del back button), quando si apre la stessa pagina non fa'
+i set per ogni field della form. Come se ha ancora la pagina memorizzata da qualche parte
+quindi fa solo i get per far vedere i valori nei campi della form
+SOLUZIONE PENSATA: dovrei ribindare i campi, oppure restore della pagina stessa nel avvio
+
+-Action vs actionListener. 
+Action first assigns the value to the property and then execute the method,
+ while actionListener executes the method and then assigns the value.
+ 
+
+- about column name size in a datatable, it is necessary to style the width of the container 
+panelgrid or the datatable itself size large enough to contain at least the sum of column
+name lengths. Only after, we can customize every contained outputLabel as a specific percentage 
+of the total width.    
+ 
+- style="width: 60%"   increase column size
+
+- RequestScope and ViewScope fanno che quando si clicca il bottone Detagli, si esegue la 
+search(), quindi maggior tempo di attesa aspettando la lista dal DB, ma sessione piu' legera
+- SessionScope non scatta nessuna chiamata, ma visto che ha tutto "in panccia" la sessione
+e' "pesante"
+
+- inside a jar file, in which folder the running .jar file is.
+return new File(MyClass.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+
+PrimeFaces - p:inplace
+enable save button on field changed.
+http://stackoverflow.com/questions/8803327/primefaces-save-to-db-using-ajax-for-inplace-tag
+save only modified field
+http://stackoverflow.com/questions/9790146/saving-changed-values-from-primefaces-inplace
+		      		
+NOTICE: 
+
+The events supported by ajax are: 
+blur, change, click, dateSelect, dblclick, focus, keydown, keypress, keyup, mousedown, mousemove, mouseout, mouseover, mouseup, select, valueChange.				      		
+				      		
+-  pdf report 
+uuid="\w*-\w*-\w*-\w*-\w*" on .jrxml    
+				     
+Tomcat eclipse location
+D:\Documenti Ermal\Projects\.metadata\.plugins\org.eclipse.wst.server.core\tmp1\wtpwebapps
+C:\Users\Ermal\AppData\Local\Temp\
+Tocat - Context
+http://www.mulesoft.com/tomcat-context
+Tocat Wiki
+http://wiki.apache.org/tomcat/FAQ/Windows#Q10
+Procrun - Wrap Tomcat as windows service
+http://commons.apache.org/daemon/procrun.html
+Tomcat multi instances
+http://builddeploy.blogspot.com/2010/02/running-multiple-tomcat-instances-on.html
+
+AOP - Rollback
+TransactionInterceptor.invoke() calls completeTransactionAfterThrowing()  which rollbacks only RuntimeExceptions
+
+JSF - passing parameters
+http://www.mkyong.com/jsf2/4-ways-to-pass-parameter-from-jsf-page-to-backing-bean/
+http://www.coderanch.com/t/504247/JSF/java/passing-parameters-one-page-another
+JSF - view parameters
+http://jdevelopment.nl/stateless-stateful-jsf-view-parameters/
+JSF + Spring (ViewScope Controler using non-serializable parameter)
+http://stackoverflow.com/questions/3180963/spring-session-scoped-beans-controllers-and-references-to-services-in-terms-o
+JSF-faces messages on page redirect
+http://ocpsoft.org/java/persist-and-pass-facesmessages-over-page-redirects/
+JSF - pass parameters in form
+http://stackoverflow.com/questions/5068466/changing-browser-url-from-backing-bean
+Locale
+http://stackoverflow.com/questions/4745181/jsf-setlocale-doesnt-work-appropriately
+
+Jar locking problem
+http://stackoverflow.com/questions/2737983/tomcat-6-whats-the-significance-of-antiresourcelocking-antijarlocking
+http://wiki.apache.org/tomcat/FAQ/Windows#Q5
+http://mail-archives.apache.org/mod_mbox/tomcat-dev/200411.mbox/%3C20041103214923.8954.qmail@nagoya.betaversion.org%3E
+http://tomcat.apache.org/tomcat-6.0-doc/config/listeners.html#JRE_Memory_Leak_Prevention_Listener_-_org.apache.catalina.core.JreMemoryLeakPreventionListener
+
+My Forum posts relating OZoneAdmin
+http://serverfault.com/questions/359636/iis-tomcat-on-the-same-machine
+http://serverfault.com/questions/366606/tomcat-security-without-a-web-server
+http://forum.primefaces.org/viewtopic.php?f=3&t=18101&p=59302#p59302
+http://stackoverflow.com/questions/9660989/how-can-i-mapp-uploads-folder-outside-web-application-structure
+http://forum.primefaces.org/viewtopic.php?f=3&t=17132&p=59774
+http://forum.primefaces.org/viewtopic.php?f=3&t=16386&p=59995#p59995    (disable editor)
+http://stackoverflow.com/questions/9986197/jsf-managedbean-injected-properties-not-working-correctly-on-state-saving-meth
+http://forum.primefaces.org/viewtopic.php?f=3&t=14017
+http://stackoverflow.com/questions/13324380/primeaces-accordion-with-single-form-single-submit-button
+
+FE (ermalaliraj user)
+http://forum.primefaces.org/viewtopic.php?f=3&t=20476&p=64283#p64283
+
+mail
+http://forums.incredimail.com/viewtopic.php?f=10&t=252
+
+JAR - run
+java -cp {jarfile} MainClass 
+
+ViewExpiredExceptions
+http://forum.primefaces.org/viewtopic.php?f=3&t=2631
+
+FZone -  red color button #b62834
+OZone menu bar blu 333a9e
+contdown f0e0b4
+bluja e menu- se:  37459d
+bluja e backgroundit: 34679a
+bluja e backgroundit(pika me e zbeht):5497c8
+grija me e erret e headerit: b6b7b7
+butoni i kuq: c2343e
+butoni i kuq(pjesa me e zbehte): f37175
+FZone:
+e kuqja e shkrimeve: cc3333
+
+
+					

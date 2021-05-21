@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="CUSTOMER_LOG">
+
+    <resultMap id="customerLogResultMap" type="al.ozone.bl.model.CustomerLog">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+	   	<result column="OP_TYPE" property="opType" jdbcType="VARCHAR" />
+	   	<result column="OP_DATE" property="opDate" jdbcType="TIMESTAMP" />
+	   	<result column="ERROR_MSG" property="errorMsg" jdbcType="VARCHAR" />
+	   	<association property="customer" column="CUSTOMER_ID" select="CUSTOMER.get"/>
+	</resultMap>
+	
+	<select id="get" resultMap="customerLogResultMap" parameterType="int">
+		select *
+		from CUSTOMER_LOG
+		where ID = #{id,jdbcType=DECIMAL}		
+	</select>
+	
+	<insert id="insert" parameterType="al.ozone.bl.model.CustomerLog">
+		insert into CUSTOMER_LOG (CUSTOMER_ID, OP_TYPE, OP_DATE, ERROR_MSG)
+		values (
+				#{customer.id,jdbcType=DECIMAL}, 
+				#{opType,jdbcType=VARCHAR}, 
+				#{opDate,jdbcType=VARCHAR}, 
+				#{errorMsg,jdbcType=VARCHAR})
+		<selectKey keyProperty="id" resultType="java.lang.Integer"  >
+			VALUES NEXT VALUE FOR seq_customer;
+	   	</selectKey>
+	</insert>
+	
+	<select id="search" resultMap="customerLogResultMap" parameterType="al.ozone.bl.bean.SearchCustomerLog">
+		select log.*
+		from CUSTOMER_LOG log LEFT JOIN CUSTOMER c on log.customer_id = c.id
+		where 1=1
+		<if test="cusEmail!=null and cusEmail!=''">and upper(c.EMAIL) like upper(CONCAT('%', #{cusEmail,jdbcType=VARCHAR}, '%'))</if>
+		<if test="opType!=null and opType!=''">and log.OP_TYPE = #{opType,jdbcType=VARCHAR}</if>
+		<if test="from!=null">and UNIX_TIMESTAMP(DATE(log.OP_DATE)) >= UNIX_TIMESTAMP(#{from,jdbcType=TIMESTAMP})</if>
+		<if test="to!=null">and UNIX_TIMESTAMP(#{to,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(log.OP_DATE)) </if>
+		<if test="noCustomer!=null and noCustomer==true ">and log.customer_id is null </if>
+		order by ID desc
+	</select>
+  	
+</mapper>

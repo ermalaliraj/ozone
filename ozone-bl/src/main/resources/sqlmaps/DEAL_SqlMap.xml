@@ -1,0 +1,741 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="DEAL">
+
+	<resultMap id="dealResultMap" type="al.ozone.bl.model.Deal">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="TITLE" property="title" jdbcType="VARCHAR" />  
+	   	<result column="TITLE_NEWSLETTER" property="titleNewsletter" jdbcType="VARCHAR" />  
+	   	<result column="DISCOUNT_DURATION" property="discountDuration" jdbcType="VARCHAR" />
+	   	<result column="CLIENT_FULLNAME" property="clientFullName" jdbcType="VARCHAR" />
+	   	<result column="CLIENT_CEL" property="clientCel" jdbcType="VARCHAR" />
+	   	<result column="BROKER_FULLNAME" property="brokerFullName" jdbcType="VARCHAR" />
+	   	<result column="BROKER_CEL" property="brokerCel" jdbcType="VARCHAR" />
+	    <result column="CONTRACT_DATE" property="contractDate" jdbcType="TIMESTAMP" />
+	    <result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+	    <result column="END_DATE" property="endDate" jdbcType="TIMESTAMP" />
+	   	<result column="ORDER_NR" property="order" jdbcType="DECIMAL" />
+	   	<result column="STATUS" property="status" jdbcType="VARCHAR" />
+	   	<result column="ORDER_NR" property="order" jdbcType="DECIMAL" />
+	   	<result column="TOT_PURCHASE" property="totPurchases" jdbcType="DECIMAL" />
+	   	<result column="MAIN_IMG" property="mainImgName" jdbcType="VARCHAR" />
+		<result column="SYNTHESIS" property="synthesis" jdbcType="VARCHAR" />
+	   	<result column="CONDITIONS" property="conditions" jdbcType="VARCHAR" />
+	   	<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+	   	<result column="COUPONS_PREPARED" property="couponsPrepared" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+		<result column="APPROVED_PUBLISHING" property="approvedForPublish" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+	   	<result column="APPROVED_USER" property="approvedUser" jdbcType="VARCHAR" />
+	   	<result column="APPROVED_DATE" property="approvedDate" jdbcType="TIMESTAMP" />
+	    <result column="COUPON_IMMEDIATELY" property="couponImmediately" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+	   	<result column="LAST_UPDATE" property="lastUpdate" jdbcType="TIMESTAMP" />
+	   	<result column="LAST_UPDATE_USER" property="lastUpdateUser" jdbcType="TIMESTAMP" />
+	   	<result column="CONTRACT_COMMENT" property="contractComment" jdbcType="VARCHAR" />
+	   	<association property="uploadedFiles" column="ID" select="getUploadedFiles"/>
+	   	<association property="partner" column="PARTNER_ID" select="PARTNER.get"/>
+	   	<association property="choices" column="ID" select="DEAL_CHOICE.getChoicesForDeal"/>	
+	   	<association property="dealCities" column="ID" select="CITY.getCitiesForDeal"/>   	
+  	</resultMap> 
+  	
+  	<!-- Deal with only data needed in the search List -->
+  	<resultMap id="dealSearchResultMap" type="al.ozone.bl.model.Deal">
+	   	<id column="ID" property="id" jdbcType="DECIMAL" />
+	   	<result column="TITLE" property="title" jdbcType="VARCHAR" />  
+	    <result column="CONTRACT_DATE" property="contractDate" jdbcType="TIMESTAMP" />
+	    <result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+	    <result column="END_DATE" property="endDate" jdbcType="TIMESTAMP" />
+	    <result column="DISCOUNT_DURATION" property="discountDuration" jdbcType="VARCHAR" />
+	    <result column="COUPON_IMMEDIATELY" property="couponImmediately" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+	   	<result column="APPROVED_PUBLISHING" property="approvedForPublish" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+	   	<result column="STATUS" property="status" jdbcType="VARCHAR" />
+	   	<result column="ORDER_NR" property="order" jdbcType="DECIMAL" />
+	   	<result column="MAIN_IMG" property="mainImgName" jdbcType="VARCHAR" />
+	   	<result column="BROKER_FULLNAME" property="brokerFullName" jdbcType="VARCHAR" />
+	   	<result column="CONTRACT_COMMENT" property="contractComment" jdbcType="VARCHAR" />
+	   	<result column="TOT_PURCHASE" property="totPurchases" jdbcType="DECIMAL" />
+	   	<association property="partner" column="PARTNER_ID" select="PARTNER.get"/>
+	   	<association property="choices" column="ID" select="DEAL_CHOICE.getChoicesForDeal"/>	
+	</resultMap> 
+  	
+  	<!-- Deal with only data needed in the search List and in FE purchases list -->
+  	<resultMap id="dealSimpleResultMap" type="al.ozone.bl.model.Deal">
+	   	<id column="ID" property="id" jdbcType="DECIMAL" />
+	   	<result column="TITLE" property="title" jdbcType="VARCHAR" />  
+	    <result column="CONTRACT_DATE" property="contractDate" jdbcType="TIMESTAMP" />
+	   	<result column="DISCOUNT_DURATION" property="discountDuration" jdbcType="VARCHAR" />
+	   	<result column="COUPON_IMMEDIATELY" property="couponImmediately" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+	   	<result column="APPROVED_PUBLISHING" property="approvedForPublish" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+	   	<result column="MAIN_IMG" property="mainImgName" jdbcType="VARCHAR" />
+		<association property="partner" column="PARTNER_ID" select="getPartner"/>
+	</resultMap> 
+	
+	<!-- deal for dealchoice (usually having the conditions of publications). Used in Coupon -->
+	<resultMap id="dealForDealChoiceResultMap" type="al.ozone.bl.model.Deal">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="COUPON_IMMEDIATELY" property="couponImmediately" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+	   	<result column="MAIN_IMG" property="mainImgName" jdbcType="VARCHAR" />
+		<result column="SYNTHESIS" property="synthesis" jdbcType="VARCHAR" />
+	   	<result column="CONDITIONS" property="conditions" jdbcType="VARCHAR" />
+	   	<result column="STATUS" property="status" jdbcType="VARCHAR" />
+	   	<result column="END_DATE" property="endDate" jdbcType="TIMESTAMP" /> <!-- to calculate expDate on FE purchases List -->
+	   	<result column="DISCOUNT_DURATION" property="discountDuration" jdbcType="DECIMAL" /><!-- to calculate expDate on FE purchases List -->
+	   	<association property="partner" column="PARTNER_ID" select="PARTNER.get"/>	   	
+  	</resultMap> 
+  	<select id="getDealForDealChoice" resultMap="dealForDealChoiceResultMap" parameterType="int" >
+		select d.*
+		from DEAL d
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+  	
+  	<!-- Deal with only data needed in a drop-down id/title-->
+  	<resultMap id="dealWithOnlyTitleResultMap" type="al.ozone.bl.model.Deal">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+	   	<result column="TITLE" property="title" jdbcType="VARCHAR" />  
+  	</resultMap> 
+  	
+  	<resultMap id="partnerResultMap" type="al.ozone.bl.model.Partner">
+	   <id column="ID" property="id" jdbcType="DECIMAL" />
+	   <result column="NAME" property="name" jdbcType="VARCHAR" />
+  	</resultMap> 
+	<select id="getPartner" resultMap="partnerResultMap" parameterType="long" >
+		select ID, NAME
+		from PARTNER
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	
+	<select id="get" resultMap="dealResultMap" parameterType="int" >
+		select d.*
+		from DEAL d
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	
+	<select id="getSimpleDeal" resultMap="dealSimpleResultMap" parameterType="int" >
+		select *
+		from DEAL
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	
+	<select id="getDealWithOnlyTitle" resultMap="dealWithOnlyTitleResultMap" parameterType="int" >
+		select *
+		from DEAL
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	
+	<select id="getAll" resultMap="dealResultMap">
+		select *
+		from DEAL
+	</select>
+	
+	<delete id="delete" parameterType="al.ozone.bl.model.Deal" >
+		delete from DEAL
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+	
+	<insert id="insert" parameterType="al.ozone.bl.model.Deal">
+		insert into DEAL (TITLE, DISCOUNT_DURATION,
+						PARTNER_ID, CLIENT_FULLNAME, CLIENT_CEL, BROKER_FULLNAME, BROKER_CEL,
+						CONTRACT_DATE,
+						MAIN_IMG, SYNTHESIS, CONDITIONS, DESCRIPTION,
+						APPROVED_PUBLISHING, APPROVED_USER, APPROVED_DATE, LAST_UPDATE, LAST_UPDATE_USER, 
+						COUPON_IMMEDIATELY, TITLE_NEWSLETTER, CONTRACT_COMMENT)
+		values (
+				#{title,jdbcType=VARCHAR}, 
+				#{discountDuration,jdbcType=DECIMAL}, 
+				#{partner.id,jdbcType=DECIMAL}, 
+				#{clientFullName,jdbcType=VARCHAR}, 
+				#{clientCel,jdbcType=VARCHAR}, 
+				#{brokerFullName,jdbcType=VARCHAR}, 
+				#{brokerCel,jdbcType=VARCHAR},
+				#{contractDate,jdbcType=TIMESTAMP},
+				#{mainImgName,jdbcType=VARCHAR},
+				#{synthesis,jdbcType=VARCHAR}, 
+				#{conditions,jdbcType=VARCHAR}, 
+				#{description,jdbcType=VARCHAR},			
+				#{approvedForPublish,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler},
+				#{approvedUser,jdbcType=VARCHAR},
+				#{approvedDate,jdbcType=TIMESTAMP},
+				#{lastUpdate,jdbcType=TIMESTAMP},
+				#{lastUpdateUser,jdbcType=VARCHAR},
+				#{couponImmediately,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler},
+				#{titleNewsletter,jdbcType=VARCHAR},
+				#{contractComment,jdbcType=VARCHAR})
+		<selectKey keyProperty="id" resultType="java.lang.Integer"  >
+			VALUES NEXT VALUE FOR seq_deal;
+	   	</selectKey>
+	</insert>
+	
+	<update id="update" parameterType="al.ozone.bl.model.Deal" >
+	    update DEAL
+	    set TITLE = #{title,jdbcType=VARCHAR}, 
+	    DISCOUNT_DURATION = #{discountDuration,jdbcType=DECIMAL}, 
+	    PARTNER_ID = #{partner.id,jdbcType=VARCHAR},
+	    CLIENT_FULLNAME = #{clientFullName,jdbcType=VARCHAR}, 
+	    CLIENT_CEL = #{clientCel,jdbcType=VARCHAR},
+	    BROKER_FULLNAME = #{brokerFullName,jdbcType=VARCHAR},
+	    BROKER_CEL = #{brokerCel,jdbcType=VARCHAR},
+	    START_DATE = #{startDate,jdbcType=TIMESTAMP},
+	    END_DATE = #{endDate,jdbcType=TIMESTAMP},
+	    ORDER_NR = #{order,jdbcType=VARCHAR},
+	    MAIN_IMG = #{mainImgName,jdbcType=VARCHAR},
+	    SYNTHESIS = #{synthesis,jdbcType=VARCHAR}, 
+	    CONDITIONS = #{conditions,jdbcType=VARCHAR}, 
+	    DESCRIPTION = #{description,jdbcType=VARCHAR},
+	    APPROVED_PUBLISHING = #{approvedForPublish,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler},
+	    APPROVED_USER = #{approvedUser,jdbcType=VARCHAR},
+	    APPROVED_DATE = #{approvedDate,jdbcType=TIMESTAMP},
+	    CONTRACT_DATE = #{contractDate,jdbcType=TIMESTAMP},
+	    LAST_UPDATE = #{lastUpdate,jdbcType=TIMESTAMP},
+	    LAST_UPDATE_USER = #{lastUpdateUser,jdbcType=VARCHAR}
+	    where ID = #{id,jdbcType=DECIMAL}
+    </update>
+    
+    <update id="updateDealInCalendar" parameterType="al.ozone.bl.model.Deal" >
+	    update DEAL
+	    set STATUS = #{status,jdbcType=TIMESTAMP},
+	    START_DATE = #{startDate,jdbcType=TIMESTAMP},
+	    END_DATE = #{endDate,jdbcType=TIMESTAMP},
+	    ORDER_NR = #{order,jdbcType=VARCHAR},
+	    LAST_UPDATE = #{lastUpdate,jdbcType=TIMESTAMP},
+	    LAST_UPDATE_USER = #{lastUpdateUser,jdbcType=VARCHAR}
+	    where ID = #{id,jdbcType=DECIMAL}
+    </update>
+	
+	<select id="search" resultMap="dealSearchResultMap" parameterType="al.ozone.bl.bean.SearchDealBean">
+		select d.ID, d.TITLE, d.CONTRACT_DATE, d.START_DATE, d.END_DATE, d.DISCOUNT_DURATION, 
+				d.APPROVED_PUBLISHING, d.STATUS, d.ORDER_NR, d.TOT_PURCHASE, 
+				d.BROKER_FULLNAME, d.CONTRACT_COMMENT, d.COUPON_IMMEDIATELY, p.id PARTNER_ID
+		from DEAL d, PARTNER p
+		where d.PARTNER_ID = p.ID 
+		<if test="dealId!=null and dealId!='' and dealId!=0">and d.id = #{dealId,jdbcType=DECIMAL}</if>
+		<if test="dealTitle!=null">and upper(d.TITLE) like upper(CONCAT('%', #{dealTitle,jdbcType=VARCHAR}, '%'))</if>
+		<if test="partnerName!=null and partnerName!=''">and upper(p.NAME) like upper(CONCAT('%', #{partnerName,jdbcType=VARCHAR}, '%'))</if>
+		<if test="isApprovedForPub!=null">and d.APPROVED_PUBLISHING = #{isApprovedForPub,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler} </if>
+		<if test="status!=null and status!=''">and d.STATUS = #{status,jdbcType=VARCHAR}</if>
+		<if test="insertedFrom!=null">and UNIX_TIMESTAMP(DATE(d.CONTRACT_DATE)) >= UNIX_TIMESTAMP(#{insertedFrom,jdbcType=TIMESTAMP})</if>
+		<if test="insertedTo!=null">and UNIX_TIMESTAMP(#{insertedTo,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(d.CONTRACT_DATE)) </if>
+		<if test="startedFrom!=null">and UNIX_TIMESTAMP(DATE(d.START_DATE)) >= UNIX_TIMESTAMP(#{startedFrom,jdbcType=TIMESTAMP})</if>
+		<if test="startedTo!=null">and UNIX_TIMESTAMP(#{startedTo,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(d.START_DATE)) </if>
+		<if test="categoryId!=null and categoryId>0"> and p.CATEGORY_ID = #{categoryId,jdbcType=DECIMAL} </if>
+		order by d.id desc
+	</select>
+
+	<update id="updateDataDeal" parameterType="al.ozone.bl.model.Deal" >
+		update DEAL
+	    set TITLE = #{title,jdbcType=VARCHAR}, 
+	    DISCOUNT_DURATION = #{discountDuration,jdbcType=DECIMAL}, 
+	    PARTNER_ID = #{partner.id,jdbcType=VARCHAR},
+	    CLIENT_FULLNAME = #{clientFullName,jdbcType=VARCHAR}, 
+	    CLIENT_CEL = #{clientCel,jdbcType=VARCHAR},
+	    BROKER_FULLNAME = #{brokerFullName,jdbcType=VARCHAR},
+	    BROKER_CEL = #{brokerCel,jdbcType=VARCHAR},
+	    CONTRACT_DATE = #{contractDate,jdbcType=TIMESTAMP},
+	    LAST_UPDATE = #{lastUpdate,jdbcType=TIMESTAMP},
+	    LAST_UPDATE_USER = #{lastUpdateUser,jdbcType=TIMESTAMP},
+	    COUPON_IMMEDIATELY = #{couponImmediately,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler},
+	    TITLE_NEWSLETTER = #{titleNewsletter,jdbcType=VARCHAR},
+	    CONTRACT_COMMENT = #{contractComment,jdbcType=VARCHAR},
+	    START_DATE = #{startDate,jdbcType=TIMESTAMP},
+	    END_DATE = #{endDate,jdbcType=TIMESTAMP},
+	    ORDER_NR = #{order,jdbcType=DECIMAL}
+	    where ID = #{id,jdbcType=DECIMAL}
+    </update>
+	<update id="updateSynthConditions" parameterType="al.ozone.bl.model.Deal" >
+	    update DEAL
+	    set SYNTHESIS = #{synthesis,jdbcType=VARCHAR}, 
+	    CONDITIONS = #{conditions,jdbcType=VARCHAR},
+	    LAST_UPDATE = #{lastUpdate,jdbcType=TIMESTAMP},
+	    LAST_UPDATE_USER = #{lastUpdateUser,jdbcType=TIMESTAMP}
+	    where ID = #{id,jdbcType=DECIMAL}
+    </update>
+    <update id="updateDescription" parameterType="al.ozone.bl.model.Deal" >
+	    update DEAL
+	    set DESCRIPTION = #{description,jdbcType=VARCHAR},
+	    LAST_UPDATE = #{lastUpdate,jdbcType=TIMESTAMP},
+	    LAST_UPDATE_USER = #{lastUpdateUser,jdbcType=TIMESTAMP}
+	    where ID = #{id,jdbcType=DECIMAL}
+    </update>
+    <update id="updateImageAndApproval" parameterType="al.ozone.bl.model.Deal" >
+	    update DEAL
+	    set MAIN_IMG = #{mainImgName,jdbcType=VARCHAR},
+	    APPROVED_PUBLISHING = #{approvedForPublish,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler},
+	    APPROVED_USER = #{approvedUser,jdbcType=VARCHAR},
+	    APPROVED_DATE = #{approvedDate,jdbcType=TIMESTAMP},
+	    LAST_UPDATE = #{lastUpdate,jdbcType=TIMESTAMP},
+	    LAST_UPDATE_USER = #{lastUpdateUser,jdbcType=TIMESTAMP}
+	    where ID = #{id,jdbcType=DECIMAL}
+    </update>
+	
+	<select id="getUploadedFiles" resultType="string" parameterType="int" >
+		select IMG_NAME
+		from UPLOAD_FILE
+		where DEAL_ID = #{id,jdbcType=DECIMAL}
+	</select>
+	<insert id="uploadFileForDeal" parameterType="map">
+		insert into UPLOAD_FILE (DEAL_ID, IMG_NAME)
+		values (#{dealId,jdbcType=DECIMAL}, #{fileName,jdbcType=VARCHAR})
+	</insert>
+	<delete id="removeFileForDeal" parameterType="map">
+		delete from UPLOAD_FILE
+		where DEAL_ID = #{dealId,jdbcType=DECIMAL}
+		and IMG_NAME = #{fileName,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="getApprovedDeals" resultMap="dealWithOnlyTitleResultMap">
+		select ID, TITLE
+		from DEAL
+		where APPROVED_PUBLISHING= 'Y'
+		and STATUS = 'W'
+	</select>
+	<select id="getActiveDeals" resultMap="dealResultMap" parameterType="map">
+		select *
+		from DEAL d, partner p
+		where d.partner_id = p.id
+		and d.STATUS = 'A'		
+		<if test="category!=null">and p.category_id = #{category,jdbcType=VARCHAR}</if>
+   		order by ifnull(d.order_nr, 100) asc	
+	</select>
+	
+<!-- 	<update id="setDealAsPublished" parameterType="map" >
+	    update DEAL
+	    set PUBLISHED = #{isPublished,jdbcType=DECIMAL,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler}
+	    where ID = #{id,jdbcType=DECIMAL}
+    </update> -->
+	
+	<update id="setDealAsConfirmed" parameterType="int" >
+	    update DEAL
+	    set CONFIRMED = 'Y'
+	    where ID = #{id,jdbcType=DECIMAL}
+    </update>
+
+	<update id="increasePurchases" parameterType="map">
+		update DEAL
+		set TOT_PURCHASE = IFNULL(TOT_PURCHASE,0) + #{totPurchase,jdbcType=DECIMAL}
+		where ID = #{dealId,jdbcType=DECIMAL}
+	</update>
+	
+	<select id="getAllDealsForCity" resultMap="dealSearchResultMap" parameterType="string">
+		select * 
+		from DEAL
+		where START_DATE IS NOT NULL
+		<if test="onlyActives!=null and onlyActives==true">and STATUS = "A"</if>
+		order by order_nr
+	</select>	
+	
+	<select id="getDealsNotPublished" resultMap="dealSearchResultMap">
+		<![CDATA[
+		select * 
+		from DEAL		
+		where (START_DATE IS NULL or END_DATE IS NULL)
+		and STATUS <> "D"
+		]]>
+	</select>
+	
+	<update id="changeOrder" parameterType="map">
+		update DEAL
+		set ORDER_NR = #{newOrder,jdbcType=DECIMAL}
+		where ID = #{dealId,jdbcType=DECIMAL}
+	</update>
+	
+	<select id="getAllClosedDeals" resultMap="dealResultMap">
+		select * 
+		from DEAL		
+		where STATUS = 'C'
+		order by end_date desc
+	</select>
+	
+	<select id="getDealsStartToday" resultMap="dealResultMap" parameterType="java.util.Date">
+		select * from DEAL
+		where UNIX_TIMESTAMP(DATE(START_DATE)) = UNIX_TIMESTAMP(DATE(#{startDate,jdbcType=TIMESTAMP}))
+	</select>
+    <select id="getDealsEndToday" resultMap="dealResultMap" parameterType="java.util.Date">
+		select *  from DEAL
+		where UNIX_TIMESTAMP(DATE(END_DATE)) = UNIX_TIMESTAMP(DATE(#{endDate,jdbcType=TIMESTAMP}))
+	</select>
+	<update id="changeDealStatusTo" parameterType="map" >
+	    update DEAL
+	    set STATUS = #{status,jdbcType=TIMESTAMP}
+	    where ID in
+	    <foreach item="item" index="index" collection="list"
+			open="(" separator="," close=")">
+			#{item.id}
+		</foreach> 
+    </update>
+    
+    <update id="setCouponsPreparedForDeal" parameterType="map">
+		update DEAL
+		set COUPONS_PREPARED = #{couponsPrepared,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler}
+		where ID = #{dealId,jdbcType=DECIMAL}
+	</update>
+	
+	<select id="getAllCustomerEmailsForDeal" resultType="string" parameterType="int">
+		select EMAIL
+		from DEAL d, PURCHASE pur, CUSTOMER c
+		where d.ID = pur.DEAL_ID
+		and pur.CUSTOMER_ID = c.ID
+		and d.ID = #{dealId,jdbcType=DECIMAL}
+		group by EMAIL
+	</select>	
+	
+	<select id="getTodayExpiringDeals" resultMap="dealResultMap">
+		select *
+		from deal
+		where UNIX_TIMESTAMP(DATE(NOW())) =  
+		UNIX_TIMESTAMP(DATE(DATE_ADD(DATE_ADD(end_date, INTERVAL DISCOUNT_DURATION MONTH), INTERVAL 1 DAY)))
+	</select>
+	
+	<update id="setDealConfirmed" parameterType="map">
+		update DEAL
+		set CONFIRMED = #{confirmed,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler}
+		where ID = #{dealId,jdbcType=DECIMAL}
+	</update>
+	
+	<!-- NEWSLETTERS -->
+	<resultMap id="newsletterResultMap" type="al.ozone.bl.model.Newsletter">
+		<result column="CITY_ID" property="cityId" jdbcType="VARCHAR" />
+		<result column="CITY_NAME" property="cityName" jdbcType="VARCHAR" />	
+		<association property="activeDeals" column="CITY_ID" select="getActiveDealsForCity"/>
+  	</resultMap>
+  	
+	<select id="getActiveDealsForCity" resultMap="dealResultMap">
+		select *
+		from DEAL d
+		where 1=1 
+		AND UNIX_TIMESTAMP(DATE(d.START_DATE)) = UNIX_TIMESTAMP(DATE_ADD(date(now()), interval 1 day))
+		order by d.ORDER_NR
+	</select>
+	
+	<select id="getDealsAlreadyActive" resultMap="dealResultMap">
+		select *
+		from DEAL d
+		where d.STATUS = 'A'
+		and UNIX_TIMESTAMP(DATE_ADD(date(now()), interval 1 day)) > UNIX_TIMESTAMP(DATE(d.START_DATE)) 
+		order by d.START_DATE desc
+	</select>
+	
+	<select id="getDealsStartTodayGroupedByCity" resultMap="newsletterResultMap">
+		select c.ID CITY_ID, c.NAME CITY_NAME, COUNT(*) totActivePublications
+		from deal d, city c, deal_city dc
+		where dc.DEAL_ID = d.ID
+		and dc.CITY_ID = c.ID
+		AND UNIX_TIMESTAMP(DATE(d.START_DATE)) = UNIX_TIMESTAMP(DATE_ADD(date(now()), interval 1 day))
+		group by CITY_ID
+	</select>	
+	<!-- END NEWSLETTERS -->
+	
+	<update id="changeAccountedDeal" parameterType="map">
+		update DEAL
+		set ACCOUNTED = #{isAccounted,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler}
+		where ID = #{dealId,jdbcType=DECIMAL}
+	</update>
+		
+	<select id="getActivePubsGroupedByPurchases" resultMap="SYSTEMCONFIGBEAN.applicationConfigMap">
+		<![CDATA[
+	    select deal.id as CONFIG_KEY, IFNULL(sum(quantity), 0) as CONFIG_VALUE
+		from DEAL deal, 
+        	DEAL_CHOICE dc left JOIN PURCHASE p on dc.DEAL_ID = p.DEAL_ID
+                        and dc.CHOICE_NR = p.DEAL_CHOICE
+			        	and customer_id <> 82		
+			        	and p.CONFIRMED = 'Y'	
+        where deal.id = dc.deal_id
+        and deal.status = 'A'
+		group by deal.id
+		]]>
+	</select>
+	
+	<resultMap id="resultStatsResultMap" type="al.ozone.bl.bean.ResultStatisticBean">
+	   <result column="month" property="key" jdbcType="VARCHAR" />
+	   <result column="nr" property="value" jdbcType="DECIMAL" />
+ 	</resultMap>  
+	<select id="getDealsGroupByPubDate" resultMap="resultStatsResultMap">
+	    <![CDATA[
+	    select 
+	        CASE MONTH(START_DATE) 
+	            WHEN 1 THEN 'Janar' 
+	            WHEN 2 THEN 'Shkurt' 
+	            WHEN 3 THEN 'Mars' 
+	            WHEN 4 THEN 'Prill' 
+	            WHEN 5 THEN 'Maj' 
+	            WHEN 6 THEN 'Qershor' 
+	            WHEN 7 THEN 'Korrik' 
+	            WHEN 8 THEN 'Gusht' 
+	            WHEN 9 THEN 'Shtator' 
+	            WHEN 10 THEN 'Tetor' 
+	            WHEN 11 THEN 'Nentor' 
+	            WHEN 12 THEN 'Dhjetor' 
+	        END as month
+	        , count(*) as nr
+		from deal 
+        where START_DATE is not null
+        and status <> 'W'
+		group by YEAR(START_DATE), MONTH(START_DATE)
+		]]>
+	</select>
+ 
+	<select id="searchDealReport2" resultMap="dealStatsResultMap" parameterType="al.ozone.bl.bean.SearchDealReportBean">
+		<![CDATA[
+	    select d.id as deal_id, dc.choice_nr, dc.title_choice, d.contract_date, d.end_date, d.discount_duration
+		        , dc.full_price, dc.price, dc.commission
+		        , count(dc.deal_id) tot_purchase
+		        , count(case when pay_type=1 then pay_type end) as 'cash'
+		        , count(case when pay_type=3 then pay_type end) as 'paypal'
+		        , sum(credit_spent) bonusUsed
+		        , sum(money_spent) totAmount
+		        , count(case when coupon_status = 'U' then coupon_status end) as 'used'
+		        , count(case when coupon_status = 'R' then coupon_status end) as 'returned'
+		        , count(case when coupon_status = 'E' then coupon_status end) as 'expired'
+		        , c.valid_to
+		from deal d, deal_choice dc, purchase pur, payment p , coupon c
+		where d.ID = dc.DEAL_ID
+		and pur.deal_id = dc.deal_id
+		and pur.deal_choice = dc.choice_nr
+		and pur.payment_id = p.id
+		and pur.id = c.purchase_id
+		and d.confirmed = 'Y'
+		and pur.customer_id <> 82
+		]]>
+		<if test="dealId!=null and dealId!='' and dealId!=0">and d.id = #{dealId,jdbcType=DECIMAL}</if>
+		<if test="dealTitle!=null">and upper(d.TITLE) like upper(CONCAT('%', #{dealTitle,jdbcType=VARCHAR}, '%'))</if>
+		<if test="status!=null and status!=''">and d.STATUS = #{status,jdbcType=VARCHAR}</if>
+		<if test="isApprovedForPub!=null">and if(UNIX_TIMESTAMP(DATE(now())) > UNIX_TIMESTAMP(date(c.valid_to))=1, 'Y', 'N') = #{isApprovedForPub,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler} </if>
+		<if test="insertedFrom!=null">and UNIX_TIMESTAMP(DATE(d.CONTRACT_DATE)) >= UNIX_TIMESTAMP(#{insertedFrom,jdbcType=TIMESTAMP})</if>
+		<if test="insertedTo!=null">and UNIX_TIMESTAMP(#{insertedTo,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(d.CONTRACT_DATE)) </if>
+		<if test="closedFrom!=null">and UNIX_TIMESTAMP(DATE(d.END_DATE)) >= UNIX_TIMESTAMP(#{closedFrom,jdbcType=TIMESTAMP})</if>
+		<if test="closedTo!=null">and UNIX_TIMESTAMP(#{closedTo,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(d.END_DATE)) </if>
+		group by dc.deal_id, dc.choice_nr
+	</select>
+	
+	<resultMap id="dealStatsResultMap" type="al.ozone.bl.model.DealReport">
+		<result column="deal_id" property="dealId" jdbcType="DECIMAL" />
+		<result column="choice_nr" property="choiceNr" jdbcType="DECIMAL" />
+		<result column="title_choice" property="choiceTitle" jdbcType="DECIMAL" />
+		<result column="partner" property="partner" jdbcType="VARCHAR" />
+		<result column="contract_date" property="contractDate" jdbcType="DATE" />
+		<result column="end_date" property="endDate" jdbcType="DECIMAL" />
+		<result column="discount_duration" property="discountDuration" jdbcType="DECIMAL" />
+		<result column="valid_to" property="offerExpiration" jdbcType="DATE" />
+		<result column="full_price" property="fullPrice" jdbcType="VARCHAR" />
+		<result column="price" property="priceSellOZone" jdbcType="DECIMAL" />
+		<result column="commission" property="percentCommission" jdbcType="DECIMAL" />
+		<result column="tot_purchase" property="nrPurchaseTotal" jdbcType="DECIMAL" />
+		<result column="cash" property="nrPurchaseCash" jdbcType="DECIMAL" />
+		<result column="paypal" property="nrPurchasePayPal" jdbcType="DECIMAL" />
+		<result column="easypay" property="nrPurchaseEasyPay" jdbcType="DECIMAL" />
+		<result column="bank" property="nrPurchaseBank" jdbcType="DECIMAL" />		
+		<result column="bonusUsed" property="totBonusUsed" jdbcType="DECIMAL" />
+		<result column="used" property="nrCouponsPayed" jdbcType="DECIMAL" />
+		<result column="returned" property="nrCouponsCanceled" jdbcType="DECIMAL" />
+	    <result column="expired" property="nrCouponsExpired" jdbcType="DECIMAL" />
+	    <result column="notUsed" property="nrCouponsStillToPay" jdbcType="DECIMAL" />	      
+	    <result column="singleEarning" property="singleEarning" jdbcType="DECIMAL" />
+	    <result column="priceBuyOzone" property="priceBuyOzone" jdbcType="DECIMAL" />
+	    <result column="totForPartner" property="totForPartner" jdbcType="DECIMAL" />
+	    <result column="totEarning" property="totEarning" jdbcType="DECIMAL" />
+	    <result column="totPayed" property="totPayed" jdbcType="DECIMAL" />
+	    <result column="totToPay" property="totToPay" jdbcType="DECIMAL" />
+	    <result column="totRemainFromPartners" property="totRemainFromPartners" jdbcType="DECIMAL" />
+	    <result column="totEarningForPayedCoupons" property="totEarningForPayedCoupons" jdbcType="DECIMAL" />
+	    <result column="totEarningForExpiredCoupons" property="totEarningForExpiredCoupons" jdbcType="DECIMAL" />
+	    <result column="absEarnings" property="absEarnings" jdbcType="DECIMAL" />
+	    <result column="ACCOUNTED" property="accounted" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+ 	</resultMap> 
+	<select id="searchDealReport" resultMap="dealStatsResultMap" parameterType="al.ozone.bl.bean.SearchDealReportBean">
+		
+		select d.id as deal_id, dc.choice_nr, dc.title_choice,  partner.name partner, c.valid_to  
+		    , d.contract_date, d.end_date, d.ACCOUNTED
+		    , dc.full_price, dc.price, dc.commission
+		    , dc.price * dc.commission / 100 singleEarning
+		    , dc.price - (dc.price * dc.commission / 100) priceBuyOZone            
+		    , count(case when pay_type=1 then pay_type end) as 'cash'
+	        , count(case when pay_type=2 then pay_type end) as 'easypay'
+	        , count(case when pay_type=3 then pay_type end) as 'paypal'
+		    , count(case when pay_type=4 then pay_type end) as 'bank'
+		    , count(dc.deal_id) tot_purchase            
+		    , dc.price * count(dc.deal_id) - bonusTable.tot totAmount     
+		    , count(case when coupon_status = 'N' then coupon_status end) as 'notUsed'
+		    , count(case when coupon_status = 'U' then coupon_status end) as 'used'
+		    , count(case when coupon_status = 'R' then coupon_status end) as 'returned'
+		    , count(case when coupon_status = 'E' then coupon_status end) as 'expired'			    	
+		    , bonusTable.tot bonusUsed
+		    , (dc.price - (dc.price * dc.commission / 100)) * count(dc.deal_id) totForPartner
+		    , (dc.price * count(dc.deal_id) - bonusTable.tot)  -  ((dc.price - (dc.price * dc.commission / 100)) * count(dc.deal_id)) totEarning
+		    , count(case when coupon_status = 'U' then coupon_status end) * (dc.price - (dc.price * dc.commission / 100) ) totPayed
+		    , count(case when coupon_status = 'N' then coupon_status end) * (dc.price - (dc.price * dc.commission / 100) ) totToPay
+		    , ((dc.price - (dc.price * dc.commission / 100)) * count(dc.deal_id)) - (count(case when coupon_status = 'U' then coupon_status end) * (dc.price - (dc.price * dc.commission / 100) ) ) totRemainFromPartners
+		    , (dc.price * dc.commission / 100) * (count(case when coupon_status = 'U' then coupon_status end)) totEarningForPayedCoupons
+		    , (dc.price * (count(case when coupon_status = 'E' then coupon_status end))) totEarningForExpiredCoupons
+		    , ((dc.price * dc.commission / 100) * (count(case when coupon_status = 'U' then coupon_status end))) + ((dc.price * (count(case when coupon_status = 'E' then coupon_status end)))) absEarnings
+		from deal d, deal_choice dc, purchase pur, payment p , coupon c, partner
+		    , (
+            select bonusForPurchase.deal_id, bonusForPurchase.deal_choice, sum(bonusForPurchase.tot) as tot    
+            from (
+                select deal_id, deal_choice, id as purId, sum(credit_spent) tot
+                from purchase
+                where 1=1
+                <if test="purchaseFrom!=null">and UNIX_TIMESTAMP(DATE(PURCHASE_DATE)) >= UNIX_TIMESTAMP(#{purchaseFrom,jdbcType=TIMESTAMP})</if>
+				<if test="purchaseTo!=null">and UNIX_TIMESTAMP(#{purchaseTo,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(PURCHASE_DATE)) </if>
+				group by id, credit_spent  
+            ) bonusForPurchase
+            group by bonusForPurchase.deal_id, bonusForPurchase.deal_choice
+		) bonusTable
+		where d.ID = dc.DEAL_ID
+		and pur.deal_id = dc.deal_id
+		and pur.deal_choice = dc.choice_nr
+		and pur.payment_id = p.id
+		and pur.id = c.purchase_id
+		and bonusTable.deal_id = dc.deal_id
+    	and bonusTable.deal_choice = dc.choice_nr
+		and d.partner_id = partner.id
+		and d.confirmed = 'Y'
+		<![CDATA[and pur.customer_id <> 82]]>		
+		<if test="dealId!=null and dealId!='' and dealId!=0">and d.id = #{dealId,jdbcType=DECIMAL}</if>
+		<if test="dealTitle!=null">and upper(d.TITLE) like upper(CONCAT('%', #{dealTitle,jdbcType=VARCHAR}, '%'))</if>
+		<if test="isExpired!=null">and if(UNIX_TIMESTAMP(DATE(now())) > UNIX_TIMESTAMP(date(c.valid_to))=1, 'Y', 'N') = #{isExpired,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler} </if>
+		<if test="isAccounted!=null">and d.ACCOUNTED = #{isAccounted,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler} </if>
+		<if test="insertedFrom!=null">and UNIX_TIMESTAMP(DATE(d.CONTRACT_DATE)) >= UNIX_TIMESTAMP(#{insertedFrom,jdbcType=TIMESTAMP})</if>
+		<if test="insertedTo!=null">and UNIX_TIMESTAMP(#{insertedTo,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(d.CONTRACT_DATE)) </if>
+		<if test="closedFrom!=null">and UNIX_TIMESTAMP(DATE(d.END_DATE)) >= UNIX_TIMESTAMP(#{closedFrom,jdbcType=TIMESTAMP})</if>
+		<if test="closedTo!=null">and UNIX_TIMESTAMP(#{closedTo,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(d.END_DATE)) </if>
+		<if test="purchaseFrom!=null">and UNIX_TIMESTAMP(DATE(pur.PURCHASE_DATE)) >= UNIX_TIMESTAMP(#{purchaseFrom,jdbcType=TIMESTAMP})</if>
+		<if test="purchaseTo!=null">and UNIX_TIMESTAMP(#{purchaseTo,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(pur.PURCHASE_DATE)) </if>
+		<if test="categoryId != null and categoryId>0"> and partner.CATEGORY_ID = #{categoryId,jdbcType=DECIMAL} </if>
+		group by dc.deal_id, dc.choice_nr
+	</select>
+	
+	
+	<resultMap id="contractPubsMap" type="al.ozone.bl.bean.ContratPublicationBean">
+		<result column="month" property="month" jdbcType="DECIMAL" />
+		<result column="totContrats" property="totContrats" jdbcType="DECIMAL" />
+		<result column="stillWaiting" property="stillWaiting" jdbcType="DECIMAL" />
+	</resultMap> 
+	<select id="getContratsGroupByMonths" resultMap="contractPubsMap" parameterType="al.ozone.bl.bean.SearchDealBean">
+		select CONTRACT_DATE,
+			ifnull(CASE MONTH(CONTRACT_DATE)
+		        WHEN 1 THEN 'Janar' 
+		        WHEN 2 THEN 'Shkurt' 
+		        WHEN 3 THEN 'Mars' 
+		        WHEN 4 THEN 'Prill' 
+		        WHEN 5 THEN 'Maj' 
+		        WHEN 6 THEN 'Qershor' 
+		        WHEN 7 THEN 'Korrik' 
+		        WHEN 8 THEN 'Gusht' 
+		        WHEN 9 THEN 'Shtator' 
+		        WHEN 10 THEN 'Tetor' 
+		        WHEN 11 THEN 'Nentor' 
+		        WHEN 12 THEN 'Dhjetor' 
+		    END, 'Pa Date') as month
+		    , count(*) as totContrats
+		    , count(case when status = 'W' then status end) as stillWaiting
+		from deal    
+		where 1=1    
+		<if test="startedFrom!=null">and UNIX_TIMESTAMP(DATE(CONTRACT_DATE)) >= UNIX_TIMESTAMP(#{startedFrom,jdbcType=TIMESTAMP})</if>
+		<if test="startedTo!=null">and UNIX_TIMESTAMP(#{startedTo,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(CONTRACT_DATE)) </if>
+		group by YEAR(CONTRACT_DATE), MONTH(CONTRACT_DATE)
+		order by ifnull(YEAR(CONTRACT_DATE), 2020), ifnull(MONTH(CONTRACT_DATE), 32)
+	</select>
+	
+	<resultMap id="resultDealCatResultMap" type="al.ozone.bl.bean.ResultStatisticBean">
+	   <result column="k" property="key" jdbcType="VARCHAR" />
+	   <result column="v" property="value" jdbcType="DECIMAL" />
+ 	</resultMap> 
+	<select id="getDealsGroupByCategory" resultMap="resultDealCatResultMap" parameterType="al.ozone.bl.bean.SearchDealBean">
+			select pc.name_al k, count(d.id) v
+			from deal d, partner p, partner_categories pc
+			where d.partner_id = p.id
+			and p.category_id = pc.id
+			<if test="startedFrom!=null">and UNIX_TIMESTAMP(DATE(d.CONTRACT_DATE)) >= UNIX_TIMESTAMP(#{startedFrom,jdbcType=TIMESTAMP})</if>
+			<if test="startedTo!=null">and UNIX_TIMESTAMP(#{startedTo,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(d.CONTRACT_DATE)) </if>
+			group by pc.name_al
+	</select>
+
+	<select id="getAllCustomersPurchasedDeal" resultMap="CUSTOMER.customerResultMap" parameterType="int">
+		<![CDATA[
+		select distinct c.id, c.email, c.pwd
+		from purchase p, customer c
+		where p.customer_id = c.id
+		and p.customer_id <> 82
+		and p.deal_id = #{dealId,jdbcType=DECIMAL}
+		]]>
+	</select>
+
+	<select id="getAllDealsForPartner" resultMap="dealWithOnlyTitleResultMap" parameterType="int">
+		select d.*
+		from deal d, partner p
+		where d.partner_id = p.id
+		and p.id = #{partnerId,jdbcType=DECIMAL}
+		order by d.end_date desc
+	</select>
+	
+	<select id="getAllClosedDealsCount" resultType="int" >
+		<![CDATA[
+		select sum(a.nr)
+		from (
+		    select MONTH(START_DATE), count(*) as nr
+		    from deal 
+		    where START_DATE is not null
+		    and status <> 'W'
+		    group by YEAR(START_DATE), MONTH(START_DATE)
+		)a
+		]]>
+	</select>
+	
+	<select id="getTotActiveDeals" resultType="int" >
+		<![CDATA[
+		select count(*)
+		from deal 
+		where status = 'A'
+		]]>
+	</select>
+	
+	<resultMap id="dealPurchResultMap" type="al.ozone.bl.model.DealPurchasesReport">
+		<result column="deal_id" property="dealId" jdbcType="DECIMAL" />
+		<result column="choice_nr" property="choiceNr" jdbcType="DECIMAL" />
+		<result column="title_choice" property="choiceTitle" jdbcType="DECIMAL" />
+		<result column="partner" property="partner" jdbcType="VARCHAR" />
+		<result column="valid_to" property="offerExpiration" jdbcType="DATE" />
+		<result column="contract_date" property="contractDate" jdbcType="DATE" />
+		<result column="start_date" property="startDate" jdbcType="DECIMAL" />
+		
+		<result column="percentDiscount" property="percentDiscount" jdbcType="VARCHAR" />
+		<result column="price" property="priceSellOZone" jdbcType="DECIMAL" />
+		<result column="commission" property="percentCommission" jdbcType="DECIMAL" />
+		<result column="singleEarning" property="singleEarning" jdbcType="DECIMAL" />
+		<result column="tot_purchase" property="nrPurchaseTotal" jdbcType="DECIMAL" />
+		<result column="totAmount" property="totAmount" jdbcType="DECIMAL" />
+	    <result column="totEarning" property="totEarning" jdbcType="DECIMAL" />
+	    <result column="broker_fullname" property="agentName" jdbcType="VARCHAR" />
+ 	</resultMap> 
+	<select id="searchDealPurchases" resultMap="dealPurchResultMap" parameterType="al.ozone.bl.bean.SearchDealPurchasesBean">
+		select d.id as deal_id, dc.choice_nr, dc.title_choice,  partner.name partner, c.valid_to  
+			, d.contract_date, d.start_date
+			, dc.price / dc.full_price * 100 percentDiscount
+			, dc.price
+			, dc.commission
+			, dc.price * dc.commission / 100 singleEarning   
+			, count(dc.deal_id) tot_purchase            
+			, dc.price * count(dc.deal_id) totAmount  
+			, (dc.price * count(dc.deal_id))  -  ((dc.price - (dc.price * dc.commission / 100)) * count(dc.deal_id)) totEarning
+			, d.broker_fullname
+			, ((dc.price * count(dc.deal_id))  -  ((dc.price - (dc.price * dc.commission / 100)) * count(dc.deal_id)))  
+				* #{agentCommission,jdbcType=DECIMAL} / 100 agentEarning
+		from deal d, deal_choice dc, purchase pur, payment p , coupon c, partner
+		where d.ID = dc.DEAL_ID
+		and pur.deal_id = dc.deal_id
+		and pur.deal_choice = dc.choice_nr
+		and pur.payment_id = p.id
+		and pur.id = c.purchase_id
+		and d.partner_id = partner.id
+		and d.confirmed = 'Y'
+		<![CDATA[and pur.customer_id <> 82]]>	
+		<if test="dealId!=null and dealId!='' and dealId!=0">and d.id = #{dealId,jdbcType=DECIMAL}</if>
+		<if test="dealTitle!=null">and upper(d.TITLE) like upper(CONCAT('%', #{dealTitle,jdbcType=VARCHAR}, '%'))</if>
+		<if test="dealTitle!=null">and upper(d.broker_fullname) like upper(CONCAT('%', #{agentName,jdbcType=VARCHAR}, '%'))</if>
+		<if test="insertedFrom!=null">and UNIX_TIMESTAMP(DATE(d.CONTRACT_DATE)) >= UNIX_TIMESTAMP(#{insertedFrom,jdbcType=TIMESTAMP})</if>
+		<if test="insertedTo!=null">and UNIX_TIMESTAMP(#{insertedTo,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(d.CONTRACT_DATE)) </if>
+		<if test="startFrom!=null">and UNIX_TIMESTAMP(DATE(d.START_DATE)) >= UNIX_TIMESTAMP(#{startFrom,jdbcType=TIMESTAMP})</if>
+		<if test="startTo!=null">and UNIX_TIMESTAMP(#{startTo,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(d.START_DATE)) </if>
+		<if test="purchaseFrom!=null">and UNIX_TIMESTAMP(DATE(pur.PURCHASE_DATE)) >= UNIX_TIMESTAMP(#{purchaseFrom,jdbcType=TIMESTAMP})</if>
+		<if test="purchaseTo!=null">and UNIX_TIMESTAMP(#{purchaseTo,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(pur.PURCHASE_DATE)) </if>
+		<if test="categoryId != null and categoryId>0"> and partner.CATEGORY_ID = #{categoryId,jdbcType=DECIMAL} </if>
+		group by dc.deal_id, dc.choice_nr
+	</select>
+</mapper>

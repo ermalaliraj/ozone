@@ -1,0 +1,39 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition >    	
+	<h:form id="couponDetailForm">
+		<p:dialog header="#{msg['coupon.header']}" 
+				   		widgetVar="couponDetailDialog" 
+				   		resizable="false"
+						modal="true" 
+			           	width="700" 
+			           	style="position:fixed; top:0%; left:0%;">
+			           	
+			<h:panelGrid id="couponDetailDlgPanel" columns="3" cellpadding="2" style="margin:0 auto;" border="0"> 
+				<p:dataTable id="couponsTable" var="c" value="#{purchaseController.couponsList}">
+			    	<p:column headerText="">
+						<h:outputText value="aaa"/>
+					</p:column>	
+					<p:column headerText="">
+						<h:outputText value="sd"/>
+					</p:column>	
+				</p:dataTable>
+			</h:panelGrid>
+				
+			<f:facet name="footer">
+				<h:panelGroup>
+					<center>	
+					<p:commandButton value="#{msg['buttonClose']}" onclick="couponDetailDialog.hide()" type="button" icon="ui-icon ui-icon-close"/>  
+					</center>
+				</h:panelGroup>
+			</f:facet>
+	
+		</p:dialog>
+	
+	</h:form>
+</ui:composition>
+</html>

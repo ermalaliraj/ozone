@@ -1,0 +1,22 @@
+-- the following steps produce certificates needed for paypal encryption in the path c:/certs
+
+cd C:\Users\shpresa-al\Downloads\openssl-0.9.8k_X64\bin
+openssl genrsa -out C:/certs/private-key.pem 1024 
+openssl req -new -key C:/certs/private-key.pem -x509 -days 1095 -out C:/certs/public-cert.pem
+openssl pkcs12 -export -in C:/certs/public-cert.pem -inkey C:/certs/private-key.pem -out C:/certs/pkcs12.p12
+
+same:
+- private-key.pem
+- public-cert.pem
+- pkcs12.p12
+can be used for sandbox environment too.
+
+What must be done different is
+1. uploading public-cert.pem in paypal account (Profile-Impostazioni Pagamenti crittografati)
+2. downloading paypal certificate (paypal_sand_cert_pem.txt) after step 1
+3. sign identifyToken from Profilo->Preferenze Pagamenti su sito web / Trasferimento dei dati del pagamento
+
+
+ButtonEncryptionTest run parameter: 
+C:\Apache\hosts\certs\public-cert.pem C:\Apache\hosts\certs\pkcs12.p12 C:\Apache\hosts\certs\paypal_sand_cert_pem.txt zone2011 cmd='_xclick,business=payment@ozone.al,amount=23.00,currency_code=USD,item_name=todos\nson\nasi' CYBASDU4BKJN2 java_bn.html
+ 

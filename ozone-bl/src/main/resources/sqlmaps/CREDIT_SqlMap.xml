@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="CREDIT">
+
+	<resultMap id="creditResultMap" type="al.ozone.bl.model.Credit">
+	   <id column="ID" property="id" jdbcType="DECIMAL" />
+	   <result column="ASSIGNED_DATE" property="assignedDate" jdbcType="TIMESTAMP" />
+	   <result column="VALID_DATE" property="validDate" jdbcType="TIMESTAMP" />
+	   <result column="USED_DATE" property="usedDate" jdbcType="TIMESTAMP" />
+	   <result column="VALUE" property="value" jdbcType="DECIMAL" />
+	   <result column="TYPE" property="type" jdbcType="VARCHAR" />
+	   <result column="ABOUT" property="about" jdbcType="VARCHAR" />
+	   <result column="ABOUT_USE" property="aboutUse" jdbcType="VARCHAR" />	   
+	   <association column="CUSTOMER_ID" property="customer" select="getCustomer" />
+  	</resultMap>   	
+  	
+  	<resultMap id="customerResultMap" type="al.ozone.bl.model.Customer">
+	   <id column="ID" property="id" jdbcType="DECIMAL" />
+	   <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+  	</resultMap> 
+  	
+	<select id="getCustomer" resultMap="customerResultMap" parameterType="int" >
+		select *
+		from CUSTOMER
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	
+	<select id="get" resultMap="creditResultMap" parameterType="int" >
+		select *
+		from CREDIT
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+  
+  	<select id="getAll" resultMap="creditResultMap">
+		select *
+		from CREDIT
+	</select>
+	
+	<delete id="delete" parameterType="al.ozone.bl.model.Credit" >
+		delete from CREDIT
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+	
+	<insert id="insert" parameterType="al.ozone.bl.model.Credit">
+		insert into CREDIT (ASSIGNED_DATE, VALID_DATE, VALUE, CUSTOMER_ID, TYPE, ABOUT, ABOUT_USE)
+		values (#{assignedDate,jdbcType=TIMESTAMP}, 
+				#{validDate,jdbcType=TIMESTAMP}, 
+				#{value,jdbcType=DECIMAL}, 
+				#{customer.id,jdbcType=DECIMAL},
+				#{type,jdbcType=VARCHAR},
+				#{about,jdbcType=VARCHAR},
+				#{aboutUse,jdbcType=VARCHAR})
+		<selectKey keyProperty="id" resultType="java.lang.Integer"  >
+			VALUES NEXT VALUE FOR seq_credit;
+	   	</selectKey>
+	</insert>
+	
+	<!--  
+	<update id="update" parameterType="al.ozone.bl.model.Credit" >
+	    update CREDIT
+	    set	ASSIGNED_DATE = #{assignedDate,jdbcType=TIMESTAMP}, 
+	    	VALID_DATE = #{validDate,jdbcType=TIMESTAMP}, 
+		    USED_DATE = #{usedDate,jdbcType=TIMESTAMP}, 
+		    VALUE = #{value,jdbcType=DECIMAL}, 
+		    CUSTOMER_ID = #{customer.id,jdbcType=DECIMAL},
+		    TYPE = #{type,jdbcType=VARCHAR},
+			ABOUT =	#{about,jdbcType=VARCHAR},
+			ABOUT_USE =	#{aboutUse,jdbcType=VARCHAR}
+	    where ID = #{id,jdbcType=DECIMAL}
+    </update>
+	-->
+	<select id="searchSelective" resultMap="creditResultMap" parameterType="al.ozone.bl.bean.SearchCreditBean">
+		select c.* 
+		from CREDIT c, CUSTOMER d
+		where c.CUSTOMER_ID = d.ID
+		<if test="customerEmail!=null and customerEmail!=''">and upper(d.EMAIL) like upper(CONCAT('%', #{customerEmail,jdbcType=VARCHAR}, '%'))</if>
+		<if test="used!=null and used==true">and c.USED_DATE is not NULL</if>
+		<if test="used!=null and used==false">and c.USED_DATE is NULL</if>
+		<if test="type!=null and type!='default'"> and c.TYPE = #{type,jdbcType=VARCHAR}</if>
+	</select>
+	
+	
+	<update id="setCreditAsUsed" parameterType="map" >
+	    update CREDIT
+	    set ABOUT_USE = #{aboutUse,jdbcType=VARCHAR},
+	    	USED_DATE = #{usedDate,jdbcType=TIMESTAMP}
+	    where ID = #{id,jdbcType=DECIMAL}
+    </update>
+    
+    <select id="getForUser" resultMap="creditResultMap" parameterType="int">
+		select * 
+		from CREDIT
+		where CUSTOMER_ID=#{customer.id,jdbcType=DECIMAL}
+	</select>
+	
+	 <select id="getByCustomer" resultMap="creditResultMap" parameterType="al.ozone.bl.model.Customer">
+		select c.* 
+		from CREDIT c
+		where c.CUSTOMER_ID=#{cusId,jdbcType=DECIMAL}
+	</select>
+	
+</mapper>

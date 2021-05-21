@@ -1,0 +1,121 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+<ui:composition>
+	<h:form id="newCustomerForm">
+       	<p:dialog header="#{msg['customer.new']}" 
+		   		widgetVar="newCustomerDialog" 
+		   		resizable="false"
+				modal="true" 
+	           	width="600"
+	           	style="position:fixed; top:0%; left:0%;"> 
+	           	
+	    <h:panelGrid id="newCustomerPanel" columns="2" cellpadding="2" style="margin:0 auto;" border="0">
+	    <p:fieldset legend="Customer's Data">
+	    <h:panelGrid columns="3" cellpadding="2" style="margin:0 auto;" border="0">     
+           	 	<h:outputLabel for="nName" value="#{msg['customer.name']} *"/>             
+	            <p:inputText id="nName" syle="width:100%"
+	            			required="true"
+	               			label="#{msg['customer.name']}"
+					        binding="#{customerController.newName}"> 
+					 <p:ajax event="blur" update="nNameMsg"/> 
+				</p:inputText>
+		        <p:message id="nNameMsg" for="nName" display="icon"/>
+
+				<h:outputLabel for="nSurname" value="#{msg['customer.surname']} *"/>             
+	            <p:inputText id="nSurname" syle="width:100%"
+	            			required="true"
+	               			label="#{msg['customer.surname']}"
+					        binding="#{customerController.newSurname}"> 
+					 <p:ajax event="blur" update="nSurnameMsg"/> 
+				</p:inputText>
+		        <p:message id="nSurnameMsg" for="nSurname" display="icon"/>
+		        
+		        <h:outputLabel for="nBirthdate" value="#{msg['customer.birthdate']}"/>             
+				<p:calendar id="nBirthdate" value="#{customerController.newBirthdate}" navigator="true" display="inline"/>  
+		        <p:message for="nBirthdate"/>
+		        
+		      
+		        <h:outputLabel for="nEmail" value="#{msg['customer.email']} *"/>                
+	            <p:inputText id="nEmail" syle="width:100%" 
+	              				required="true"   
+	                			size="30"                 
+	                            binding="#{customerController.newEmail}"> 
+	                	<f:validator validatorId="emailValidator" />
+	            		<p:ajax event="blur" update="nEmailMsg" /> 
+	            </p:inputText>
+	            <p:message id="nEmailMsg" for="nEmail" display="icon"/>  
+		        
+		        <h:outputLabel for="nPassword" value="#{msg['customer.password']} *"/> 
+	            	<p:inputText required="true" id="nPassword"
+	                            binding="#{customerController.newPassword}">
+	                	<p:ajax event="blur" update="nPasswordMsg"/> 
+	                </p:inputText>
+					<p:message id="nPasswordMsg" for="nPassword" display="icon"/>  
+		        
+		        <h:outputLabel for="nPhone" value="#{msg['customer.phone']}"/>                
+	            <p:inputText id="nPhone" syle="width:100%" 
+	              				required="false"
+	                            binding="#{customerController.newPhone}"> 
+	                	<!-- <f:validator validatorId="phoneValidator" /> -->
+	            		<p:ajax event="blur" update="nPhoneMsg" /> 
+	            </p:inputText>
+	            <p:message id="nPhoneMsg" for="nPhone" display="icon"/>  
+		        
+		        
+		        <h:outputLabel for="nSex" value="#{msg['customer.sex']}"/>   
+					<p:selectOneMenu id="nSex"
+							label="#{msg['customer.sex']}"
+							value="ALL"
+							binding="#{customerController.newSex}">	
+							<f:selectItem itemLabel="ALL" itemValue=""/>	
+							<f:selectItem itemLabel="#{msg['customer.male']}" itemValue="M"/>
+							<f:selectItem itemLabel="#{msg['customer.female']}" itemValue="F"/>																
+							<p:ajax event="blur" update="nSexMsg" />
+					</p:selectOneMenu>
+				<p:message id="nSexMsg" for="nSex" display="icon"/>
+		        
+		        
+			 	<h:outputLabel for="newActive" value="#{msg['customer.active']}"/>                
+	       		<p:selectBooleanCheckbox id="newActive" 
+	               			binding="#{customerController.newActive}"/>
+	            <p:message for="newActive" display="icon"/> 
+	      
+	      </h:panelGrid>
+	      </p:fieldset>
+            <f:facet name="footer">
+				<h:panelGroup>
+					<center>	
+						<p:commandButton 
+							value="#{msg['customer.buttonAdd']}"
+							update="customerForm:customersListPanel,customerForm:message,newCustomerForm:newCustomerPanel" 
+							oncomplete="handleCallbackRequestNew(xhr, status, args)"								
+							actionListener="#{customerController.addCustomer}"/>	
+							
+  						<p:commandButton 
+ 							value="#{msg['buttonClose']}" 
+							onclick="newCustomerDialog.hide()" 
+							type="button" 
+							image="ui-icon ui-icon-close"/>  
+					</center>
+				</h:panelGroup>
+            </f:facet>
+            	
+           	</h:panelGrid>
+   		</p:dialog>
+
+	</h:form>   
+	<script type="text/javascript">  
+		    function handleCallbackRequestNew(xhr, status, args) { 
+		    	if(!args.validationFailed) {  
+		        	newCustomerDialog.hide();
+		        }
+		    }  
+	  </script> 		
+</ui:composition>    	
+</html>
+	
+	

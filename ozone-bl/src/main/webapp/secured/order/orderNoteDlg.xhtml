@@ -1,0 +1,76 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition >    	
+
+<h:form id="orderNoteForm">
+	<p:dialog header="Shto nje koment lidhur me kete porosi" 
+		   		widgetVar="orderNoteDialog" 
+		   		resizable="false"
+				modal="true" 
+	           	width="500"
+	           	style="position:fixed; top:0%; left:0%;">
+	           	
+		<h:panelGrid id="orderNotePanel" columns="3" cellpadding="2" style="margin:0 auto;">  
+           	
+           	<h:panelGrid columns="3" cellpadding="5" border="0">
+
+				<h:outputLabel for="fNote" value="Koment i meparshem:"/>                
+	            <h:outputText id="fNote" value="#{orderController.orderSelected.note}" escape="false"/>	     
+	            <p:message id="fNoteMsg" for="fNote" /> 
+	            
+	            <h:outputLabel for="nNote" value="Koment i ri:"/>                
+	            <p:inputTextarea id="nNote" style="width:250px;height:80px;"
+	             			required="true"
+	                		maxlength="200"
+	                		resisable="true"
+	             			rendered="#{orderController.editMode}" 
+	           				label="Koment"	           				
+	           				binding="#{orderController.nOrderNote}">
+	           			<p:ajax event="blur" update="nNoteMsg" />   
+	            </p:inputTextarea>   	     
+	            <p:message id="nNoteMsg" for="nNote" />     
+	            
+	            <h:outputLabel for="fCanceled" value="#{msg['enabled']}"/>                
+	       		<p:selectBooleanCheckbox id="fCanceled" rendered="#{orderController.editMode}" 
+	               			binding="#{orderController.fCanceled}"
+	               			value="#{orderController.orderSelected.canceled}" />
+	            <p:message for="fCanceled" />       
+	        </h:panelGrid>
+             
+       		
+       		<f:facet name="footer">
+			<h:panelGroup>
+				<center>	
+					<p:commandButton 
+						value="Shto Koment"
+						oncomplete="handleOrderNoteCallback(xhr, status, args)"	
+						update="orderListForm:message,orderNoteForm:orderNotePanel,orderListForm:ordersListPanel" 							
+						actionListener="#{orderController.addComment}"/>	
+						
+ 					<p:commandButton 
+						value="#{msg['buttonClose']}" 
+						onclick="orderNoteDialog.hide()" 
+						type="button" 
+						icon="ui-icon ui-icon-close"/>  
+				</center>
+			</h:panelGroup>
+           </f:facet>
+           
+    	</h:panelGrid> 
+	</p:dialog>
+	
+	<script type="text/javascript">  
+    function handleOrderNoteCallback(xhr, status, args) {
+        if(!args.validationFailed) {  
+        	orderNoteDialog.hide();
+        }
+    }  
+</script> 
+</h:form>
+		
+</ui:composition>
+</html>

@@ -1,0 +1,112 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+<ui:composition template="/template/common/commonLayout.xhtml">    	  
+	<ui:define name="title">
+    	<h:outputText value="#{msg['title.userManagement']}"/>
+    </ui:define>
+    
+	<ui:define name="content">
+  		<h:form id="form">        
+        	<p:growl id="message" showDetail="true" /> 
+ 			<!--p:messages id="message2" showDetail="true"/-->  
+ 			
+ 			<!-- Search Panel -->
+			<p:panel id="userSearchPanel" header="#{msg['user.panelSearch']}" styleClass="nowrapColumn">
+				<h:panelGrid columns="6" cellpadding="5" width="600px" border="0">			
+			 		<h:outputLabel value="#{msg['username']}"/>
+			 		<p:inputText id="userName" binding="#{userController.sUsername}"/>
+       				
+       				<h:outputLabel value="#{msg['fullName']}" styleClass="nowrapColumn"/>
+			 		<p:inputText id="userFullName" binding="#{userController.sFullName}"/>
+			 		
+			 		<h:outputLabel value="#{msg['headerRole']}"/>				                
+			        <p:selectOneMenu
+			        	value="ALL"
+			        	binding="#{userController.sRoleId}">  
+			        	<f:selectItem itemLabel="ALL" itemValue="" />
+			            <f:selectItems value="#{userController.allRoleItems}" />  
+			        </p:selectOneMenu>
+		
+					<f:facet name="footer">
+						<h:panelGroup>
+						<center>					
+							<p:commandButton value="#{msg['buttonSearch']}" update="usersListPanel" action="#{userController.searchUser}"/>
+							<p:spacer width="10"/>
+							<p:commandButton value="#{msg['buttonReset']}" update="userSearchPanel,message" action="#{userController.cleanSearchForm}" />  							
+						</center>
+						</h:panelGroup>
+					</f:facet>
+				</h:panelGrid>		
+			</p:panel>	
+        	
+        	<ui:include src="../common/ajaxloading.xhtml" />
+
+        	<!-- Table Panel -->
+        	<p:panel id="usersListPanel" header="#{msg['user.panelResult']}" >		
+	    		<p:dataTable id="usersTable" var="u" value="#{userController.usersList}" 
+			    			paginator="true" rows="50" rowsPerPageTemplate="10,20,50"
+			    			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} Nr. Rows: #{userController.usersList.size()}">
+					<p:column headerText="#{msg['username']}" sortBy="#{u.username}">
+						<h:outputText value="#{u.username}"/>
+					</p:column>	
+					<p:column headerText="#{msg['name']}" sortBy="#{u.name}">
+						<h:outputText value="#{u.name}"/>
+					</p:column>		
+					<p:column headerText="#{msg['surname']}" sortBy="#{u.surname}">	
+						<h:outputText value="#{u.surname}"/>
+					</p:column>	
+					<p:column headerText="#{msg['email']}">
+						<h:outputText value="#{u.email}"/>
+					</p:column>	
+					<p:column headerText="#{msg['enabled']}">
+						<p:selectBooleanCheckbox value="#{u.enabled}" disabled="true" />
+					</p:column>	
+					<p:column headerText="#{msg['locked']}">
+						<p:selectBooleanCheckbox value="#{u.locked}" disabled="true" />
+					</p:column>	
+					<p:column headerText="#{msg['failedLoginCount']}">
+						<h:outputText value="#{u.failedLoginCount}"/>
+					</p:column>	
+					<p:column headerText="#{msg['user.lastIp']}">
+						<h:outputText value="#{u.lastIp}"/>
+					</p:column>	
+					   
+		            <p:column>   
+	            		<p:commandButton title="Edit" update=":updateForm:updateUserPanel" oncomplete="updateUserDialog.show()" icon="ui-icon ui-icon-pencil">  
+							<f:setPropertyActionListener value="#{u}" target="#{userController.userSelected}" />  
+							<f:setPropertyActionListener value="#{true}" target="#{userController.editMode}" />  
+						</p:commandButton>  	
+	                   	<p:commandButton title="Delete" update=":updateForm:updateUserPanel" oncomplete="confirmation.show()" icon="ui-icon ui-icon-close">  
+	                       <f:setPropertyActionListener value="#{u}" target="#{userController.userSelected}" />  
+	                   	</p:commandButton>  
+		          	</p:column>  
+		          	
+		          	<f:facet name="footer">  
+						<p:commandButton oncomplete="newUserDialog.show()" value="#{msg['user.buttonAdd']}" icon="ui-icon ui-icon-newwin"/>				
+					</f:facet>            
+		 		</p:dataTable >			
+		 	</p:panel>	
+		    
+		    <p:confirmDialog widgetVar="confirmation" width="400" severity="alert"
+		    		style="position:fixed; top:0%; left:0%; text-align:center;"	
+		    		message="#{msg['user.confirmDeleteMsg']}" header="#{msg['confirm']}" > 
+		    	<center>      
+		            <p:commandButton value="#{msg['yes']}" update="usersListPanel,message" actionListener="#{userController.deleteUser}" oncomplete="confirmation.hide()"/>  
+		            <p:commandButton value="#{msg['no']}" onclick="confirmation.hide()" type="button" />  
+        		</center> 
+        	</p:confirmDialog>  
+		</h:form>			
+		
+		<ui:include src="userEditDlg.xhtml" />
+		<ui:include src="userNewDlg.xhtml" />
+		
+	</ui:define>    		
+
+</ui:composition>    	
+</html>
+	
+	

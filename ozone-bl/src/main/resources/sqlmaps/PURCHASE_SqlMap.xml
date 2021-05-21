@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="PURCHASE">
+
+	<resultMap id="purchaseResultMap" type="al.ozone.bl.model.Purchase">
+	   <id column="ID" property="id" jdbcType="DECIMAL" />
+	   <result column="QUANTITY" property="quantity" jdbcType="DECIMAL" />
+	   <result column="PURCHASE_DATE" property="purchDate" jdbcType="TIMESTAMP" />
+	   <result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+	   <result column="TOT_AMOUNT" property="totAmount" jdbcType="DECIMAL" />
+	   <result column="MONEY_SPENT" property="moneySpent" jdbcType="DECIMAL" />
+	   <result column="CREDIT_SPENT" property="creditSpent" jdbcType="DECIMAL" />
+	   <result column="CONFIRMED" property="confirmed" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+	   <result column="ORDER_ID" property="orderId" jdbcType="DECIMAL" />
+	   <result column="FEEDBACK_REQUESTED" property="feedbackRequested" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+	   <association property="dealChoice" column="{dealId=DEAL_ID, choiceNr=DEAL_CHOICE}" select="DEAL_CHOICE.get"/>
+	   <association property="customer" column="CUSTOMER_ID" select="CUSTOMER.getWithOnlyEmail"/>
+	   <association property="payment" column="PAYMENT_ID" select="PAYMENT.get"/>
+	   <association property="discount" column="DISCOUNT_ID" select="DISCOUNTCARD.get"/>
+	   <association property="coupons" column="ID" select="COUPON.getCouponsByPurchase"/>
+	   <collection property="credits" column="pc.CREDIT_ID,pc.PURCHASE_ID" 
+	   			   ofType="al.ozone.bl.model.Credit" javaType="ArrayList" resultMap="CREDIT.creditResultMap"/>
+  	</resultMap>   	
+  	
+  	<select id="get" resultMap="purchaseResultMap"  parameterType="int">
+  		select *
+		from purchase p 
+    		left outer join purchase_credit pc on p.ID = pc.PURCHASE_ID
+    		left outer join credit c on c.ID = pc.CREDIT_ID
+    	where p.ID = #{id,jdbcType=DECIMAL}
+	</select>
+	
+	<select id="get4" resultMap="purchaseResultMap" parameterType="int" >
+		select *
+		from PURCHASE
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+  
+  	<select id="getAll" resultMap="purchaseResultMap">
+		select *
+		from PURCHASE
+	</select>
+	
+	<delete id="delete" parameterType="al.ozone.bl.model.Purchase">
+		delete from PURCHASE
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+
+	<insert id="insert" parameterType="al.ozone.bl.model.Purchase">
+		insert into PURCHASE (QUANTITY, PURCHASE_DATE, AMOUNT, TOT_AMOUNT, MONEY_SPENT, CREDIT_SPENT, 
+								CONFIRMED, CUSTOMER_ID, PAYMENT_ID, DISCOUNT_ID,
+								DEAL_ID, DEAL_CHOICE, ORDER_ID)
+		values (#{quantity,jdbcType=DECIMAL}, 
+				#{purchDate,jdbcType=TIMESTAMP}, 
+				#{amount,jdbcType=DECIMAL},
+				#{totAmount,jdbcType=DECIMAL},  
+				#{moneySpent,jdbcType=DECIMAL}, 
+				#{creditSpent,jdbcType=DECIMAL}, 
+				#{confirmed,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler},
+				#{customer.id,jdbcType=DECIMAL},
+				#{payment.id,jdbcType=DECIMAL},
+				#{discount.id,jdbcType=DECIMAL},
+				#{dealChoice.dealId,jdbcType=DECIMAL},
+				#{dealChoice.choiceNr,jdbcType=DECIMAL},
+				#{orderId,jdbcType=DECIMAL})
+		<selectKey keyProperty="id" resultType="java.lang.Integer"  >
+			VALUES NEXT VALUE FOR seq_purchase;
+	   	</selectKey>
+	</insert>
+  
+	<select id="getAllPurchasesForDeal" resultMap="purchaseResultMap" parameterType="int">
+    	SELECT p.*
+		from DEAL d, purchase p
+		where p.DEAL_ID = d.id
+		and d.id = #{dealId,jdbcType=DECIMAL}
+	</select>
+	
+	<select id="getCreditsUsedByPurchase" resultMap="CREDIT.creditResultMap" parameterType="int">
+		select c.* 
+		from PURCHASE p, PURCHASE_CREDIT pc, CREDIT c
+		where p.ID = pc.PURCHASE_ID
+		and pc.CREDIT_ID = c.ID
+		and p.ID = #{purId,jdbcType=DECIMAL}
+	</select>
+	
+	<sql id="search_fragment">
+		select p.*, c.EMAIL
+		from PURCHASE p, DEAL_CHOICE dc, CUSTOMER C, PAYMENT pay
+		where p.DEAL_ID = dc.DEAL_ID
+		AND p.DEAL_CHOICE = dc.CHOICE_NR
+		and p.CUSTOMER_ID = c.ID
+		and p.PAYMENT_ID = pay.ID
+		<if test="purId!=null and purId!=''">and p.ID = #{purId,jdbcType=DECIMAL}</if>
+		<if test="dealId!=null and dealId!=''">and dc.DEAL_ID = #{dealId,jdbcType=DECIMAL}</if>
+		<if test="cusEmail!=null and cusEmail!=''">and upper(c.EMAIL) like upper(CONCAT('%', #{cusEmail,jdbcType=VARCHAR}, '%'))</if>
+		<if test="dealChoiceTitle!=null and dealChoiceTitle!=''">and upper(dc.TITLE_CHOICE) like upper(CONCAT('%', #{dealChoiceTitle,jdbcType=VARCHAR}, '%')) </if>
+		<if test="insertedFrom!=null">and UNIX_TIMESTAMP(DATE(p.PURCHASE_DATE)) >= UNIX_TIMESTAMP(#{insertedFrom,jdbcType=TIMESTAMP})</if>
+		<if test="insertedTo!=null">and UNIX_TIMESTAMP(#{insertedTo,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(p.PURCHASE_DATE)) </if>
+		<if test="paymentType!=null and paymentType!=''">and pay.PAY_TYPE = #{paymentType,jdbcType=VARCHAR}</if>
+		<if test="orderId!=null and orderId!=''">and p.ORDER_ID = #{orderId,jdbcType=DECIMAL}</if>
+		<if test="confirmed!=null">and p.CONFIRMED = #{confirmed,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler} </if>
+		<if test="noFake==true ">
+			 <![CDATA[and c.id <> 82 ]]>
+		</if>
+		order by p.ID desc
+	</sql>
+		
+	<select id="search" resultMap="purchaseResultMap" parameterType="al.ozone.bl.bean.SearchPurchaseBean">
+		<include refid="search_fragment"/>
+	</select>
+	
+	<select id="searchCount" resultType="int" parameterType="al.ozone.bl.bean.SearchPurchaseBean">
+		select count(1) 
+		from (
+		    <include refid="search_fragment"/>
+		) t
+	</select>
+	
+	<select id="getByCustomer" resultMap="purchaseResultMap" parameterType="int">
+		SELECT *
+		from purchase p
+		where p.CUSTOMER_ID = #{cusId,jdbcType=DECIMAL}
+	</select>
+	
+	<insert id="setCreditUsedByPurchase" parameterType="map">
+		insert into PURCHASE_CREDIT (PURCHASE_ID, CREDIT_ID)
+		values (#{purId,jdbcType=DECIMAL}, 
+				#{creditId,jdbcType=DECIMAL})
+	</insert>
+	
+	<resultMap id="resultStatsResultMap" type="al.ozone.bl.bean.ResultStatisticBean">
+	   <result column="month" property="key" jdbcType="VARCHAR" />
+	   <result column="nr" property="value" jdbcType="DECIMAL" />
+ 	</resultMap>   
+ 
+	<select id="getPurchasesGroupedByMonths" resultMap="resultStatsResultMap">
+	    <![CDATA[
+        select 
+	        CASE MONTH(PURCHASE_DATE) 
+	            WHEN 1 THEN 'Janar' 
+	            WHEN 2 THEN 'Shkurt' 
+	            WHEN 3 THEN 'Mars' 
+	            WHEN 4 THEN 'Prill' 
+	            WHEN 5 THEN 'Maj' 
+	            WHEN 6 THEN 'Qershor' 
+	            WHEN 7 THEN 'Korrik' 
+	            WHEN 8 THEN 'Gusht' 
+	            WHEN 9 THEN 'Shtator' 
+	            WHEN 10 THEN 'Tetor' 
+	            WHEN 11 THEN 'Nentor' 
+	            WHEN 12 THEN 'Dhjetor' 
+	        END as month
+	        , sum(quantity) as nr
+		from purchase 
+		where customer_id <> 82
+		and confirmed='Y'
+		group by YEAR(PURCHASE_DATE), MONTH(PURCHASE_DATE)
+		]]>
+	</select>
+	
+	<select id="getTotAmountGroupedByMonths" resultMap="resultStatsResultMap">
+	    <![CDATA[
+	    select 
+	        CASE MONTH(PURCHASE_DATE) 
+	            WHEN 1 THEN 'Janar' 
+	            WHEN 2 THEN 'Shkurt' 
+	            WHEN 3 THEN 'Mars' 
+	            WHEN 4 THEN 'Prill' 
+	            WHEN 5 THEN 'Maj' 
+	            WHEN 6 THEN 'Qershor' 
+	            WHEN 7 THEN 'Korrik' 
+	            WHEN 8 THEN 'Gusht' 
+	            WHEN 9 THEN 'Shtator' 
+	            WHEN 10 THEN 'Tetor' 
+	            WHEN 11 THEN 'Nentor' 
+	            WHEN 12 THEN 'Dhjetor' 
+	        END as month
+	        , sum(ifnull(money_spent,0)) as nr
+		from purchase 
+		where customer_id <> 82
+		and confirmed='Y'
+		group by YEAR(PURCHASE_DATE), MONTH(PURCHASE_DATE)
+		]]>
+	</select>
+	
+	<select id="getEarningsGroupedByMonths" resultMap="resultStatsResultMap">
+	    <![CDATA[
+			select
+	        	CASE a.purchase_month
+		            WHEN 1 THEN 'Janar' 
+		            WHEN 2 THEN 'Shkurt' 
+		            WHEN 3 THEN 'Mars' 
+		            WHEN 4 THEN 'Prill' 
+		            WHEN 5 THEN 'Maj' 
+		            WHEN 6 THEN 'Qershor' 
+		            WHEN 7 THEN 'Korrik' 
+		            WHEN 8 THEN 'Gusht' 
+		            WHEN 9 THEN 'Shtator' 
+		            WHEN 10 THEN 'Tetor' 
+		            WHEN 11 THEN 'Nentor' 
+		            WHEN 12 THEN 'Dhjetor' 
+		        END as month
+		    	, sum(a.totEarning) as nr
+		    from (	        
+				select month(pur.purchase_date) purchase_month, year(pur.purchase_date) purchase_year
+				    , sum(pur.quantity) * (dc.price * dc.commission / 100) - sum(pur.credit_spent)totEarning
+				from deal_choice dc, purchase pur
+				where pur.deal_id = dc.deal_id
+				and pur.deal_choice = dc.choice_nr
+				and pur.customer_id <> 82
+				and pur.confirmed='Y'
+				group by dc.deal_id, dc.choice_nr, month(pur.purchase_date), year(pur.purchase_date)
+			) a
+			group by a.purchase_year, a.purchase_month
+	    ]]>
+	</select>	
+	
+	<select id="getPurchaseByOrderId" resultMap="purchaseResultMap" parameterType="string">
+	    select *
+		from purchase p
+		where p.order_id = #{orderId,jdbcType=DECIMAL}
+	</select>
+	
+	<update id="setPurchaseAsNotConfirmed" parameterType="int">
+		update purchase
+	    set CONFIRMED = 'N'
+	    where ID = #{purId,jdbcType=DECIMAL}
+	</update>
+	
+	<select id="getPurchasesByCount" resultMap="resultStatsResultMap">
+		<![CDATA[
+		select a.nr as month, count(a.nr) as nr
+		from (
+		    select count(*) nr
+		    from purchase p, customer c
+		    where p.customer_id = c.id
+		    and customer_id<>82
+		    and p.confirmed='Y'
+		    group by customer_id
+		    order by count(*) desc
+		) a
+		group by a.nr
+		]]>
+	</select>
+
+	<select id="getPurchaseForCoupon" resultMap="purchaseResultMap" parameterType="string">
+		select *
+		from purchase p, coupon c
+		where c.purchase_id = p.id
+		and c.code = #{code,jdbcType=DECIMAL}
+	</select>	
+	<update id="setFeedbackRequestedForPurchase" parameterType="map">
+		update PURCHASE
+		set FEEDBACK_REQUESTED = #{feedbackRequested,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler}
+		where ID = #{purId,jdbcType=DECIMAL}
+	</update>
+	
+	<update id="changePurchaseCustomer" parameterType="al.ozone.bl.model.Purchase">
+		update PURCHASE
+		set CUSTOMER_ID = #{customer.id,jdbcType=DECIMAL},
+		 PURCHASE_DATE = #{purchDate, jdbcType=TIMESTAMP}
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	
+	<select id="countPurchaseUsed" resultType="int" parameterType="int">
+		select count(*)
+		from purchase p, coupon c
+		where p.id = c.purchase_id
+		and c.coupon_status = 'U'
+		and p.id = #{purId,jdbcType=DECIMAL}
+	</select>	
+	
+	<select id="getSumTotAmount" resultType="int">
+		<![CDATA[
+		select sum(money_spent)
+		from purchase
+		where customer_id <> 82
+		and confirmed = 'Y'
+		]]>
+	</select>
+	
+	<select id="getSumTotEarning" resultType="int">
+		<![CDATA[
+		select sum(a.totEarning)
+		from (	        
+		    select month(pur.purchase_date) purchase_month, year(pur.purchase_date) purchase_year
+		        , sum(pur.quantity) * (dc.price * dc.commission / 100) - sum(pur.credit_spent)totEarning
+		    from deal_choice dc, purchase pur
+		    where pur.deal_id = dc.deal_id
+		    and pur.deal_choice = dc.choice_nr
+		    and pur.customer_id <> 82
+		    and pur.confirmed='Y'
+		    group by dc.deal_id, dc.choice_nr, month(pur.purchase_date), year(pur.purchase_date)
+		) a
+		]]>
+	</select>
+	
+	<select id="getTotBuyers" resultType="int">
+		<![CDATA[
+		select count(distinct customer_id) nr
+		from purchase p
+		where p.customer_id<>82
+		and p.confirmed='Y'
+		]]>
+	</select>
+	
+	<select id="getTotCouponsSold" resultType="int">
+		<![CDATA[
+		select sum(quantity) as nr
+		from purchase 
+		where customer_id <> 82
+		and confirmed='Y'
+		]]>
+	</select>
+
+</mapper>

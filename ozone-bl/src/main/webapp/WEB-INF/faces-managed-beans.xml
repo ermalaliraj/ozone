@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+    version="2.0">
+
+	<!-- 
+	<managed-bean>
+	    <managed-bean-name>partnerController</managed-bean-name>
+	    <managed-bean-class>al.ozone.admin.backing.PartnerController</managed-bean-class>
+	    <managed-bean-scope>view</managed-bean-scope>
+	    <managed-property>
+			<property-name>partnerManager</property-name>
+			<property-class>al.ozone.bl.manager.PartnerManager</property-class>
+			<value>#{partnerManager}</value>
+		</managed-property>
+  	</managed-bean>    -->
+  	
+</faces-config>

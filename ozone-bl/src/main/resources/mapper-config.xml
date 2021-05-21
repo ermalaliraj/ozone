@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	
+	<typeHandlers>
+		<typeHandler 
+			handler="al.ozone.bl.utils.YNBooleanTypeHandler"
+			javaType="java.lang.Boolean" jdbcType="VARCHAR" />
+	</typeHandlers>
+	
+	<mappers>
+		<mapper resource="sqlmaps/USER_SqlMap.xml" />
+		<mapper resource="sqlmaps/ROLE_SqlMap.xml" />
+		<mapper resource="sqlmaps/AUDIT_TRAIL_SqlMap.xml" />
+		<mapper resource="sqlmaps/PARTNER_SqlMap.xml" />	
+		<mapper resource="sqlmaps/CUSTOMER_SqlMap.xml" />	
+		<mapper resource="sqlmaps/CREDIT_SqlMap.xml" />		
+		<mapper resource="sqlmaps/DISCOUNT_CARD_SqlMap.xml" />
+		<mapper resource="sqlmaps/CITY_SqlMap.xml" />		
+		<mapper resource="sqlmaps/DEAL_SqlMap.xml" />	
+		<mapper resource="sqlmaps/DEAL_CHOICE_SqlMap.xml" />		
+		<mapper resource="sqlmaps/PUBLICATION_SqlMap.xml" />	
+		<mapper resource="sqlmaps/PURCHASE_SqlMap.xml" />
+		<mapper resource="sqlmaps/COUPON_SqlMap.xml" />
+		<mapper resource="sqlmaps/PAYMENT_SqlMap.xml" />	
+		<mapper resource="sqlmaps/APPLICATION_CONFIG_SqlMap.xml" />
+		<mapper resource="sqlmaps/INVITE_SqlMap.xml" />
+		<mapper resource="sqlmaps/EMAILS_INTRO_SqlMap.xml" />
+		<mapper resource="sqlmaps/ORDERS_SqlMap.xml" />
+		<mapper resource="sqlmaps/CUSTOMER_LOG_SqlMap.xml" />
+		<mapper resource="sqlmaps/DEAL_FEEDBACK_SqlMap.xml" />
+	</mappers>
+</configuration>

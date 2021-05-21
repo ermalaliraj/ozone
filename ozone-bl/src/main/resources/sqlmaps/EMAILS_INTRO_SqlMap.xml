@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="EMAILS_INTRO">
+
+	<resultMap id="eiResultMap" type="al.ozone.bl.model.EmailNewsletter">
+		<id column="EMAIL" property="email" jdbcType="VARCHAR" />
+	  	<result column="ACCEPT_NEWSLETTER" property="acceptNewsletter" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+  	</resultMap> 
+  	
+  	<select id="get" resultMap="eiResultMap" >
+		    select *
+		    from EMAILS_all
+		    where EMAIL = #{email,jdbcType=VARCHAR}
+	</select>
+  	
+	<select id="getAll" resultType="string" >
+		    select EMAIL, accept_newsletter
+			from EMAILS_all
+			where accept_newsletter = 'Y'
+			union
+			select EMAIL, 'Y' as accept_newsletter
+			from customer
+	</select>
+	
+	<select id="getAdmins" resultType="string" >
+		    select email
+			from email_admins
+	</select>
+	
+	<select id="search" resultMap="eiResultMap" parameterType="al.ozone.bl.bean.SearchBeanEmailNewsletter">
+		<include refid="search_fragment"/>
+	</select>
+	
+	<sql id="search_fragment">
+		select EMAIL, accept_newsletter
+		from EMAILS_all
+		where upper(email) like CONCAT('%', upper(#{email,jdbcType=VARCHAR}),'%')
+		<if test="acceptNewsletter!=null">and ACCEPT_NEWSLETTER = #{acceptNewsletter,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler} </if>
+	</sql>
+	
+	<select id="searchCount" resultType="int" parameterType="al.ozone.bl.bean.SearchBeanEmailNewsletter">
+		select count(1) 
+		from (
+		    <include refid="search_fragment"/>
+		) t
+	</select>
+  
+  	<select id="searchLazy" resultMap="eiResultMap" parameterType="al.ozone.bl.bean.SearchBeanEmailNewsletter">
+		<include refid="search_fragment"/>
+		<if test="sortColumn != null"> order by ${sortColumn} </if>
+ 		<if test="sortDirection == 'DESC'"> DESC </if>
+	</select>
+	
+	<update id="update" parameterType="al.ozone.bl.model.EmailNewsletter">
+		update EMAILS_all
+	    set	accept_newsletter = #{acceptNewsletter,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler}
+	    where EMAIL = #{email,jdbcType=VARCHAR}
+	</update>
+	
+	<insert id="insert" parameterType="al.ozone.bl.model.EmailNewsletter">
+		insert EMAILS_all (EMAIL, accept_newsletter)
+		values(#{email,jdbcType=VARCHAR}, #{acceptNewsletter,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler} );
+	</insert>
+	
+	<insert id="insertForCity" parameterType="al.ozone.bl.model.EmailNewsletter">
+		insert EMAILS_CITY (EMAIL, CITY_ID, OP_DATE)
+		values(#{email, jdbcType=VARCHAR}, #{cityId, jdbcType=VARCHAR},#{opDate,jdbcType=TIMESTAMP} );
+	</insert>	
+	
+	<resultMap id="resultStatsResultMap" type="al.ozone.bl.bean.ResultStatisticBean">
+	   <result column="month" property="key" jdbcType="VARCHAR" />
+	   <result column="nr" property="value" jdbcType="DECIMAL" />
+ 	</resultMap>  
+	<select id="getEmailsGroupByRegMonths" resultMap="resultStatsResultMap">
+		select 
+	        CASE MONTH(DATE) 
+	            WHEN 1 THEN 'Janar' 
+	            WHEN 2 THEN 'Shkurt' 
+	            WHEN 3 THEN 'Mars' 
+	            WHEN 4 THEN 'Prill' 
+	            WHEN 5 THEN 'Maj' 
+	            WHEN 6 THEN 'Qershor' 
+	            WHEN 7 THEN 'Korrik' 
+	            WHEN 8 THEN 'Gusht' 
+	            WHEN 9 THEN 'Shtator' 
+	            WHEN 10 THEN 'Tetor' 
+	            WHEN 11 THEN 'Nentor' 
+	            WHEN 12 THEN 'Dhjetor' 
+	        END as month
+	        , count(*) as nr
+		from _all_emails 
+		group by YEAR(DATE), MONTH(DATE)
+	</select>
+	<select id="getCountEmails" resultType="int">
+		select count(1) 
+		from _all_emails
+	</select>
+	
+</mapper>

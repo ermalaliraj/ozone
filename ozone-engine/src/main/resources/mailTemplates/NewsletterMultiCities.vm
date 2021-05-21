@@ -1,0 +1,555 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+</head>
+<body>
+    <table style="margin: 0 auto; font-family: Arial,Helvetica,sans-serif;" border="0"
+        cellpadding="0" cellspacing="0" width="608">
+        <tbody>
+            <tr>
+                <td colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <a rel="nofollow" href="http://www.ozone.al" target="_blank">
+                        <img src="http://www.ozone.al/image/header-1.jpg" height="141" width="608" alt="" /></a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#413A3B">
+                        <tbody>
+                            <tr>
+                                <td width="10" height="38" align="left" valign="top">
+                                </td>
+                                <td width="10" height="38">
+                                    &nbsp;
+                                </td>
+                                <td height="38" align="left">
+                                    <font style="font-size: 14px; color: #ffffff; padding-left: 45px;"><strong>Ofertat e
+                                        reja per $citiesString</strong></font>
+                                </td>
+                                <td height="38" align="right" valign="middle">
+                                    <font style="font-size: 11px; color: #ffffff">$date</font>
+                                </td>
+                                <td width="24" height="38" align="right" valign="top">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+             <tr>
+                <td colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            #foreach( $row in $newsletters ) #foreach( $deal in $row.activeDeals )
+            <tr>
+                <td colspan="2" align="center">
+                    <table cellpadding="0" cellspacing="0" width="600">
+                        <tbody>
+                            <tr>
+                                <td colspan="3">
+                                    <img src="http://www.ozone.al/image/box_top.jpg" style="display: block" height="5"
+                                        width="600" alt="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-left: 1px solid #ccc" align="left" valign="top" width="187">
+                                    <a href="http://www.ozone.al/main.faces?mainDealId=${deal.id}" target="_blank">
+                                        <img src="$fileUpload$deal.mainImgName" alt="$deal.title" width="270" height="180" />
+                                    </a>
+                                </td>
+                                <td colspan="2" style="padding-left: 10px; border-right: 1px solid #ccc" align="left"
+                                    valign="top">
+                                    <h3 style="padding: 0; margin: 0; font-size: 18px">
+                                        <span><a href="http://www.ozone.al/main.faces?mainDealId=${deal.id}" style="text-decoration: none; color:Black">
+                                            $deal.partner.name </a></span>
+                                    </h3>
+                                    <div style="margin: 0; padding: 0; font-size: 12px; height: 93px;">
+                                        $deal.title</div>
+                                    <div style="margin: 0px 0; padding: 0px 0; border-bottom: 1px dotted #999; border-top: 1px dotted #999;">
+                                        <span style="font-size: 34px; font-weight: bold; color: #5599CA;">$deal.price Leke</span>
+                                        &nbsp; <span style="font-size: 14px">
+                                            <br />
+                                            Ulje</span> <span style="font-size: 18px; font-weight: bold">$deal.percentDiscount%</span>
+                                        &nbsp; <span style="font-size: 14px">Ne vend te</span> <span style="font-size: 18px;
+                                            font-weight: bold; text-decoration: line-through">$deal.fullPrice L</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border-left: 1px solid #ccc" align="center" valign="top">
+                                    <table bgcolor="#e4e4e4" border="0" cellpadding="0" cellspacing="0">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <img src="http://www.ozone.al/image/timer_top.jpg" style="display: block" height="5"
+                                                        width="240" alt="" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td height="40" style="font-size: 11px; text-align: center;">
+                                                    <span style="color: #555">Kjo oferte eshte e disponueshme deri me date<br />
+                                                    </span>$deal.endDateFormatted
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <img src="http://www.ozone.al/image/timer_bottom.jpg" style="display: block" height="5"
+                                                        width="240" alt="" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td style="padding: 10px;" align="left" valign="top">
+                                    <a rel="nofollow" href="http://www.ozone.al/main.faces?mainDealId=${deal.id}" target="_blank">
+                                        <img src="http://www.ozone.al/image/butoni_guarda_offerta-1.png" height="50" width="200"
+                                            alt="" />
+                                    </a>
+                                </td>
+                                <td style="padding: 10px; border-right: 1px solid #ccc" align="left" valign="top">
+                                    <table border="0" cellpadding="0" cellspacing="0">
+                                        <tbody>
+                                            <tr>
+                                                <td style="font-size: 10px; color: #666; padding-bottom: 8px;">
+                                                    Shperndaje
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                            		<a title="Share this on Facebook" href='http://www.facebook.com/share.php?u=http://www.ozone.al/main.faces?mainDealId=${deal.id}'>
+                                                    	<img src="http://www.ozone.al/image/facebook.png" height="20" width="20" alt="" />
+                                                    </a>
+                                            	</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <img src="http://www.ozone.al/image/box_bottom.jpg" style="display: block" height="5"
+                                        width="600" alt="" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            #end #end
+            <tr>
+                <td colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            #if ($rowNr >= 0)
+            <tr>
+                <td colspan="2" align="center">
+                    <table width="600" border="0" cellpadding="0" cellspacing="0">
+                        <tbody>
+                           #set( $i = 0 )
+                        	#foreach( $row in [0..$rowNr] ) 
+                            <tr>
+                                #foreach( $p in [0..1] )
+                                	#if($row != $rowNr)
+		                                <td width="290" align="center" valign="top" bgcolor="#f4f4f4" style="border-top: 1px solid #cccccc">
+		                                    <table width="290" border="0" cellpadding="0" cellspacing="5">
+                                        <tbody>
+                                            <tr>
+                                                <td align="center" valign="top">
+                                                    <table width="263" border="0" cellpadding="3" cellspacing="0">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td align="left" valign="top">
+                                                                    <font style="font-size: 14px;"><a href="http://www.ozone.al/main.faces?mainDealId=${alreadyActive.get($i).id}"
+                                                                        style="color: #333333; text-decoration: none" target="_blank">
+                                                                            <strong>$alreadyActive.get($i).partner.name</strong></a></font>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <table width="290" border="0" cellpadding="0" cellspacing="0">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td align="center">
+                                                                    <table width="257" border="0" cellpadding="0" cellspacing="0">
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td width="257" height="174" align="left" valign="top">
+                                                                                    <a href="http://www.ozone.al/main.faces?mainDealId=${alreadyActive.get($i).id}"
+                                                                                        style="text-decoration: none" title="Shiko" target="_blank">
+                                                                                            <img border="1" src="$fileUpload$alreadyActive.get($i).mainImgName" width="255"
+                                                                                                height="170" alt="Shiko" style="border: 1px solid #cccccc; display: block" /></a>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td width="257" align="left">
+                                                                                    <table width="257" border="0" cellpadding="0" cellspacing="1" bgcolor="#cccccc">
+                                                                                        <tbody>
+                                                                                            <tr>
+                                                                                                <td width="50%" align="center" valign="middle" style="border-right: 1px solid #a9a9a9">
+                                                                                                    <font style="font-size: 13px; color: #333333;
+                                                                                                        line-height: 1em"><font style="font-size: 10px">
+                                                                                                            Ulje<br />
+                                                                                                        </font><strong>$alreadyActive.get($i).percentDiscount%</strong></font>
+                                                                                                </td>
+                                                                                                <td width="50%" align="center" valign="middle">
+                                                                                                    <font style=" font-size: 13px; color: #333333;
+                                                                                                        line-height: 1em"><font style="font-size: 10px">
+                                                                                                            Cmimi<br />
+                                                                                                        </font><strong>$alreadyActive.get($i).price L</strong></font>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="center" style="padding-top: 5px">
+                                                                    <table width="257" border="0" cellpadding="2" cellspacing="0">
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td align="left" valign="top">
+                                                                                    <font style="font-size: 12px; "><a href="http://www.ozone.al/main.faces?mainDealId=${alreadyActive.get($i).id}"
+                                                                                            style=" text-decoration: none; color: #333333" target="_blank">
+                                                                                                $alreadyActive.get($i).title</a></font>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">
+                                                    <a href="http://www.ozone.al/main.faces?mainDealId=${alreadyActive.get($i).id}"
+                                                         target="_blank">
+                                                                <img src="http://www.ozone.al/image/butoni_vedi2.png" width="107" height="29" border="0"
+                                                                     alt="Shiko" /></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+		                                </td>
+									#elseif($p < $mod || $mod==0)
+										<td width="290" align="center" valign="top" bgcolor="#f4f4f4" style="border-top: 1px solid #cccccc">
+		                                   <table width="290" border="0" cellpadding="0" cellspacing="5">
+                                        <tbody>
+                                            <tr>
+                                                <td align="center" valign="top">
+                                                    <table width="263" border="0" cellpadding="3" cellspacing="0">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td align="left" valign="top">
+                                                                    <a href="http://www.ozone.al/main.faces?mainDealId=${alreadyActive.get($i).id}"
+                                                                        style="text-decoration: none" target="_blank"><font style="font-size: 14px; color: #333333">
+                                                                            <strong>$alreadyActive.get($i).partner.name</strong></font></a>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <table width="290" border="0" cellpadding="0" cellspacing="0">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td align="center">
+                                                                    <table width="257" border="0" cellpadding="0" cellspacing="0">
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td width="257" height="174" align="left" valign="top">
+                                                                                    <a href="http://www.ozone.al/main.faces?mainDealId=${alreadyActive.get($i).id}"
+                                                                                        style="text-decoration: none" title="Shiko" target="_blank">
+                                                                                            <img border="1" src="$fileUpload$alreadyActive.get($i).mainImgName" width="255"
+                                                                                                height="170" alt="Shiko" style="border: 1px solid #cccccc; display: block" /></a>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td width="257" align="left">
+                                                                                    <table width="257" border="0" cellpadding="0" cellspacing="1" bgcolor="#cccccc">
+                                                                                        <tbody>
+                                                                                            <tr>
+                                                                                                <td width="50%" align="center" valign="middle" style="border-right: 1px solid #a9a9a9">
+                                                                                                    <font style=" font-size: 13px; color: #333333;
+                                                                                                        line-height: 1em"><font style="font-size: 10px">
+                                                                                                            Ulje<br />
+                                                                                                        </font><strong>$alreadyActive.get($i).percentDiscount%</strong></font>
+                                                                                                </td>
+                                                                                                <td width="50%" align="center" valign="middle">
+                                                                                                    <font style=" font-size: 13px; color: #333333;
+                                                                                                        line-height: 1em"><font style="font-size: 10px">
+                                                                                                            Cmimi<br />
+                                                                                                        </font><strong>$alreadyActive.get($i).price L</strong></font>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="center" style="padding-top: 5px">
+                                                                    <table width="257" border="0" cellpadding="2" cellspacing="0">
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td align="left" valign="top">
+                                                                                    <font style="font-size: 12px; color: #333333"
+                                                                                       ><a href="http://www.ozone.al/main.faces?mainDealId=${alreadyActive.get($i).id}"
+                                                                                            style="color: #333333; text-decoration: none" target="_blank">
+                                                                                                $alreadyActive.get($i).title</a></font>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">
+                                                    <a href="http://www.ozone.al/main.faces?mainDealId=${alreadyActive.get($i).id}"
+                                                        target="_blank">
+                                                                <img src="http://www.ozone.al/image/butoni_vedi2.png" width="107" height="29" border="0"
+                                                                     alt="Shiko" /></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+		                                </td>
+									#end
+									
+									#set( $i = $i + 1 )
+									
+	                               
+	                        	#end
+	                        	
+	                        	 <td width="18" bgcolor="#ffffff">
+	                                </td>
+	                                
+	                                #if ($rowNr == 0 && $mod == 1)
+		                                <td width="290" align="center" valign="top">
+		                                </td>
+	                                #end
+	                               
+                            </tr>
+                            
+                            <tr>
+				           		<td colspan="3">
+				                    &nbsp;
+				                </td>
+                            </tr>
+                        	#end
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            #end
+            <tr>
+                <td colspan="2">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td align="left">
+                    <a rel="nofollow" href="http://www.ozone.al/invitaamici.faces" target="_blank">
+                        <img style="border: none" src="http://www.ozone.al/image/ftoni_miqte-1.png" height="82"
+                            width="298" alt="" /></a>
+                </td>
+                <td align="right">
+                    <a rel="nofollow" href="http://www.fzone.al" target="_blank">
+                        <img style="border: none" src="http://www.ozone.al/image/fzone-1.png" height="82"
+                            width="298" alt="" /></a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <table bgcolor="#e4e4e4" border="0" cellpadding="0" cellspacing="0" width="600">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <img src="http://www.ozone.al/image/footer_top.jpg" style="display: block" height="5"
+                                        width="600" alt="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                	<table border="0" cellpadding="0" cellspacing="0">
+                                        <tbody>
+                                            <tr>
+                                                <td valign="top">&nbsp;
+                                                    
+                                                </td>
+                                                <td>&nbsp;
+                                                    
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 0 20px 0 10px; border-right: 1px dotted #aaa" valign="top"> 
+                                                    <div style="text-align:center; width:181px; margin-left:auto; margin-right:auto;">
+														<img id="Image-Maps_5201211220945024" src="http://www.ozone.al/image/pagesa_email.png" usemap="#Image-Maps_5201211220945024" border="0" width="181" height="75" alt="" />
+														<map id="_Image-Maps_5201211220945024" name="Image-Maps_5201211220945024">
+														<area shape="rect" coords="1,0,58,36" href="https://www.easypay.al/" alt="EasyPay" title="EasyPay"    />
+														<area shape="rect" coords="62,1,176,70" href="https://www.paypal.com/webapps/mpp/paypal-popup" alt="PayPal" title="PayPal"    />
+														<area shape="rect" coords="0,38,55,70" href="http://www.ozone.al/template/common/conditions.faces#11" alt="Korrier falas" title="Korrier falas"    />
+														</map>
+													</div>
+                                                </td>
+                                                <td style="padding: 0 10px 10px 20px" align="left" valign="top">
+                                                    <div align="left">
+                                                        <span style="font-size: 11px; color: #666">Ozone eshte nje faqe interneti qe ju jep
+                                                            mundesine te blini online nje sherbim ose produkt me ulje emimi deri ne 90%! Propozojme
+                                                            edo dite Oferta nga me te larmishmet, duke filluar nga sherbime spa, masazhe, parukeri,
+                                                            fitness, qendra estetike, kurse kercimi e duke vazhduar me restorante, hotele dhe
+                                                            udhetime ne destinacione te ndryshme turistike. Behu pjese e familjes Ozone, dhe
+                                                            do te provoni dieka ndryshe nga e zakonshmja, do te thyeni monotonine ditore, me
+                                                            eksperienca te reja, kurioze dhe zbavitese qe ofron qyteti juaj. </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="2">&nbsp;
+                                                	
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="2" align="center" style="color: #597382; font-weight:bold">
+                                                	
+                                                </td>
+                                            </tr>
+                                            <tr bgcolor="#597382" align="center" style="color: #fff; font-weight:bold">
+                                            	<td colspan="2">Partnership
+                                                	
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                            	<td colspan="2" align="center" ce>
+                                                	<table cellpadding="3">
+                                                    <tr>
+                                                    <td>
+                                                	<a href="http://www.radiotravel.al" target="_blank"  title="Radio Travel" >
+                                               	 		<img alt="Radio Travel" src="http://www.ozone.al/image/logo_radio_travel.png"/>
+                                            		</a>
+                                            		&nbsp;
+                                                    </td>
+                                                    <td>
+                                                    <a href="http://www.vas.al" target="_blank" title="Paketa Turistike">
+                                               			<img alt="Paketa Turistike" src="http://www.ozone.al/image/logo_vas.png"/>
+                                            		</a>
+                                                    &nbsp;
+                                                    </td>
+                                                    <td>
+                                                    <a href="http://www.kinemamillennium.com/" target="_blank" title="Kinema Millennium">
+                                                   		<img alt="Kinema Millenium" src="http://www.ozone.al/image/logo_millennium.png" width="80"/>
+                                           			</a>
+                                           			&nbsp;
+                                                    </td>
+                                                    <td>
+                                                    <a href="http://www.facebook.com/SonnyKElsonPhotographer?ref=hl" target="_blank"  title="Sonny K.Elson Photograher">
+                                                    	<img alt="Sonny Photographer" src="http://www.ozone.al/image/logo_sonny.png" width="100"/>
+                                                    </a>
+                                                    </td>
+                                                    <td>
+                                                    <img alt="Breeze Bar" src="http://www.ozone.al/image/logo_breeze.png"/>
+                                                    </td>
+                                                    <td>
+                                                    <img alt="4PM" src="http://www.ozone.al/image/logo_4pm.png"/>
+                                                    </td>
+                                                    </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>   
+                                            <tr bgcolor="#597382">
+                                            	<td colspan="2">&nbsp;
+                                                	
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2" align="center" height="40" valign="middle">
+                                                    <img src="http://www.ozone.al/image/footer_line.jpg" height="10" width="575" alt="" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 11px; color: #666; text-align: center;">
+                                    OZone.al &#235;sht&#235; pjes&#235; e Zone Sh.p.k. adresa Rr. e Bogdan&#235;ve/Gjon
+                                    Muzaka nr.1, Tiran&#235;
+                                    <br />
+                                    P&#235;r m&#235; shum&#235; info vizitoni <a href="http://wwww.ozone.al" target="_blank">
+                                        www.ozone.al</a> ose na kontaktoni n&#235; info@ozone.al ose n&#235; 044 530
+                                    424
+                                    <br />
+                                    <!--
+                                    N&#235;se nuk d&#235;shironi t&#235; merrni email-e nga OZone.al klikoni 
+                                    
+                                    <a href="http://www.ozone.al/unsubscribeNewsletter.faces?cusEmail=$cusEmail"
+                                        target="_blank">k&#235;tu</a> p&#235;r tu c'regjistruar.
+                                    -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img src="http://www.ozone.al/image/footer_bottom.jpg" style="display: block" height="5"
+                                        width="600" alt="" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    &nbsp;
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

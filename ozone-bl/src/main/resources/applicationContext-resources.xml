@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"
+       default-lazy-init="true">
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:jdbc.properties</value>
+                <value>classpath:email.properties</value>
+                <value>classpath:env.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="maxActive" value="100"/>
+        <property name="maxWait" value="1000"/>
+        <property name="poolPreparedStatements" value="true"/>
+        <property name="defaultAutoCommit" value="false"/>
+        <property name="validationQuery" value="select now()"/>
+        <property name="testOnBorrow" value="true"/>
+    </bean>
+
+    <!--<bean id="databaseIdProvider" class="org.apache.ibatis.mapping.DefaultDatabaseIdProvider">-->
+        <!--<property name="properties">-->
+            <!--<props>-->
+                <!--&lt;!&ndash;<prop key="_databaseId">mysql</prop>&ndash;&gt;-->
+                <!--<prop key="_databaseId">h2</prop>-->
+            <!--</props>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <bean id="dataSourceAutoCommit" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="maxActive" value="100"/>
+        <property name="maxWait" value="1000"/>
+        <property name="poolPreparedStatements" value="true"/>
+        <property name="defaultAutoCommit" value="true"/>
+        <property name="validationQuery" value="select now()"/>
+        <property name="testOnBorrow" value="true"/>
+    </bean>
+
+    <bean id="envConfig" class="al.ozone.bl.utils.EnvConfig">
+        <property name="uploadsFolder" value="${env.uploadsFolder}"/>
+        <property name="uploadsUrl" value="${env.uploadsUrl}"/>
+
+        <property name="ppEnv" value="${pp.env}"/>
+        <property name="ppSellerEmail" value="${pp.sellerEmail}"/>
+        <property name="ppCurrencyCode" value="${pp.currency_code}"/>
+        <property name="ppReturnUrl" value="${pp.returnUrl}"/>
+        <property name="ppNotifyUrl" value="${pp.notifyUrl}"/>
+        <property name="ppCancelUrl" value="${pp.cancelUrl}"/>
+        <property name="ppButtonImg" value="${pp.button_image}"/>
+        <property name="deltaExchangeCurr" value="${pp.deltaExchangeCurr}"/>
+        <property name="ppEwpCertPath" value="${pp.ewpCertPath}"/>
+        <property name="ppPrivateKey" value="${pp.privateKey}"/>
+        <property name="ppCertId" value="${pp.certId}"/>
+        <property name="ppCertPath" value="${pp.certPath}"/>
+        <property name="ppIdentifyToken" value="${pp.identifyToken}"/>
+
+        <property name="epEnv" value="${ep.env}"/>
+        <property name="epMerchantUser" value="${ep.merchantUser}"/>
+        <property name="epMerchantRefNr" value="${ep.merchantRefNr}"/>
+
+        <property name="fbAppId" value="${fb.appId}"/>
+    </bean>
+
+    <bean id="urlEncrypter" class="al.ozone.bl.utils.UrlEncrypterImpl">
+        <constructor-arg value="${env.encryptionKey}"/>
+        <aop:scoped-proxy proxy-target-class="false"/>
+    </bean>
+
+    <bean id="currencyConvertor" class="NET.webserviceX.www.CurrencyConvertorLocator">
+        <aop:scoped-proxy proxy-target-class="false"/>
+    </bean>
+
+    <bean id="dataSourceInitializer" class="org.springframework.jdbc.datasource.init.DataSourceInitializer">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="databasePopulator" ref="databasePopulator"/>
+    </bean>
+    <bean id="databasePopulator" class="org.springframework.jdbc.datasource.init.ResourceDatabasePopulator">
+        <property name="scripts">
+            <array value-type="org.springframework.core.io.Resource">
+                <value>classpath:db/1.drop_tables.sql</value>
+                <value>classpath:db/2.create_db.sql</value>
+                <value>classpath:db/3.populate_db.sql</value>
+            </array>
+        </property>
+    </bean>
+
+</beans>

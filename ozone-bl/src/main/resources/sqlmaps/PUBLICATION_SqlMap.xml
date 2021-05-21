@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="PUBLICATION">
+	<resultMap id="publicationResultMap" type="al.ozone.bl.model.Publication">
+	   <id column="ID" property="id" jdbcType="DECIMAL" />
+	   <result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+	   <result column="END_DATE" property="endDate" jdbcType="TIMESTAMP" />
+	   <result column="TOT_PURCHASE" property="totPurchases" jdbcType="DECIMAL" />
+	   <result column="CONFIRMED" property="confirmed" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+	   <result column="STATUS" property="status" jdbcType="VARCHAR" />
+	   <result column="ORDER_NR" property="order" jdbcType="DECIMAL" />
+	   <result column="COUPONS_PREPARED" property="couponsPrepared" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+	   <!-- result column="DEAL_ID" property="dealId" jdbcType="DECIMAL" /-->
+	   <association property="city" column="CITY_ID" select="CITY.get"/>
+	   <association property="deal" column="DEAL_ID" select="DEAL.get"/>
+  	</resultMap>
+  	
+  	<resultMap id="simplePublicationResultMap" type="al.ozone.bl.model.Publication">
+	   <id column="ID" property="id" jdbcType="DECIMAL" />
+	   <result column="END_DATE" property="endDate" jdbcType="TIMESTAMP" />
+	   <association property="deal" column="DEAL_ID" select="DEAL.getSimpleDeal"/>
+  	</resultMap>
+	
+	<select id="get" resultMap="publicationResultMap" parameterType="int" >
+		select *
+		from PUBLICATION
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	
+	<select id="getSimplePublication" resultMap="simplePublicationResultMap" parameterType="int" >
+		select *
+		from PUBLICATION
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+
+	<select id="getAll" resultMap="publicationResultMap">
+		select *
+		from PUBLICATION
+	</select>
+	
+	<delete id="delete" parameterType="al.ozone.bl.model.Publication" >
+		delete from PUBLICATION
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+
+	<insert id="insert" parameterType="al.ozone.bl.model.Publication">
+		insert into PUBLICATION (START_DATE, END_DATE, TOT_PURCHASE,
+  							CONFIRMED, STATUS, ORDER_NR, CITY_ID, DEAL_ID, COUPONS_PREPARED)
+		values (
+				#{startDate,jdbcType=TIMESTAMP}, 
+				#{endDate,jdbcType=TIMESTAMP}, 
+				#{totPurchases,jdbcType=DECIMAL}, 
+				#{confirmed,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler},
+				#{status,jdbcType=VARCHAR}, 
+				#{order,jdbcType=DECIMAL}, 
+	  			#{city.id,jdbcType=VARCHAR},
+	  			#{deal.id,jdbcType=VARCHAR},
+	  			#{couponsPrepared,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler})
+		<selectKey keyProperty="id" resultType="java.lang.Integer"  >
+			VALUES NEXT VALUE FOR seq_publication;
+	   	</selectKey>
+	</insert>
+	
+	<update id="update" parameterType="al.ozone.bl.model.Publication" >
+	    update PUBLICATION
+	    set START_DATE = #{startDate,jdbcType=TIMESTAMP}, 
+	    END_DATE = #{endDate,jdbcType=TIMESTAMP}, 
+	    TOT_PURCHASE = #{totPurchases,jdbcType=DECIMAL}, 
+	    CONFIRMED = #{confirmed,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler},
+	    ORDER_NR = #{order,jdbcType=DECIMAL}, 
+	    CITY_ID = #{city.id,jdbcType=VARCHAR}
+	    where ID = #{id,jdbcType=DECIMAL}
+    </update>
+	
+	<select id="getAllPublicationForCity" resultMap="publicationResultMap" parameterType="string">
+		select * 
+		from PUBLICATION
+		where CITY_ID = #{cityId,jdbcType=DECIMAL}
+		<if test="onlyActives!=null and onlyActives==true">and STATUS = "A"</if>
+		order by order_nr
+	</select>
+	
+	<select id="search" resultMap="publicationResultMap" parameterType="al.ozone.bl.bean.SearchPublicationBean">
+		select pub.* 
+		from PUBLICATION pub, DEAL d, PARTNER p, CITY c
+	    where pub.deal_id = d.id
+	    and d.partner_id = p.id
+	    and pub.city_id = c.id
+		<if test="pubId!=null and pubId!=''">and pub.id = #{pubId,jdbcType=DECIMAL}</if>
+		<if test="cityId!=null and cityId!=''">and c.id = #{cityId,jdbcType=VARCHAR}</if>
+		<if test="partnerName!=null and partnerName!=''">and upper(p.NAME) like upper(CONCAT('%', #{partnerName,jdbcType=VARCHAR}, '%'))</if>
+		<if test="dealTitle!=null and dealTitle!=''">and upper(d.TITLE) like upper(CONCAT('%', #{dealTitle,jdbcType=VARCHAR}, '%'))</if>
+		<if test="confirmed!=null">and pub.confirmed = #{confirmed,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler} </if>
+		<if test="status!=null and status!=''">and pub.status = #{status,jdbcType=VARCHAR}</if>
+		<if test="insertedFrom!=null">and UNIX_TIMESTAMP(DATE(pub.START_DATE)) >= UNIX_TIMESTAMP(#{insertedFrom,jdbcType=TIMESTAMP})</if>
+		<if test="insertedTo!=null">and UNIX_TIMESTAMP(#{insertedTo,jdbcType=TIMESTAMP}) >= UNIX_TIMESTAMP(DATE(pub.START_DATE))</if>
+		<!-- and c.ACTIVE = 'Y' in case want to see only active-->
+		order by pub.START_DATE DESC, c.ID, pub.ORDER_NR
+	</select>
+	
+	<update id="changePublicationsStatusTo" parameterType="map" >
+	    update PUBLICATION
+	    set STATUS = #{status,jdbcType=TIMESTAMP}
+	    where ID in
+	    <foreach item="item" index="index" collection="list"
+			open="(" separator="," close=")">
+			#{item.id}
+		</foreach> 
+    </update>
+    
+    <select id="getPublicationsStartToday" resultMap="publicationResultMap" parameterType="java.util.Date">
+		select *  from publication pub
+		where UNIX_TIMESTAMP(DATE(pub.START_DATE)) = UNIX_TIMESTAMP(DATE(#{startDate,jdbcType=TIMESTAMP}))
+	</select>
+    <select id="getPublicationsEndToday" resultMap="publicationResultMap" parameterType="java.util.Date">
+		select *  from publication pub
+		where UNIX_TIMESTAMP(DATE(pub.END_DATE)) = UNIX_TIMESTAMP(DATE(#{endDate,jdbcType=TIMESTAMP}))
+	</select>
+
+    <select id="getAllCustomerEmailsForPub" resultType="string" parameterType="int">
+		select EMAIL
+		from PUBLICATION pub, PURCHASE pur, CUSTOMER c
+		where pub.ID = pur.PUBLICATION_ID
+		and pur.CUSTOMER_ID = c.ID
+		and pub.ID = #{pubId,jdbcType=DECIMAL}
+		group by EMAIL
+	</select>	
+	
+	<update id="setPublicationConfirmed" parameterType="map">
+		update PUBLICATION
+		set CONFIRMED = #{confirmed,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler}
+		where ID = #{pubId,jdbcType=DECIMAL}
+	</update>
+	
+	<update id="setCouponsPreparedForPub" parameterType="map">
+		update PUBLICATION
+		set COUPONS_PREPARED = #{couponsPrepared,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler}
+		where ID = #{pubId,jdbcType=DECIMAL}
+	</update>
+	
+	<!-- NEWSLETTERS -->
+	<resultMap id="newsletterResultMap" type="al.ozone.bl.model.Newsletter">
+		<result column="CITY_ID" property="cityId" jdbcType="VARCHAR" />
+		<result column="CITY_NAME" property="cityName" jdbcType="VARCHAR" />	
+		<association property="activePublications" column="CITY_ID" select="getActivePublicationsForCity"/>
+  	</resultMap> 
+  	
+	<select id="getActivePublicationsForCity" resultMap="publicationResultMap">
+		select *
+		from PUBLICATION p
+		where p.CITY_ID = #{cityId,jdbcType=VARCHAR}
+		AND UNIX_TIMESTAMP(DATE(p.START_DATE)) = UNIX_TIMESTAMP(DATE(now()))
+		and p.STATUS = 'A'
+		order by p.ORDER_NR
+	</select>
+	
+	<select id="getPublicationsAlreadyActive" resultMap="publicationResultMap">
+		select *
+		from PUBLICATION p
+		where p.STATUS = 'A'
+		and UNIX_TIMESTAMP(DATE(now())) > UNIX_TIMESTAMP(DATE(p.START_DATE)) 
+		order by p.ORDER_NR
+	</select>
+	
+	<select id="getPublicationsStartTodayGroupedByCity" resultMap="newsletterResultMap">
+		select p.CITY_ID, c.NAME CITY_NAME, COUNT(*) totActivePublications
+		from publication p, city c
+		where p.CITY_ID = c.ID
+		AND p.STATUS = 'A'
+		AND UNIX_TIMESTAMP(DATE(p.START_DATE)) = UNIX_TIMESTAMP(DATE(now()))
+		group by CITY_ID
+	</select>	
+	<!-- END NEWSLETTERS -->
+	
+	<update id="increasePurchases" parameterType="map">
+		update PUBLICATION
+		set TOT_PURCHASE = TOT_PURCHASE + #{totPurchase,jdbcType=DECIMAL}
+		where ID = #{pubId,jdbcType=DECIMAL}
+	</update>
+	
+	<select id="getAllClosedPublication" resultMap="publicationResultMap">
+		select *
+		from PUBLICATION pub
+		where pub.STATUS = 'C'
+		order by end_date desc
+	</select>
+	
+	<select id="getActivePubsGroupedByPurchases" resultMap="SYSTEMCONFIGBEAN.applicationConfigMap">
+		<![CDATA[
+		select pub.id as CONFIG_KEY, IFNULL(sum(quantity), 0) as CONFIG_VALUE
+		from PUBLICATION pub
+			        left JOIN PURCHASE p on pub.id = p.publication_id
+			        					and customer_id <> 82
+	    where pub.STATUS = 'A'
+	    group by pub.id
+		]]>
+	</select>
+	
+	<select id="getTodayExpiringPublication" resultMap="publicationResultMap">
+		select *
+		from publication p, deal d
+		where p.deal_id = d.id
+		AND UNIX_TIMESTAMP(DATE(NOW())) = 
+		UNIX_TIMESTAMP(DATE(DATE_ADD(DATE_ADD(end_date, INTERVAL d.DISCOUNT_DURATION MONTH), INTERVAL 1 DAY)))
+	</select>
+	
+	<update id="changePublicationOrder" parameterType="al.ozone.bl.model.Publication">
+		update PUBLICATION
+		set ORDER_NR = #{order,jdbcType=DECIMAL}
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	
+</mapper>

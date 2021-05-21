@@ -1,0 +1,42 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition >    		           	
+	<h:outputLabel value="#{msg['payment.ep.txnId']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.txnId}"/>
+
+	<h:outputLabel value="#{msg['payment.ep.orderId']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.orderId}"/>
+	
+	<h:outputLabel value="#{msg['payment.ep.merchantUsername']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.merchantUsername}"/>
+
+	<h:outputLabel value="#{msg['payment.ep.responseCode']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.responseCode}"/>
+	
+	<h:outputLabel value="#{msg['payment.ep.txnStatus']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.txnStatus}"/>
+	
+	<h:outputLabel value="#{msg['payment.ep.amount']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.amount}"/>
+	
+	<h:outputLabel value="#{msg['payment.ep.date']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.date}">
+		<f:converter converterId="dateWithHourFormatter" />
+	</h:outputText>
+	
+	<h:outputLabel value="#{msg['payment.ep.fee']} : "/>
+	<h:outputText value="#{paymentController.paymentSelected.fee}"/>
+	
+	<h:outputLabel value="#{msg['payment.ep.originalResponse']} : "/>
+	<p:inputTextarea style="width:250px;height:80px;"
+        		resisable="false"
+   				value="#{paymentController.paymentSelected.originalResponse}" > 
+    </p:inputTextarea>   	                		
+	
+</ui:composition>
+</html>

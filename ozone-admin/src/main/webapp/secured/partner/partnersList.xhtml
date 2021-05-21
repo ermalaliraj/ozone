@@ -1,0 +1,135 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+<f:view lang="#{systemConfigController.language}">
+<h:body>    
+<ui:composition template="/template/common/commonLayout.xhtml">    
+    <ui:define name="title">
+    	<h:outputText value="#{msg['title.partners']}"/>
+    </ui:define>
+    	
+	<ui:define name="content" >
+  		<h:form id="form">        
+        	<p:growl id="message" showDetail="true" /> 
+
+ 			<!-- Search Panel -->
+			<p:panel id="partnerSearchPanel" header="#{msg['partner.panelSearch']}" >
+				<h:panelGrid columns="9" cellpadding="5" width="600px" border="0"  styleClass="nowrapColumn">			
+			 		<h:outputLabel value="#{msg['partner.partnerName']}"/>
+			 		<p:inputText id="partnerName" binding="#{partnerController.sPartnerName}"/>
+       				
+					<h:outputLabel value="#{msg['partner.city']}"/>				                
+			        <p:selectOneMenu 
+			        	value="ALL"
+			        	binding="#{partnerController.sCityId}">  
+			        	<f:selectItem itemLabel="ALL" itemValue="" />
+			            <f:selectItems value="#{partnerController.allCityItems}" />  
+			        </p:selectOneMenu>
+			                		                
+			        <h:outputLabel value="#{msg['partner.category']}"/>	
+			        <p:selectOneMenu 
+			        	value="ALL"
+			        	binding="#{partnerController.sCategoryId}">  
+			        	<f:selectItem itemLabel="ALL" itemValue="" />
+          				<f:selectItems value="#{partnerController.categoryItems}"/> 
+			        </p:selectOneMenu>
+					
+					<f:facet name="footer">
+						<h:panelGroup>
+						<center>					
+							<p:commandButton value="#{msg['buttonSearch']}" update="partnersListPanel" action="#{partnerController.searchPartner}"/>
+							<p:spacer width="10"/>
+							<p:commandButton value="#{msg['buttonReset']}" update="partnerSearchPanel,message" action="#{partnerController.cleanSearchForm}" />  							
+						</center>
+						</h:panelGroup>
+					</f:facet>
+				</h:panelGrid>		
+			</p:panel>	
+        	
+        	<ui:include src="../common/ajaxloading.xhtml" />
+			
+        	<!-- Table Panel -->
+        	<p:panel id="partnersListPanel" header="#{msg['partner.panelResult']}" >		
+	    		<p:dataTable id="partnersTable" var="p" value="#{partnerController.lazyModel}"
+			    			paginator="true" rows="50" rowsPerPageTemplate="10,50,100"
+			    			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} Nr. Rows: #{partnerController.partnersList.size()}"
+			    			>
+					<p:column headerText="#{msg['partner.id']}" sortBy="#{p.id}" style="width:5%;">
+						<h:outputText value="#{p.id}"/>
+					</p:column>	
+					<p:column headerText="#{msg['partner.name']}" sortBy="#{p.name}">
+						<h:outputText value="#{p.name}"/>
+					</p:column>		
+					<p:column headerText="#{msg['partner.city']}" sortBy="#{p.city.name}">	
+						<h:outputText value="#{p.city.name}"/>
+					</p:column>	
+					<p:column headerText="#{msg['partner.address']}">
+						<h:outputText value="#{p.address}"/>
+					</p:column>	
+					<p:column headerText="#{msg['partner.tel']}">
+						<h:outputText value="#{p.tel}"/>
+					</p:column>	
+					<p:column headerText="#{msg['partner.cel']}">
+						<h:outputText value="#{p.cel}"/>
+					</p:column>	
+					<p:column headerText="#{msg['partner.email']}">
+						<h:outputText value="#{p.email}"/>
+					</p:column>	
+					
+					<p:column headerText="#{msg['partner.website']}">
+						<h:outputText value="#{p.webSite}"/>
+					</p:column>	
+					
+					<p:column headerText="#{msg['partner.category']}">
+						<h:outputText value="#{p.category.name}"/>
+					</p:column>	
+					   
+		            <p:column>   
+	            		<!-- <p:commandButton title="View" update=":form:updatePartnerPanel" onclick="updatePartnerDialog.show()" icon="ui-icon ui-icon-search">  
+	                        <f:setPropertyActionListener value="#{p}" target="#{partnerController.partnerSelected}" />  
+	                        <f:setPropertyActionListener value="#{false}" target="#{partnerController.editMode}" />  
+	                    </p:commandButton>   -->
+	                   	<p:commandButton  title="Edit" update=":form:updatePartnerPanel" oncomplete="updatePartnerDialog.show()" icon="ui-icon ui-icon-pencil">  
+							<f:setPropertyActionListener value="#{p}" target="#{partnerController.partnerSelected}" />  
+							<f:setPropertyActionListener value="#{true}" target="#{partnerController.editMode}" />  
+						</p:commandButton>  	
+	                   	<p:commandButton title="Delete" update=":form:updatePartnerPanel" onclick="confirmation.show()" icon="ui-icon ui-icon-close">  
+	                    	<f:setPropertyActionListener value="#{p}" target="#{partnerController.partnerSelected}" />  
+	                   	</p:commandButton>  
+	                   	<p:commandButton title="Add deal" action="#{partnerController.newDealForPartner}" update="dealForm:dealPartnerPanel" icon="ui-icon ui-icon-calendar">   
+	                       	<f:setPropertyActionListener value="#{p}" target="#{partnerController.partnerSelected}" />
+	                   	</p:commandButton> 
+	                   	
+		          	</p:column>  
+		          	
+		          	<f:facet name="footer">  
+						<p:commandButton oncomplete="newPartnerDialog.show()" value="#{msg['partner.buttonAdd']}" icon="ui-icon ui-icon-newwin"/>		
+					</f:facet>            
+		 		</p:dataTable>			
+		 	</p:panel>	
+
+    		<p:confirmDialog widgetVar="confirmation" width="400" severity="alert"
+    				style="position:fixed; top:0%; left:0%; text-align:center;"
+    				message="#{msg['partner.confirmDeleteMsg']}" header="#{msg['confirm']}"  >        
+	            <center>
+		            <p:commandButton value="#{msg['yes']}" update="partnersListPanel,message" actionListener="#{partnerController.deletePartner}" oncomplete="confirmation.hide()"/>  
+		            <p:commandButton value="#{msg['no']}" onclick="confirmation.hide()" type="button" />  
+        		</center>
+        	</p:confirmDialog>  
+        	
+        	<ui:include src="partnerEditDlg.xhtml" />
+		</h:form>			
+		
+		<ui:include src="partnerNewDlg.xhtml" />
+		
+	</ui:define>    		
+
+</ui:composition>    
+</h:body>
+</f:view>	
+</html>
+	
+	

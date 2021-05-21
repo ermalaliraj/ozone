@@ -1,0 +1,13 @@
+<html>
+<body>
+<h3>Strange situation!!!!</h3>
+
+<div>
+	
+	<b>${msg}</b> <br/>
+	${where}
+	
+</div>
+
+</body>
+</html>

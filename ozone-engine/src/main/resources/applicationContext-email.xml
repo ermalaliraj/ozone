@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+			http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-2.0.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"
+	default-lazy-init="true">
+	
+ 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	    <property name="locations">
+	        <list>
+	            <value>classpath:jdbc.properties</value>
+	            <value>classpath:email.properties</value>
+	            <value>classpath:env.properties</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+		<property name="velocityProperties">
+        	<value>
+	          	resource.loader=class
+	          	class.resource.loader.class=org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+         	</value>
+      	</property>
+	</bean>
+   
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${email.hostSmtp}"/>
+		<property name="username" value="${email.username}"/>
+		<property name="password" value="${email.password}"/>
+		<!-- added on 14-03-2012. Seems after this date gmail needs SSL certificate  -->
+		<property name="javaMailProperties">	
+			<props> 
+		  		<prop key="mail.smtp.auth">true</prop>
+		  		<prop key="mail.smtp.starttls.enable">true</prop>
+		  		<prop key="mail.smtp.debug">true</prop>
+		    </props>
+		</property>
+	</bean>
+
+	<bean id="emailRobot" class="al.ozone.engine.email.EmailRobot" init-method="init">
+		<property name="hostMailSender" value="${email.hostSmtp}"/>
+		<property name="mailSender" ref="mailSender"/>
+		<property name="velocityEngine" ref="velocityEngine"/>
+		<property name="emailFrom" value="${email.emailFrom}"/>
+		<property name="templateBase" value="${email.templateBase}"/>
+		<property name="sleepSeconds" value="${email.sleepSeconds}"/>
+		<property name="defaultSubject" value="${email.defaultSubject}"/>
+		<property name="maxRetries" value="${email.maxRetries}"/>
+	</bean>
+	
+	<!-- If not lazy-init="true", init() is called even when only calling child emailRobot  -->
+	<bean id="emailEngine" class="al.ozone.engine.email.EmailEngine" 
+		init-method="init" parent="emailRobot" lazy-init="true">
+	
+	</bean>
+	
+	<bean id="proxyEmailEngine" class="al.ozone.engine.email.ProxyEmailEngineImpl"
+			scope="singleton"
+        	init-method="init">	
+		<property name="emailEngine" ref="emailEngine" />	
+		<aop:scoped-proxy proxy-target-class="false" />
+	</bean>	
+	
+	<bean id="proxyEmailRobot" class="al.ozone.engine.email.ProxyEmailRobotImpl">	
+		<property name="emailRobot" ref="emailRobot" />	
+		<aop:scoped-proxy proxy-target-class="false" />
+	</bean>	
+
+	<!-- 
+	<bean id="proxyEmailRobot" class="al.ozone.engine.email.ProxyEmailRobotImpl"
+			scope="singleton"
+        	init-method="init">	
+		<property name="emailRobot" ref="emailRobot" />	
+		<aop:scoped-proxy proxy-target-class="false" />
+	</bean>
+	 -->
+</beans>

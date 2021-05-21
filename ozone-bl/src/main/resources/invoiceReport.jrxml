@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report2" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8fe4268d-4443-4435-b1fd-86683c91ffce">
+	<property name="ireport.zoom" value="1.1000000000000005"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="465"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#EFF7FF"/>
+		</conditionalStyle>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#EFF7FF"/>
+		</conditionalStyle>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#EFF7FF"/>
+		</conditionalStyle>
+	</style>
+	<style name="table 3">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#EFF7FF"/>
+		</conditionalStyle>
+	</style>
+	<style name="table 4">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#EFF7FF"/>
+		</conditionalStyle>
+	</style>
+	<style name="table 5">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 5_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 5_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 5_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#EFF7FF"/>
+		</conditionalStyle>
+	</style>
+	<subDataset name="TableOrderItems" uuid="bae4cc0b-9641-417e-874e-e6ea0553a2f6">
+		<queryString language="SQL">
+			<![CDATA[select concat(dc.deal_id, '-', deal_choice ) as deal_id, dc.title_choice, o.single_price, o.quantity
+        , o.quantity * o.single_price as totalAmount
+from orders o, deal_choice dc
+where o.deal_id = dc.deal_id
+and o.deal_choice = dc.choice_nr]]>
+		</queryString>
+		<field name="DEAL_ID" class="java.lang.String"/>
+		<field name="TITLE" class="java.lang.String"/>
+		<field name="SINGLE_PRICE" class="java.lang.String"/>
+		<field name="QTY" class="java.lang.String"/>
+		<field name="AMOUNT" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="Table Dataset 1" uuid="2950d128-2ac4-484a-abd0-b9a48543e8cc">
+		<queryString language="SQL">
+			<![CDATA[select concat(dc.deal_id, '-', deal_choice ) as deal_id, dc.title_choice, o.single_price, o.quantity
+        , o.quantity * o.single_price as totalAmount, o.credit_used, o.money_spent
+        ,o.address, o.tel, o.op_date, o.type
+        ,c.email, concat(ifnull(c.name,''), ' ', ifnull(c.surname,'')) as full_name
+from orders o, deal_choice dc, customer c
+where o.deal_id = dc.deal_id
+and o.deal_choice = dc.choice_nr
+and o.customer_id = c.id]]>
+		</queryString>
+		<field name="deal_id" class="java.lang.String"/>
+		<field name="money_spent" class="java.lang.Integer"/>
+		<field name="credit_used" class="java.lang.Integer"/>
+		<field name="title_choice" class="java.lang.String"/>
+		<field name="single_price" class="java.lang.Integer"/>
+		<field name="quantity" class="java.lang.Integer"/>
+		<field name="totalAmount" class="java.lang.Long"/>
+	</subDataset>
+	<parameter name="ORDER_ID" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select o.id, concat(dc.deal_id, '-', deal_choice ) as deal_id, dc.title_choice, o.single_price,
+        o.quantity, o.quantity * o.single_price as totalAmount, o.credit_used, o.money_spent
+        ,o.address, o.tel, o.op_date, o.type
+        ,c.email, concat(ifnull(c.name,''), ' ', ifnull(c.surname,'')) as full_name
+from orders o, deal_choice dc, customer c
+where o.deal_id = dc.deal_id
+and o.deal_choice = dc.choice_nr
+and o.customer_id = c.id
+and o.id = $P{ORDER_ID}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="deal_id" class="java.lang.String"/>
+	<field name="title_choice" class="java.lang.String"/>
+	<field name="single_price" class="java.lang.Integer"/>
+	<field name="quantity" class="java.lang.Integer"/>
+	<field name="totalAmount" class="java.lang.Long"/>
+	<field name="credit_used" class="java.lang.Integer"/>
+	<field name="money_spent" class="java.lang.Integer"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="tel" class="java.lang.String"/>
+	<field name="op_date" class="java.sql.Timestamp"/>
+	<field name="type" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="full_name" class="java.lang.String"/>
+	<variable name="variable1" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="161" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="0422170a-bd1c-48bf-b765-66d76f83c7fb" x="371" y="24" width="184" height="65" forecolor="#9999FF" backcolor="#CCCCFF"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="e3d3e9a8-ba6d-43d6-89c2-e7fb02ab565e" x="483" y="0" width="72" height="23"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fature]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b78ebaf6-febc-44a7-a8a9-eda0a60736d5" x="421" y="49" width="27" height="16"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4b71f06f-4f28-429b-a8d9-93d7167bba47" x="387" y="35" width="61" height="14"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nr. Fatures:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e5191f46-21b6-4669-8a8f-a5df03beaf65" x="388" y="65" width="60" height="18"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nr: Ofertes:]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="fc77fbc5-bb64-4b48-81e3-162c51a14152" x="1" y="2" width="133" height="45"/>
+				<imageExpression><![CDATA["D:\\Ermal_Documents\\Projects\\OZoneMaterial\\docs\\logot\\LOGO_FATURA.jpg"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement uuid="147112bf-a4cc-4a37-88bd-deca8506e8f9" x="448" y="35" width="46" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="147112bf-a4cc-4a37-88bd-deca8506e8f9" x="448" y="49" width="89" height="16"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{op_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="147112bf-a4cc-4a37-88bd-deca8506e8f9" x="448" y="65" width="57" height="18"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{deal_id}]]></textFieldExpression>
+			</textField>
+			<elementGroup>
+				<staticText>
+					<reportElement uuid="330cff9c-4aed-4e53-97e5-4d2909c52df8" x="53" y="96" width="100" height="14"/>
+					<textElement/>
+					<text><![CDATA[Tirane, 1001, Albania]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="f396b9aa-a14c-405f-96dd-7a36afaee262" x="53" y="83" width="164" height="14"/>
+					<textElement/>
+					<text><![CDATA[Rr. e Bogdaneve / Gjon Muzaka nr.1]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="fefa814d-5876-4ee6-97c8-579420544737" x="53" y="47" width="61" height="14"/>
+					<textElement markup="none"/>
+					<text><![CDATA[Zone Sh.p.k]]></text>
+				</staticText>
+			</elementGroup>
+			<staticText>
+				<reportElement uuid="330cff9c-4aed-4e53-97e5-4d2909c52df8" x="53" y="109" width="100" height="14"/>
+				<textElement/>
+				<text><![CDATA[Phone: +355 4 45 30 424]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="330cff9c-4aed-4e53-97e5-4d2909c52df8" x="53" y="122" width="100" height="14"/>
+				<textElement/>
+				<text><![CDATA[Email: info@ozone.al]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="330cff9c-4aed-4e53-97e5-4d2909c52df8" x="53" y="135" width="100" height="14"/>
+				<textElement/>
+				<text><![CDATA[www.ozone.al]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="fefa814d-5876-4ee6-97c8-579420544737" x="53" y="61" width="61" height="14"/>
+				<textElement markup="none"/>
+				<text><![CDATA[NIPT: xx]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="226" splitType="Stretch">
+			<elementGroup>
+				<staticText>
+					<reportElement uuid="dce7d2c2-e25f-445c-94dd-057268dae69c" x="12" y="82" width="77" height="20"/>
+					<textElement/>
+					<text><![CDATA[E-Mail:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="98cb8442-dd6d-40e9-975a-8ce7224b25a1" x="12" y="31" width="138" height="20"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Perdoruesi OZone]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="266d8f2f-9039-4825-a855-cbf21543b644" style="table" x="89" y="82" width="154" height="20" isPrintWhenDetailOverflows="true" backcolor="#000000"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="c727fe2a-c1bf-468a-91b4-e8d0f4b383e1" x="12" y="62" width="77" height="20"/>
+					<textElement/>
+					<text><![CDATA[Emer mbiemer:]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="5e6e63ef-9c38-42b1-8cfa-c2627bf10b01" style="table" x="89" y="62" width="154" height="20" isPrintWhenDetailOverflows="true"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{full_name}]]></textFieldExpression>
+				</textField>
+			</elementGroup>
+			<elementGroup>
+				<staticText>
+					<reportElement uuid="dce7d2c2-e25f-445c-94dd-057268dae69c" x="294" y="121" width="77" height="20"/>
+					<textElement/>
+					<text><![CDATA[Telefoni:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="a3d8f3bd-6b4e-42b7-b797-2ec31f8046eb" x="294" y="61" width="77" height="20"/>
+					<textElement/>
+					<text><![CDATA[Emer Mbiemer:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" x="371" y="61" width="184" height="20" isPrintWhenDetailOverflows="true"/>
+					<textElement/>
+				</textField>
+				<staticText>
+					<reportElement uuid="98cb8442-dd6d-40e9-975a-8ce7224b25a1" x="314" y="31" width="138" height="20"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Paguesi]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="266d8f2f-9039-4825-a855-cbf21543b644" style="table" x="371" y="141" width="184" height="20" isPrintWhenDetailOverflows="true" backcolor="#000000"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{tel}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="c727fe2a-c1bf-468a-91b4-e8d0f4b383e1" x="294" y="81" width="77" height="20"/>
+					<textElement/>
+					<text><![CDATA[Adresa:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="5e6e63ef-9c38-42b1-8cfa-c2627bf10b01" style="table" x="371" y="81" width="184" height="60" isPrintWhenDetailOverflows="true"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+				</textField>
+			</elementGroup>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" x="371" y="183" width="184" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+			</textField>
+			<staticText>
+				<reportElement uuid="a3d8f3bd-6b4e-42b7-b797-2ec31f8046eb" x="294" y="183" width="77" height="20"/>
+				<textElement/>
+				<text><![CDATA[Emri Korrierit:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a3d8f3bd-6b4e-42b7-b797-2ec31f8046eb" x="294" y="203" width="77" height="20"/>
+				<textElement/>
+				<text><![CDATA[Firma e Korrierit]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" x="371" y="203" width="184" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="26" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="224">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" mode="Opaque" x="501" y="0" width="54" height="20" isPrintWhenDetailOverflows="true" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Shuma"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" mode="Opaque" x="31" y="0" width="340" height="20" isPrintWhenDetailOverflows="true" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Oferta"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" mode="Opaque" x="1" y="0" width="30" height="20" isPrintWhenDetailOverflows="true" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nr."]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" mode="Opaque" x="370" y="0" width="40" height="20" isPrintWhenDetailOverflows="true" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Sasia"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" mode="Opaque" x="410" y="0" width="91" height="20" isPrintWhenDetailOverflows="true" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Cmimi per njesi"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" x="370" y="20" width="40" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{single_price}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" x="501" y="20" width="54" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{totalAmount}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" x="31" y="20" width="339" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{title_choice}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" x="1" y="20" width="30" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[1]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" x="410" y="20" width="91" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Right">
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{single_price}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" x="410" y="40" width="91" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nentotali "]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" x="501" y="40" width="54" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{totalAmount}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" mode="Transparent" x="410" y="60" width="91" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Bonus "]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" x="410" y="80" width="91" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Totali ne Lek"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" x="501" y="60" width="54" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{credit_used}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf5b005-c64c-4404-916e-25d920c20216" style="table" mode="Opaque" x="501" y="80" width="54" height="20" isPrintWhenDetailOverflows="true" backcolor="#FFCCCC"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{money_spent}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="5e6e63ef-9c38-42b1-8cfa-c2627bf10b01" style="table" x="31" y="103" width="317" height="73" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+			</textField>
+			<staticText>
+				<reportElement uuid="c727fe2a-c1bf-468a-91b4-e8d0f4b383e1" x="-21" y="103" width="52" height="20"/>
+				<textElement/>
+				<text><![CDATA[Shenime:]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="52" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="c727fe2a-c1bf-468a-91b4-e8d0f4b383e1" x="1" y="13" width="133" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Stafi OZone ju falenderon]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

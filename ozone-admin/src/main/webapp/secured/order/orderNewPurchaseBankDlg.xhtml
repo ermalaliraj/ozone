@@ -1,0 +1,157 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition >    	
+	<h:form id="orderNewPurchaseBkForm">
+		<p:dialog header="#{msg['purchase.new']} - #{orderController.orderSelected.customer.email}" 
+				   		widgetVar="orderNewPurchaseBkDlg" 
+				   		resizable="false"
+						modal="true" 
+			           	width="640" 
+			           	style="position:fixed; top:0%; left:0%;">
+	<p:panel> 	
+		<p:messages id="messageBk" showDetail="true"/> 
+		 
+		<h:panelGrid id="orderNewPurchaseBkPanel" columns="1" cellpadding="2" style="width:600px;" border="0" styleClass="nowrapColumn"> 
+			<p:fieldset legend="#{msg['purchase.dealData']}" style="width:400px;">
+				<h:panelGrid columns="1" cellpadding="2"  style="margin:0 auto;" border="0">  	
+					<h:panelGrid columns="3" cellpadding="2" border="0">  	
+				        <h:outputLabel for="nBkDeal" value="#{msg['purchase.dealTitle']} *"/>				                	
+				        <p:selectOneMenu id="nBkDeal"
+				        				style="width:400px;"
+				        				disabled="true"
+				        				rendered="#{orderController.editMode}" 
+				        				value="#{orderController.orderSelected.dealChoice.choiceTitle}"
+				        				label="#{msg['publication.dealTitle']}">
+			            	<f:selectItem itemLabel="#{orderController.orderSelected.dealChoice.choiceTitle}" itemValue="#{orderController.orderSelected.dealChoice.choiceNr}" /> 
+				        </p:selectOneMenu>					    			    
+			        	<p:message id="nDealBkMsg" for="nBkDeal" display="icon"/>  
+		        	</h:panelGrid>
+		        	
+		        	<h:panelGrid id="sumBkTable" columns="5" cellpadding="2" style="margin:0 auto;" border="0">  	
+			        	<h:outputLabel for="nBkQty" value="#{msg['purchase.quantity']}"/>  
+			        	<h:outputLabel/> 
+			        	<h:outputLabel for="nBkAmount" value="#{msg['purchase.amount']}"/>  
+			        	<h:outputLabel/> 
+		          		<h:outputLabel for="nBkTotAmount" value="#{msg['purchase.total']}"/>   
+
+		          		<h:selectOneMenu id="nBkQty" required="true" disabled="true"
+		          					value="#{orderController.orderSelected.quantity}">	
+		          					<f:selectItem itemLabel="#{orderController.orderSelected.quantity}" itemValue="#{orderController.orderSelected.quantity}" />       	
+				        </h:selectOneMenu>	
+				        
+						<h:outputLabel value="x"/>
+						<h:outputText id="nBkAmount" size="7" disabled="true"
+								rendered="#{orderController.editMode}" 
+								value="#{orderController.orderSelected.singlePrice}">
+						</h:outputText> 
+						<h:outputLabel value="="/>
+						<h:outputText id="nBkTotAmount" size="7" disabled="true"
+								value="#{orderController.orderSelected.singlePrice * orderController.orderSelected.quantity}"> 
+						</h:outputText> 
+	          		</h:panelGrid>
+	          		
+	          		<h:panelGrid id="creditBkTable" columns="5" cellpadding="2" style="margin:0 auto;" border="0">   
+						
+						<h:outputLabel for="nBkCreditUse" value="#{msg['payment.usedCredit']}"/>   
+						<h:outputLabel value="="/>
+		          		<h:outputText id="nBkCreditUse" size="7"
+		          				rendered="#{orderController.editMode}" 
+								value="#{orderController.orderSelected.creditUsed}"> 
+						</h:outputText> 
+	          		</h:panelGrid>
+	          		
+		      		<h:panelGrid id="totBkTable" columns="3" cellpadding="2" style="margin:0 auto;" border="0">  	
+			       		<h:outputText value="Total per te paguar"/>   
+							<h:outputLabel value="="/>
+			       		<h:outputText value="#{orderController.orderSelected.moneySpent}"/>
+		      		</h:panelGrid>
+	          		
+				</h:panelGrid>
+			</p:fieldset>
+				
+			<p:fieldset legend="#{msg['purchase.paymentData']}" style="width:535px;">
+				<h:panelGrid columns="3" cellpadding="2" style="margin:0 auto;" border="0">  	
+					<h:outputLabel value="Banka *: "/>
+				 		<p:selectOneMenu id="nBank" label="Banka" required="true" 
+				 			binding="#{orderController.nBkName}">  
+			        		<f:selectItem itemLabel="--" itemValue="" />
+				        	<f:selectItem itemLabel="BKT" itemValue="BKT" />
+				        	<f:selectItem itemLabel="Tirana Bank" itemValue="TIRANA" />
+				        	<p:ajax event="blur" update="nBankMsg" /> 
+				        </p:selectOneMenu>	 
+		          		<p:message id="nBankMsg" for="nBank" display="icon"/>
+		          		
+		          		<h:outputLabel for="nBkPayerFullName" value="Emer/Mbiemer i paguesit *: "/>   
+		          		<p:inputText id="nBkPayerFullName" size="30" required="true" 
+		          				label="Emer/Mbiemer i paguesit"
+		          				binding="#{orderController.nBkPayerFullName}"> 
+		          			<p:ajax event="blur" update="nBkPayerFullNameMsg" /> 
+						</p:inputText> 
+		          		<p:message id="nBkPayerFullNameMsg" for="nBkPayerFullName" display="icon"/>	
+		          		
+		          		<h:outputLabel for="nBkRefNr" value="Kodi references *: "/>   
+		          		<p:inputText id="nBkRefNr" size="30" required="true" 
+		          				label="Kodi references"
+		          				binding="#{orderController.nBkRefNr}"> 
+		          			<p:ajax event="blur" update="nBkRefNrMsg" /> 
+						</p:inputText> 
+		          		<p:message id="nBkRefNrMsg" for="nBkRefNr" display="icon"/>
+		          		
+		          		<h:outputLabel for="nBkTransferDate" value="Data e transfertes *: "/>   
+						<p:calendar id="nBkTransferDate" 
+							label="Data e transfertes" required="true"
+		        			value="#{orderController.nBkTransferDate}" 
+		        			pattern="dd/MM/yyyy hh:mm:ss">
+		        			<p:ajax event="dateSelect" update="nBkTransferDateMsg"/>
+		        		</p:calendar>
+		          		<p:message id="nBkTransferDateMsg" for="nBkTransferDate" display="icon"/>
+					
+						<h:outputLabel for="nBkNote" value="#{msg['payment.note']} : "/>             
+		           		<p:inputTextarea id="nBkNote" style="width:250px;height:70px;"
+							label="#{msg['payment.note']}"
+							maxlength="200"
+							resisable="false"
+					        binding="#{orderController.nBkNote}"> 
+						</p:inputTextarea>
+		          		<p:message id="nBkNoteMsg" for="nBkNote" display="icon"/>
+					
+				</h:panelGrid>
+			</p:fieldset>
+		</h:panelGrid>
+				
+		<f:facet name="footer">
+			<h:panelGroup>
+				<center>	
+				<p:commandButton value="#{msg['purchase.buttonAdd']}"  
+								title="#{msg['purchase.buttonAdd']}" 
+								update="orderListForm:ordersListPanel,orderListForm:message" 
+								actionListener="#{orderController.addPurchaseBank}"
+								oncomplete="handleCallbackRequest(xhr, status, args)"
+								icon="ui-icon ui-icon-newwin"> 					
+				</p:commandButton>   
+				<p:commandButton value="#{msg['buttonClose']}" onclick="orderNewPurchaseBkDlg.hide()" type="button" icon="ui-icon ui-icon-close"/>  
+				</center>
+			</h:panelGroup>
+		</f:facet>
+		
+		</p:panel>
+	</p:dialog>
+	
+	<script type="text/javascript">  
+	    function handleCallbackRequest(xhr, status, args) { 
+	        if(!args.validationFailed) {  
+	        	orderNewPurchaseBkDlg.hide();
+	        }
+	    }  
+	</script> 
+	
+	</h:form>
+</ui:composition>
+</html>
+
+
+

@@ -1,0 +1,32 @@
+<html>
+<body>
+
+<div>
+
+Pershendetje,
+
+<br/><br/>
+Duke ju falenderuar per perdorimin e ofertes <b>${dealTitle}</b>
+dhe duke shpresuar qe sherbimi te kete qene ne lartesine e duhur, 
+donim t'ju merrnim dy minuta nga koha juaj per te permiresuar sherbimet tona kundrejt jush.
+
+
+<br/><br/>
+Ju lutemi te jepni nje vleresim mbi oferten e perdorur tek <b>${partner}</b>, ne menyre qe 
+OZone te kete nje panoramike me te qarte te bizneseve per t'ju ofruar juve nje sherbim sa
+ me cilesor.
+
+<br/><br/>
+Per te shkuar tek faqja ku mund te lini vleresimin tuaj klikoni
+<a href="http://ozone.al/registrati.faces?targetNavigation=recentDeals&mainDealId=${dealId}&u=${cusEmail}&p=${token}#fback">
+KETU
+</a>
+
+<br/><br/>
+Faleminderit per kohen tuaj.<br/>
+Stafi OZone
+
+</div>
+
+</body>
+</html>

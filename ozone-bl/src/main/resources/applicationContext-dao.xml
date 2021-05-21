@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"
+	default-lazy-init="true">
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mapper-config.xml" />
+	</bean>	
+
+	<bean id="baseDAO" abstract="true" class="al.ozone.bl.dao.BaseDAO">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+
+	<bean id="genericDAO" class="al.ozone.bl.dao.impl.GenericDAOImpl" parent="baseDAO"/>
+
+  	<bean id="userDAO" class="al.ozone.bl.dao.impl.UserDAOImpl" parent="baseDAO"/>		
+  	
+  	<bean id="auditTrailDAO" class="al.ozone.bl.dao.impl.AuditTrailDAOImpl" parent="baseDAO"/>		
+
+  	<bean id="roleDAO" class="al.ozone.bl.dao.impl.RoleDAOImpl" parent="baseDAO"/>		
+  
+  	<bean id="cityDAO" class="al.ozone.bl.dao.impl.CityDAOImpl" parent="genericDAO" >
+  		<constructor-arg value="al.ozone.bl.model.City" />	
+  	</bean>	
+
+	<bean id="partnerDAO" class="al.ozone.bl.dao.impl.PartnerDAOImpl" parent="genericDAO" >
+  		<constructor-arg value="al.ozone.bl.model.Partner" />	
+  	</bean>
+  	
+  	<bean id="customerDAO" class="al.ozone.bl.dao.impl.CustomerDAOImpl" parent="genericDAO" >
+  		<constructor-arg value="al.ozone.bl.model.Customer" />	
+  	</bean>
+  	
+  	<bean id="creditDAO" class="al.ozone.bl.dao.impl.CreditDAOImpl" parent="genericDAO" >
+  		<constructor-arg value="al.ozone.bl.model.Credit" />	
+  	</bean>
+  	
+    <bean id="discountCardDAO" class="al.ozone.bl.dao.impl.DiscountCardDAOImpl" parent="genericDAO" >
+  		<constructor-arg value="al.ozone.bl.model.DiscountCard" />	
+  	</bean>
+  	
+  	<bean id="dealDAO" class="al.ozone.bl.dao.impl.DealDAOImpl" parent="genericDAO" >
+  		<constructor-arg value="al.ozone.bl.model.Deal" />	
+  	</bean>
+  	
+  	<bean id="dealChoiceDAO" class="al.ozone.bl.dao.impl.DealChoiceDAOImpl" parent="genericDAO" >
+  		<constructor-arg value="al.ozone.bl.model.DealChoice" />	
+  	</bean>
+  	
+  	<bean id="purchaseDAO" class="al.ozone.bl.dao.impl.PurchaseDAOImpl" parent="genericDAO" >
+  		<constructor-arg value="al.ozone.bl.model.Purchase" />	
+  	</bean>
+  	
+  	<bean id="couponDAO" class="al.ozone.bl.dao.impl.CouponDAOImpl" parent="genericDAO" >
+  		<constructor-arg value="al.ozone.bl.model.Coupon" />	
+  	</bean>
+
+    <bean id="paymentDAO" class="al.ozone.bl.dao.impl.PaymentDAOImpl" parent="genericDAO" >
+  		<constructor-arg value="al.ozone.bl.model.Payment" />
+  	</bean>
+  	
+  	<bean id="systemConfigDAO" class="al.ozone.bl.dao.impl.GenericDAOImpl" parent="baseDAO" >
+  		<constructor-arg value="al.ozone.bl.model.SystemConfigBean" />	
+  	</bean>
+  	
+  	<bean id="codeGeneratorDAO" class="al.ozone.bl.dao.impl.CodeGeneratorDAOImpl" parent="baseDAO"/>
+  	
+  	<bean id="inviteDAO" class="al.ozone.bl.dao.impl.InviteDAOImpl" parent="baseDAO"/>
+  	
+  	<bean id="emailsIntroDAO" class="al.ozone.bl.dao.impl.EmailsIntroDAOImpl" parent="baseDAO"/>
+  	
+  	<bean id="ordersDAO" class="al.ozone.bl.dao.impl.OrdersDAOImpl" parent="genericDAO">
+  		<constructor-arg value="al.ozone.bl.model.Orders" />	
+  	</bean>	
+  	
+  	<bean id="customerLogDAO" class="al.ozone.bl.dao.impl.CustomerLogDAOImpl" parent="baseDAO"/>
+  	
+  	<bean id="dealFeedbackDAO" class="al.ozone.bl.dao.impl.GenericDAOImpl" parent="baseDAO" >
+		<constructor-arg value="al.ozone.bl.model.DealFeedback" />	
+	</bean>
+	
+</beans>
+
+	

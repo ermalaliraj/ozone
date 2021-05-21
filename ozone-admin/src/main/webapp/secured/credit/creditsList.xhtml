@@ -1,0 +1,130 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="/template/common/commonLayout.xhtml"> 
+    <ui:define name="title">
+    	<h:outputText value="#{msg['title.credits']}"/>
+    </ui:define>
+    
+	<ui:define name="content">   	
+
+		<h:form id="creditForm"> 
+		<p:growl id="message" showDetail="true" /> 
+		
+		<!-- Search Panel -->
+		<p:panel id="creditSearchPanel" header="#{msg['credit.panelSearch']}" >
+			<h:panelGrid columns="9" cellpadding="5" border="0"  styleClass="nowrapColumn">			
+
+		 		<h:outputLabel for="sEmail" value="#{msg['customer.email']}"/>                
+	            <p:inputText id="sEmail"  
+                			size="30"                 
+                            binding="#{creditController.sCustomerEmail}"> 
+            		<p:ajax event="blur" update="sEmailMsg" /> 
+	            </p:inputText>
+	            <p:message id="sEmailMsg" for="sEmail" />  
+	            
+	            <h:outputLabel value="#{msg['credit.type']}"/>				                
+		        <p:selectOneMenu
+		        	 binding="#{creditController.sType}">  
+		        	<f:selectItem itemLabel="ALL" itemValue="" />
+		        	<f:selectItems value="#{creditController.creditTypes}"/>
+		        </p:selectOneMenu>
+	  
+				<h:outputLabel value="#{msg['credit.used']}"/>				                
+		        <p:selectOneMenu
+		             binding="#{creditController.sUsed}">     	
+		        	<f:selectItem itemLabel="ALL" itemValue="" />
+		        	<f:selectItem itemLabel="#{msg['yes']}"  itemValue="true" />
+		        	<f:selectItem itemLabel="#{msg['no']}" itemValue="false" />
+		        </p:selectOneMenu>
+		        
+				
+				<f:facet name="footer">
+					<h:panelGroup>
+					<center>					
+						<p:commandButton value="#{msg['buttonSearch']}" update="creditsListPanel,creditSearchPanel" action="#{creditController.search}"/>
+						<p:spacer width="10"/>
+						<p:commandButton value="#{msg['buttonReset']}" update="creditsListPanel,creditSearchPanel,message" action="#{creditController.cleanSearchForm}" />  							
+					</center>
+					</h:panelGroup>
+				</f:facet>
+			</h:panelGrid>		
+		</p:panel>
+		
+		<ui:include src="../common/ajaxloading.xhtml" />
+		
+		<!-- Table Panel -->
+		<p:panel id="creditsListPanel" header="#{msg['credit.list']}" >
+			<h:panelGrid columns="2" cellpadding="2" border="0" style="width:100%;">
+				<p:dataTable id="creditsTable" var="c" value="#{creditController.creditsList}" 
+							paginator="true" rows="50" rowsPerPageTemplate="10,50,100"
+					    	paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}  Nr. Rows: #{creditController.creditsList.size()}"
+					    	rowStyleClass="#{d.colorStatus}"> 
+					    	
+					<p:column headerText="#{msg['credit.id']}" sortBy="#{c.id}" style="width:8%;">
+						<h:outputText value="#{c.id}"/>
+					</p:column>
+					
+					<p:column headerText="#{msg['credit.customer']}" sortBy="#{c.customer.email}" style="width:14%;">
+						<h:outputText value="#{c.customer.email}"/>
+					</p:column>
+					
+					<p:column headerText="#{msg['credit.type']}" sortBy="#{c.type}" style="width:16%;">
+						<h:outputText value="#{c.type}">
+					    <f:converter converterId="creditTypeFormatter" />
+					    </h:outputText>
+					</p:column>
+					
+					<p:column headerText="#{msg['credit.assignedDate']}" sortBy="#{c.assignedDate}" style="width:16%;">
+						<h:outputText value="#{c.assignedDate}">
+						<f:converter converterId="dateFormatter"/>
+						</h:outputText>
+					</p:column>
+					
+					<p:column headerText="#{msg['credit.validDate']}" sortBy="#{c.validDate}" style="width:17%;">
+						<h:outputText value="#{c.validDate}">
+						<f:converter converterId="dateFormatter"/>
+						</h:outputText>
+					</p:column>
+					
+					<p:column headerText="#{msg['credit.usedDate']}" sortBy="#{c.usedDate}" style="width:17%;">
+						<h:outputText value="#{c.usedDate}">
+						<f:converter converterId="dateFormatter"/>
+						</h:outputText>
+					</p:column>
+					
+					<p:column headerText="#{msg['credit.value']}" sortBy="#{c.value}" style="width:14%;">
+						<h:outputText value="#{c.value}"/>
+					</p:column>
+					
+					<p:column headerText="#{msg['credit.about']}" style="width:14%;">
+						<h:outputText value="#{c.about}"/>
+					</p:column>
+					
+					<p:column headerText="#{msg['credit.aboutUse']}">
+						<h:outputText value="#{c.aboutUse}"/>
+					</p:column>
+				</p:dataTable> 
+			</h:panelGrid>	
+		</p:panel>
+
+				
+		<p:confirmDialog widgetVar="confirmation" width="400" severity="alert"
+					style="position:fixed; top:0%; left:0%; text-align:center;"
+    				message="#{msg['credit.confirmDeleteMsg']}"  header="#{msg['confirm']}"  >        
+	        <center>
+	            <p:commandButton value="#{msg['yes']}" update="creditsListPanel,message" actionListener="#{creditController.deleteCredit}" oncomplete="confirmation.hide()"/>  
+	            <p:commandButton value="#{msg['no']}" onclick="confirmation.hide()" type="button" />  
+        	</center>
+        </p:confirmDialog>  
+		
+		</h:form>
+		
+	</ui:define>
+</ui:composition>
+</html>
+

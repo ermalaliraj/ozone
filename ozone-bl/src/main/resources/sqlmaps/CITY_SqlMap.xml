@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="CITY">
+
+	<resultMap id="cityResultMap" type="al.ozone.bl.model.City">
+	   <result column="ID" property="id" jdbcType="VARCHAR" />
+	   <result column="NAME" property="name" jdbcType="VARCHAR" />
+	   <result column="ACTIVE" property="active" jdbcType="VARCHAR" typeHandler="al.ozone.bl.utils.YNBooleanTypeHandler"/>
+	   <result column="LAT" property="lat" jdbcType="DOUBLE" />
+	   <result column="LNG" property="lng" jdbcType="DOUBLE" />
+	   <result column="ZOOM_LEVEL" property="zoomLevel" jdbcType="DECIMAL" />
+  	</resultMap> 
+  	
+	<select id="get" resultMap="cityResultMap" parameterType="string" >
+		select *
+		from CITY
+		where ID = #{id,jdbcType=VARCHAR}
+		order by NAME asc
+	</select>
+	
+	<select id="getAll" resultMap="cityResultMap" parameterType="string" >
+		select *
+		from CITY
+	</select>
+  
+	<delete id="delete" parameterType="al.ozone.bl.model.City" >
+		delete from CITY
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+  
+	<insert id="insert" parameterType="al.ozone.bl.model.City">
+		
+		insert into CITY (ID, NAME, ACTIVE, LAT, LNG, ZOOM_LEVEL)
+		values (#{id,jdbcType=VARCHAR}, 
+				#{name,jdbcType=VARCHAR},
+				#{active,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler},
+				#{lat,jdbcType=DOUBLE},
+				#{lng,jdbcType=DOUBLE},
+				#{zoomLevel,jdbcType=DECIMAL})
+	</insert>
+	
+	<update id="update" parameterType="al.ozone.bl.model.City" >
+	    update CITY
+	    set NAME = #{name,jdbcType=VARCHAR},
+	    ACTIVE = #{active,jdbcType=VARCHAR,typeHandler=al.ozone.bl.utils.YNBooleanTypeHandler},
+	    LAT =#{lat,jdbcType=DOUBLE},
+	    LNG = #{lng,jdbcType=DOUBLE},
+	    ZOOM_LEVEL = #{zoomLevel,jdbcType=DECIMAL}
+	    where ID = #{id,jdbcType=VARCHAR}
+    </update>
+  
+	<select id="search" resultMap="cityResultMap" parameterType="al.ozone.bl.model.City">
+		select * 
+		from CITY
+		where upper(NAME) like '%' || upper(#{name,jdbcType=VARCHAR}) || '%'
+	</select>
+	
+	<select id="getAllActives" resultMap="cityResultMap" parameterType="al.ozone.bl.model.City">
+		select * 
+		from CITY
+		where ACTIVE = 'Y'
+	</select>
+	
+	<select id="getCitiesForDeal" resultType="string" parameterType="int">
+		select CITY_ID
+		from DEAL_CITY
+		where DEAL_ID = #{dealId,jdbcType=DECIMAL}
+	</select>
+	
+	<insert id="insertCityForDeal" parameterType="map">
+		insert into DEAL_CITY (DEAL_ID, CITY_ID)
+		values (#{dealId,jdbcType=DECIMAL}, 
+				#{cityId,jdbcType=VARCHAR})
+	</insert>
+	
+	<delete id="deleteCityForDeal" parameterType="map">
+		select * 
+		from DEAL_CITY
+		where DEAL_ID = #{dealId,jdbcType=DECIMAL}
+		and CITY_ID = #{cityId,jdbcType=VARCHAR}
+	</delete>
+	
+	<delete id="deleteCitiesForDeal" parameterType="int">
+		delete from DEAL_CITY
+		where DEAL_ID = #{dealId,jdbcType=DECIMAL}
+	</delete>
+	
+</mapper>

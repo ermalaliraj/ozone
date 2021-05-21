@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>OZoneAdmin</display-name>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+	    	classpath:applicationContext-dao.xml
+			classpath:applicationContext-manager.xml
+			classpath:applicationContext-resources.xml
+			classpath:applicationContext-service.xml
+			classpath:applicationContext-menu.xml
+			classpath:applicationContext-security.xml
+			classpath:applicationContext-email.xml
+			classpath:applicationContext-BatchEngine.xml
+		</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.PROJECT_STAGE</param-name>
+    <param-value>Development</param-value>
+  </context-param>
+  <context-param>
+    <param-name>primefaces.THEME</param-name>
+    <param-value>#{userPreferences.theme}</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.CONFIG_FILES</param-name>
+    <param-value>
+    	/WEB-INF/faces-config.xml,/WEB-INF/faces-managed-beans.xml,/WEB-INF/faces-navigation.xml
+	</param-value>
+  </context-param>
+  
+<!--   <context-param>
+       <param-name>configuration</param-name>
+      <param-value>deployment</param-value>
+  </context-param> -->
+  
+  <!-- ************** Shtuar nga Flori ************-->
+ <!--    <context-param>
+        <param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
+        <param-value>1</param-value>
+    </context-param>
+     -->
+    
+    
+  <error-page>
+    <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+    <location>/login.faces</location>
+  </error-page>
+    <!-- ************** Shtuar nga Flori ************-->
+
+	<session-config>
+   		<session-timeout>30</session-timeout>    <!-- minutes -->
+   	</session-config>
+  
+  
+  <filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+	<dispatcher>FORWARD</dispatcher>
+	<dispatcher>REQUEST</dispatcher>
+  </filter-mapping>
+    
+  <servlet>
+    <servlet-name>Faces Servlet</servlet-name>
+    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>*.jsf</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>*.faces</url-pattern>
+  </servlet-mapping>
+	
+  <servlet>
+    <servlet-name>streamServlet</servlet-name>
+    <servlet-class>al.ozone.admin.servlet.StreamServlet</servlet-class>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>streamServlet</servlet-name>
+    <url-pattern>/printInvoice</url-pattern>
+  </servlet-mapping>
+  
+    <servlet>
+    <servlet-name>couponServlet</servlet-name>
+    <servlet-class>al.ozone.admin.servlet.CouponServlet</servlet-class>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>couponServlet</servlet-name>
+    <url-pattern>/printCoupon</url-pattern>
+  </servlet-mapping>
+
+  <filter>
+    <filter-name>PrimeFaces FileUpload Filter</filter-name>
+    <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>PrimeFaces FileUpload Filter</filter-name>
+    <servlet-name>Faces Servlet</servlet-name>
+  </filter-mapping>
+  
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  	<listener>
+		<listener-class>
+			org.springframework.web.context.request.RequestContextListener
+		</listener-class>
+	</listener>
+  
+	<listener>
+    	<listener-class>al.ozone.admin.listener.EmailEngineContextListener</listener-class>
+  	</listener>
+  	<!-- listener>
+    	<listener-class>al.ozone.admin.listener.BatchEngineContextListener</listener-class>
+  	</listener-->
+  
+  <error-page>
+    <error-code>500</error-code>
+    <location>/error.jsp</location>
+  </error-page>
+  
+  <error-page>
+    <error-code>404</error-code>
+    <location>/error404.jsp</location>
+  </error-page>
+  
+   <error-page>
+   <exception-type>java.lang.Exception</exception-type>
+	<location>/errorUncachedJava.jsp</location>
+   </error-page>
+
+</web-app>
